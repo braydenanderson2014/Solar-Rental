@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=VersionController
+comment0.text=\r\n\ Controls\ the\ version\ of\ the\ program.\r\n\r\n\ @author\ (Brayden\ Anderson)\r\n\ @version\ (Base\ Version\:\ ALPHA\ 1.0.0,\ Snapshot\:\ 1A3XV)\r\n\ @classversion\ (ALPHA\ V1.0.0)\r\n
+comment1.params=
+comment1.target=VersionController()
+comment2.params=
+comment2.target=java.lang.String\ updateVersion()
+comment3.params=version
+comment3.target=java.lang.String\ setVersion(java.lang.String)
+comment4.params=
+comment4.target=java.lang.String\ getVersion()
+numComments=5

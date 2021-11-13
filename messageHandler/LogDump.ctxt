@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=LogDump
+comment1.params=Mode
+comment1.target=void\ DumpLog(java.lang.String)
+numComments=2

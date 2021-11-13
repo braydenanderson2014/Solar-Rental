@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=Login
+comment1.params=
+comment1.target=Login()
+comment2.params=
+comment2.target=void\ LoginScreen()
+comment3.params=user\ Password
+comment3.target=boolean\ ValidateUserSignIn(java.lang.String,\ java.lang.String)
+comment4.params=
+comment4.target=java.lang.String\ getCurrentUser()
+numComments=5

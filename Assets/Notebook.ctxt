@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=Notebook
+comment1.params=
+comment1.target=boolean\ newNote()
+comment2.params=note
+comment2.target=boolean\ addNote(java.lang.String)
+comment3.params=
+comment3.target=boolean\ deleteNote()
+comment4.params=
+comment4.target=boolean\ submitNotesToFile()
+comment5.params=
+comment5.target=java.lang.String\ viewNotes()
+comment6.params=
+comment6.target=java.lang.String\ resetNotes()
+comment7.params=
+comment7.target=java.lang.String\ loadUserNotes()
+numComments=8
