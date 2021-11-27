@@ -14,7 +14,7 @@ public class installDirectories{
     public static boolean updateIsFirstTime(){
         return isFirstTime;
     }
-    public static boolean installTheDirectoriesDammit(){
+    public static boolean installTheDirectoriesDamnit(){
         //#region Notebooks
         tempPath = tempPath + "\\Solar Program Files/Notebooks";
         messageHandler.HandleMessage(1, "Path: " + tempPath);
@@ -23,8 +23,20 @@ public class installDirectories{
             file.mkdirs();
             messageHandler.HandleMessage(1, "Directory Created at " + tempPath);
         }else {
-            messageHandler.HandleMessage(-1, "Directory already Exits at "+ tempPath);
+            messageHandler.HandleMessage(-1, "Directory already Exists at "+ tempPath);
         }
+        //#endregion
+        //#region Users
+        tempPath = path + "\\Solar Program\\Users/Passwords";
+        messageHandler.HandleMessage(1, "Path: " + tempPath);
+        file = new File(tempPath);
+        if(!file.exists()){
+            file.mkdirs();
+            messageHandler.HandleMessage(1, "Directory Created at " + tempPath);
+        }else {
+            messageHandler.HandleMessage(-1, "Directory already Exists at " + tempPath);
+        }
+        //#endregion
         return true;
     }
 }

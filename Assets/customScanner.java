@@ -15,6 +15,7 @@ public class customScanner
    
     public customScanner(){
          scan = new Scanner(System.in);
+         messageHandler.HandleMessage(1, "Created Scanner Object for user input");
     }
     public static Scanner getScanner(){
         return scan;

@@ -33,6 +33,7 @@ public class ConsoleSettings {
             }else if(ErrorSet == false){
                 ErrorSet = true;
             }
+            messageHandler.HandleMessage(1, "Error Messages ON?: " + ErrorSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("warning")){
             if(WarningSet == true){
@@ -40,6 +41,7 @@ public class ConsoleSettings {
             }else if(WarningSet == false){
                 WarningSet = true;
             }
+            messageHandler.HandleMessage(1, "Warning Messages ON?: " + WarningSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("system")){
             if(SystemSet == true){
@@ -47,6 +49,7 @@ public class ConsoleSettings {
             }else if(SystemSet == false){
                 SystemSet = true;
             }
+            messageHandler.HandleMessage(1, "System Messages ON?: " + SystemSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("user")){
             if(UserNotifySet == true){
@@ -54,6 +57,7 @@ public class ConsoleSettings {
             }else if(UserNotifySet == false){
                 UserNotifySet = true;
             }
+            messageHandler.HandleMessage(1, "User Notifications Messages ON?: " + UserNotifySet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("time")){
             if(timeSet == true){
@@ -61,9 +65,11 @@ public class ConsoleSettings {
             }else if(timeSet == false){
                 timeSet = true;
             }
+            messageHandler.HandleMessage(1, "Date Time Stamps ON?: " + timeSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("help")){
-
+            messageHandler.HandleMessage(-2, "Help System Not Implemented yet, Try again in a later update");
+            ConsoleSettingsMenu();
         }else if(setToChange.equals("return")){
             Settings.SettingsMenu();
         }else{
@@ -91,6 +97,7 @@ public class ConsoleSettings {
             }else if(ErrorSet == false){
                 ErrorSet = true;
             }
+            messageHandler.HandleMessage(1, "Error Messages ON?: " + ErrorSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("warning")){
             if(WarningSet == true){
@@ -98,6 +105,7 @@ public class ConsoleSettings {
             }else if(WarningSet == false){
                 WarningSet = true;
             }
+            messageHandler.HandleMessage(1, "Warning Messages ON?: " + WarningSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("system")){
             if(SystemSet == true){
@@ -105,6 +113,7 @@ public class ConsoleSettings {
             }else if(SystemSet == false){
                 SystemSet = true;
             }
+            messageHandler.HandleMessage(1, "System Messages ON?: " + SystemSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("user")){
             if(UserNotifySet == true){
@@ -112,6 +121,7 @@ public class ConsoleSettings {
             }else if(UserNotifySet == false){
                 UserNotifySet = true;
             }
+            messageHandler.HandleMessage(1, "User Messages ON?: " + UserNotifySet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("time")){
             if(timeSet == true){
@@ -119,8 +129,10 @@ public class ConsoleSettings {
             }else if(timeSet == false){
                 timeSet = true;
             }
+            messageHandler.HandleMessage(1, "Date Time Stamps ON?: " + timeSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("help")){
+            messageHandler.HandleMessage(-2, "Help System Not Implemented yet, Try again in a later update");
             dConsoleSettingsMenu();
         }else if(setToChange.equals("return")){
             Settings.configMenu();

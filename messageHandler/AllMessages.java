@@ -21,7 +21,9 @@ public class AllMessages {
         AllMessagesT.clear();
         return true;
     }
-    
+    public static int size(){// Normal array (Get) size
+        return AllMessages.size();
+    }
     public static String getLastMessage() {
         int size = AllMessages.size();
         size --;

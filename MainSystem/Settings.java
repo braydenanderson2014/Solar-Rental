@@ -3,8 +3,10 @@ import java.util.Scanner;
 import Assets.Logo;
 import Install.FirstTimeController;
 import Install.installManager;
+import messageHandler.ClearAllMessages;
 import messageHandler.Console;
 import messageHandler.ConsoleSettings;
+import messageHandler.ViewLogManager;
 import messageHandler.messageHandler;
 public class Settings{
     public static Scanner scan = new Scanner(System.in);
@@ -19,13 +21,20 @@ public class Settings{
         System.out.println("[PATH]: Program's Working Directory" + path);
         System.out.println("[CONSOLE]: Console Settings");
         System.out.println("[LOG]: Log Dump Type: " + logType);
+        System.out.println("[ViewLogs]: View logs Menu");
         System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimed);
+        System.out.println("[CLS]: Clear Logs");
         System.out.println("[RETURN]: Return");
         System.out.println();
         Console.getConsole();
         String option = scan.nextLine().toLowerCase();
         if(option.equals("path")){
 
+        }else if(option.equals("viewlogs")){
+            ViewLogManager.ViewMenu(1);
+        }else if(option.equals("cls")){
+            ClearAllMessages.clearAll();
+            SettingsMenu();
         }else if(option.equals("console")){
             ConsoleSettings.ConsoleSettingsMenu();
         }else if(option.equals("log")){
@@ -62,6 +71,7 @@ public class Settings{
         System.out.println("[PATH]: Program's Working Directory: " + path);
         System.out.println("[CONSOLE]: Console Settings");
         System.out.println("[LOG]: Log Dump Type: " + logType);
+        System.out.println("[ViewLogs]: View logs Menu");
         System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimed);
         System.out.println("[RETURN]: Return");
         System.out.println();
@@ -69,6 +79,8 @@ public class Settings{
         String option = scan.nextLine().toLowerCase();
         if(option.equals("path")){
             
+        }else if(option.equals("viewlogs")){
+            ViewLogManager.ViewMenu(2);
         }else if(option.equals("console")){
             ConsoleSettings.dConsoleSettingsMenu();
         }else if(option.equals("log")){

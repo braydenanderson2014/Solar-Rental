@@ -2,6 +2,7 @@ package MainSystem;
 import java.io.*;
 import Assets.Logo;
 import Assets.VersionController;
+import Assets.customScanner;
 import Install.installManager;
 import messageHandler.ErrorMessages;
 import messageHandler.SystemMessages;
@@ -12,6 +13,7 @@ public class ProgramController{
     public static String Version;
     public static boolean start(){
         Logo.displayLogo();
+        new customScanner();
         System.out.println("Console: ");
         messageHandler.HandleMessage(1, "Starting Solar on Thread main");
         System.out.println(SystemMessages.getLastMessage());
