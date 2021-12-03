@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+import MainSystem.SettingsController;
 import messageHandler.ErrorMessages;
 import messageHandler.SystemMessages;
 import messageHandler.WarningMessages;
@@ -14,26 +15,16 @@ import messageHandler.messageHandler;
 public class FirstTimeController {
     public static boolean firstTime;
     public static boolean checkFirstTime(){
-        String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/isFirstTime.txt";
+        String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
             try {
-                BufferedReader in = new BufferedReader(new FileReader(new File(path)));
-                int line = 0;
-                messageHandler.HandleMessage(1, "Reading from isFirstTime.txt on line: " + line);
-                System.out.println(SystemMessages.getLastMessage());
-                for(String x= in.readLine(); x != null; x= in.readLine()){
-                    line++;
-                    messageHandler.HandleMessage(1, "Reading from isFirstTime.txt on line: " + line);
-                    System.out.println(SystemMessages.getLastMessage());
-                    firstTime = Boolean.parseBoolean(x);
-                }
-                in.close();
-                messageHandler.HandleMessage(1, "Found a Boolean, Now applying to System Setting... IsFirstTime = " + firstTime);
-                System.out.println(SystemMessages.getLastMessage());
+                SettingsController.loadSettings();
+                String FirstTimeSet = SettingsController.getSetting("FirstTime");
+                firstTime = Boolean.parseBoolean(FirstTimeSet);
                 return firstTime;
             } catch (Exception e) {
-                messageHandler.HandleMessage(-2, "Failed to read from isFirstTime.txt [" + e.toString() + "]");
+                messageHandler.HandleMessage(-2, "Failed to read from config.properties [" + e.toString() + "]");
                 return true;
             }
         }else{
@@ -44,12 +35,10 @@ public class FirstTimeController {
     }
     public static boolean updateFirstTime(boolean isFirstTimeUpdate){
         firstTime = isFirstTimeUpdate;
-        System.out.println(isFirstTimeUpdate);
-        System.out.println(firstTime);
-        String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/isFirstTime.txt";
+        String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
-            messageHandler.HandleMessage(1, "Now Updating firstTime file");
+            messageHandler.HandleMessage(1, "Now Updating config.properties file");
             System.out.println(SystemMessages.getLastMessage());
             messageHandler.HandleMessage(1, "Converting Boolean to String...");
             System.out.println(SystemMessages.getLastMessage());
@@ -57,17 +46,14 @@ public class FirstTimeController {
             messageHandler.HandleMessage(1, "Successfully converted boolean to String!");
             System.out.println(SystemMessages.getLastMessage());
             try {
-                FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(bool);
-                bw.close();
+                SettingsController.setSetting("FirstTime", bool);
                 messageHandler.HandleMessage(1, "Saved converted boolean to isFirstTime.txt");
                 System.out.println(SystemMessages.getLastMessage());
             } catch (Exception e) {
                 messageHandler.HandleMessage(-2, "Failed to convert boolean to String or save the converted boolean" + e.toString());
             }
         }else {
-            messageHandler.HandleMessage(-1, "Failed to save isFirstTime.txt (FILE NOT FOUND)");
+            messageHandler.HandleMessage(-1, "Failed to save config.properties (FILE NOT FOUND)");
             System.out.println(WarningMessages.getLastMessage());
         }
         return isFirstTimeUpdate;

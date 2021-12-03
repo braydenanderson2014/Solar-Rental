@@ -1,7 +1,11 @@
 package MainSystem;
 import java.util.Scanner;
+
+import javax.sound.midi.Patch;
+
 import Assets.Logo;
 import Install.FirstTimeController;
+import Install.PathController;
 import Install.installManager;
 import messageHandler.ClearAllMessages;
 import messageHandler.Console;
@@ -29,7 +33,7 @@ public class Settings{
         Console.getConsole();
         String option = scan.nextLine().toLowerCase();
         if(option.equals("path")){
-
+            PathController.pathMenu(1);
         }else if(option.equals("viewlogs")){
             ViewLogManager.ViewMenu(1);
         }else if(option.equals("cls")){
@@ -53,11 +57,12 @@ public class Settings{
             }else if(FirstTimed == false){
                 FirstTimed = true;
             }
-             FirstTimeController.updateFirstTime(FirstTimed);
+            messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimed);
+            FirstTimeController.updateFirstTime(FirstTimed);
             SettingsMenu();
         }else if(option.equals("return")){
             //MainSystem
-
+            MainMenu.mainMenu();
         }else {
             messageHandler.HandleMessage(-1, "Invalid option, Try again");
             SettingsMenu();
@@ -78,7 +83,7 @@ public class Settings{
         Console.getConsole();
         String option = scan.nextLine().toLowerCase();
         if(option.equals("path")){
-            
+            PathController.pathMenu(2);
         }else if(option.equals("viewlogs")){
             ViewLogManager.ViewMenu(2);
         }else if(option.equals("console")){

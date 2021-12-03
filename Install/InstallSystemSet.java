@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import Assets.VersionController;
+import MainSystem.SettingsController;
 import messageHandler.ErrorMessages;
 import messageHandler.SystemMessages;
 import messageHandler.messageHandler;
@@ -14,6 +15,11 @@ public class InstallSystemSet {
     public static String FilePath = SystemSetPath;
     public static boolean installSystemSets(){
         //#region FOLDERSTRUCTURE
+            //#region ConfigSetup
+
+            SettingsController.setSetting("Path", SystemSetPath);
+        //#endregion
+        
         File file = new File(SystemSetPath); 
         if(!file.exists()){
             messageHandler.HandleMessage(1, "Unable to find Directory: " + SystemSetPath + ", at the expected location. Now Creating The Folder Structure");
@@ -62,6 +68,7 @@ public class InstallSystemSet {
             file = new File(FilePath);
             if(!file.exists()){
                 file.createNewFile();
+                SettingsController.setSetting("FirstTime", "false");
                 messageHandler.HandleMessage(1, "Created Empty File called isFirstTime; Will Populate File in Just a moment");
                 System.out.println(SystemMessages.getLastMessage());
                 messageHandler.HandleMessage(1, "Now Populating isFirstTime.txt with Value" + false);
@@ -73,6 +80,7 @@ public class InstallSystemSet {
                 System.out.println(SystemMessages.getLastMessage());
                 FirstTimeController.updateFirstTime(false);
             }else{
+                SettingsController.setSetting("FirstTime", "false");
                 messageHandler.HandleMessage(1, "File Already Existed, Writing Default Value...");
                 System.out.println(SystemMessages.getLastMessage());
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());

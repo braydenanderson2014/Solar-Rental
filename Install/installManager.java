@@ -14,7 +14,7 @@ import messageHandler.messageHandler;
 
 public class installManager{
     public static Scanner scan = new Scanner(System.in);
-    public static String DefaultPath = "\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/isFirstTime.txt";
+    public static String DefaultPath = "\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/";
     public static String DefaultdriveLetter = "C";
     public static String Directory = DefaultPath;
     public static String driveLetter = DefaultdriveLetter;

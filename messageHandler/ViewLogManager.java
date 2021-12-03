@@ -1,9 +1,7 @@
 package messageHandler;
-
 import Assets.Logo;
 import Assets.customScanner;
 import MainSystem.Settings;
-
 public class ViewLogManager{
     public static String ViewWarnings(){
         for(int i = 0; i < WarningMessages.size(); i++){
