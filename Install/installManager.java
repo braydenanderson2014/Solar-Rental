@@ -6,6 +6,7 @@ import Assets.VersionController;
 import Login.Login;
 import MainSystem.ProgramController;
 import MainSystem.Settings;
+import MainSystem.SettingsController;
 import messageHandler.AllMessages;
 import messageHandler.Console;
 import messageHandler.SystemMessages;
@@ -63,8 +64,11 @@ public class installManager{
             //#endregion
         }else{
             //#region FIRST TIME FALSE
+            SettingsController.loadSettings();
+            VersionController.setVersion(SettingsController.getSetting("Version"));
             messageHandler.HandleMessage(1, "FirstTime Setup was Already completed, Now Entering Start Menu");
             ProgramController.clearScreen();
+            System.out.println(SettingsController.getSetting("Version"));
             Logo.displayLogo();
             System.out.println();
             System.out.println("Welcome to Solar! We are so Glad You are Here!");
@@ -77,7 +81,9 @@ public class installManager{
             Console.getConsole();
             String option = scan.nextLine();
             if(option.equals("start")){
-                getSystemSet.populateSystem();
+                Settings.LoadSettings();
+                installDirectories.installTheDirectoriesDamnit();
+                InstallFiles.installTheFilesDamnit();
                 Login.LoginScreen();
             }else if(option.equals("config")){
                 Settings.configMenu();

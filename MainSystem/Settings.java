@@ -1,15 +1,16 @@
 package MainSystem;
 import java.util.Scanner;
 
-import javax.sound.midi.Patch;
 
 import Assets.Logo;
+import Assets.VersionController;
 import Install.FirstTimeController;
 import Install.PathController;
 import Install.installManager;
 import messageHandler.ClearAllMessages;
 import messageHandler.Console;
 import messageHandler.ConsoleSettings;
+import messageHandler.SystemMessages;
 import messageHandler.ViewLogManager;
 import messageHandler.messageHandler;
 public class Settings{
@@ -113,11 +114,33 @@ public class Settings{
             configMenu();
         }
     }
-    public static boolean refreshSettings(){
-        path = installManager.getPath();
-        logType  = "all";
-        FirstTimed = false;
-        messageHandler.HandleMessage(1, "Setting Refresh");
+    public static boolean LoadSettings(){
+        messageHandler.HandleMessage(1, "Loading Settings file from config.properties");
+        System.out.println(SystemMessages.getLastMessage());
+        SettingsController.loadSettings();
+        messageHandler.HandleMessage(1, "Settings File Loaded... Now reading from Settings");
+        System.out.println(SystemMessages.getLastMessage());
+        FirstTimeController.updateFirstTime(false);
+        messageHandler.HandleMessage(1, "FirstTime Setting: False");
+        System.out.println(SystemMessages.getLastMessage());
+        installManager.setPath(SettingsController.getSetting("PathLetter"), SettingsController.getSetting("Path"));
+        messageHandler.HandleMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: " + SettingsController.getSetting("Path"));
+        System.out.println(SystemMessages.getLastMessage());
+        VersionController.setVersion(SettingsController.getSetting("Version"));
+        System.out.println("Version: " + SettingsController.getSetting("Version"));
+        Settings.logType = SettingsController.getSetting("LogType");
+        System.out.println("LogType: " + SettingsController.getSetting("LogType"));
+        ConsoleSettings.ErrorSet = Boolean.parseBoolean(SettingsController.getSetting("ErrorSet"));
+        System.out.println("ErrorSet: " + Boolean.parseBoolean(SettingsController.getSetting("ErrorSet")));
+        ConsoleSettings.WarningSet = Boolean.parseBoolean(SettingsController.getSetting("WarningSet"));
+        System.out.println("WarningSet: " + Boolean.parseBoolean(SettingsController.getSetting("WarningSet")));
+        ConsoleSettings.SystemSet = Boolean.parseBoolean(SettingsController.getSetting("SystemSet"));
+        System.out.println("SystemSet: " + Boolean.parseBoolean(SettingsController.getSetting("SystemSet")));
+        ConsoleSettings.UserNotifySet = Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet"));
+        System.out.println("UserNotifySet: " + Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet")));
+        ConsoleSettings.timeSet = Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet"));
+        System.out.println("Time Set: " + Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet")));
+
         return true;
     }
 }

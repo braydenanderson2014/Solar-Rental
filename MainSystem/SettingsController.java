@@ -25,7 +25,10 @@ public class SettingsController{
             messageHandler.HandleMessage(-2, e.toString());
             return false;
         }
-        //
+    }
+    public static boolean SearchForSet(String Setting){
+        boolean exists = prop.containsKey(Setting);
+        return exists;
     }
     public static boolean loadSettings(){
         try (InputStream input = new FileInputStream(path + "config.properties")){

@@ -8,6 +8,7 @@ public class autoSetup{
     private static String autoPath = "C:\\Users\\Public\\Public Documents";
     private static String setPathLetter = "C:";
     private static String setPathDir = "\\Users\\Public\\Public Documents";
+    static int tries = 0;
     public autoSetup(){
         
     }
@@ -24,8 +25,14 @@ public class autoSetup{
             System.out.println(SystemMessages.getLastMessage());
             installManager.installMenu();
         }else if(!itWorked){
-            messageHandler.HandleMessage(-2, "Setup Failed!");
-            System.out.println(ErrorMessages.getLastMessage());
+            tries++;
+            if(tries < 2){
+                itWorked = InstallSystemSet.installSystemSets();
+            }else{
+                messageHandler.HandleMessage(-2, "Setup Failed!");
+                System.out.println(ErrorMessages.getLastMessage());
+                System.exit(1);
+            }
         }
 
     }

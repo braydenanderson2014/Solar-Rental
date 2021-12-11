@@ -1,10 +1,6 @@
 package Install;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+
 
 import MainSystem.SettingsController;
 import messageHandler.ErrorMessages;
@@ -18,10 +14,22 @@ public class FirstTimeController {
         String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
+            messageHandler.HandleMessage(1, "Path Found");
+            System.out.println(SystemMessages.getLastMessage());
             try {
                 SettingsController.loadSettings();
-                String FirstTimeSet = SettingsController.getSetting("FirstTime");
-                firstTime = Boolean.parseBoolean(FirstTimeSet);
+                messageHandler.HandleMessage(1, "Settings Loaded, Checking firstTime setup");
+                System.out.println(SystemMessages.getLastMessage());
+                boolean exists = SettingsController.SearchForSet("FirstTime");
+                if(exists){
+                    String FirstTimeSet = SettingsController.getSetting("FirstTime");
+                    messageHandler.HandleMessage(1, "First Time Setup?:" + FirstTimeSet);
+                    firstTime = Boolean.parseBoolean(FirstTimeSet);
+                }else{
+                    SettingsController.setSetting("FirstTime", String.valueOf(true));
+                    firstTime = true;
+                }
+                
                 return firstTime;
             } catch (Exception e) {
                 messageHandler.HandleMessage(-2, "Failed to read from config.properties [" + e.toString() + "]");
@@ -35,9 +43,13 @@ public class FirstTimeController {
     }
     public static boolean updateFirstTime(boolean isFirstTimeUpdate){
         firstTime = isFirstTimeUpdate;
+        messageHandler.HandleMessage(1, "First Time: " + firstTime);
+        System.out.println(SystemMessages.getLastMessage());
         String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
+            messageHandler.HandleMessage(1, "Path Found");
+            System.out.println(SystemMessages.getLastMessage());
             messageHandler.HandleMessage(1, "Now Updating config.properties file");
             System.out.println(SystemMessages.getLastMessage());
             messageHandler.HandleMessage(1, "Converting Boolean to String...");

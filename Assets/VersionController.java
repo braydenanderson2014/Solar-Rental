@@ -2,6 +2,7 @@ package Assets;
 //import java.io.*;
 import java.util.Scanner;
 
+import MainSystem.SettingsController;
 import messageHandler.messageHandler;
 /**
  * Controls the version of the program.
@@ -20,13 +21,22 @@ public class VersionController {
     }
     public static String updateVersion(){
         Version = scan.nextLine();
+        SettingsController.setSetting("Version", Version);
         return Version;
     }
     public static String setVersion(String version){
         Version = version;
+        SettingsController.setSetting("Version", Version);
         return Version;
     }
     public static String getVersion(){
+        boolean exists = SettingsController.SearchForSet("Version");
+        if(exists){
+            Version = SettingsController.getSetting("Version");
+        }else{
+            Version = "ALPHA 1.0.1";
+            System.out.println("Version" + Version);
+        }
         return Version;
     }
 }

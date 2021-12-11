@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import Assets.Logo;
 import MainSystem.Settings;
+import MainSystem.SettingsController;
 
 public class ConsoleSettings {
     public static boolean ErrorSet = true;
@@ -33,6 +34,7 @@ public class ConsoleSettings {
             }else if(ErrorSet == false){
                 ErrorSet = true;
             }
+            SettingsController.setSetting("ErrorSet", String.valueOf(ErrorSet));
             messageHandler.HandleMessage(1, "Error Messages ON?: " + ErrorSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("warning")){
@@ -41,6 +43,7 @@ public class ConsoleSettings {
             }else if(WarningSet == false){
                 WarningSet = true;
             }
+            SettingsController.setSetting("WarningSet", String.valueOf(WarningSet));
             messageHandler.HandleMessage(1, "Warning Messages ON?: " + WarningSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("system")){
@@ -49,6 +52,7 @@ public class ConsoleSettings {
             }else if(SystemSet == false){
                 SystemSet = true;
             }
+            SettingsController.setSetting("SystemSet", String.valueOf(SystemSet));
             messageHandler.HandleMessage(1, "System Messages ON?: " + SystemSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("user")){
@@ -57,6 +61,7 @@ public class ConsoleSettings {
             }else if(UserNotifySet == false){
                 UserNotifySet = true;
             }
+            SettingsController.setSetting("UserNotifySet", String.valueOf(UserNotifySet));
             messageHandler.HandleMessage(1, "User Notifications Messages ON?: " + UserNotifySet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("time")){
@@ -65,6 +70,7 @@ public class ConsoleSettings {
             }else if(timeSet == false){
                 timeSet = true;
             }
+            SettingsController.setSetting("Date/TimeSet", String.valueOf(timeSet));
             messageHandler.HandleMessage(1, "Date Time Stamps ON?: " + timeSet);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("help")){
@@ -97,6 +103,7 @@ public class ConsoleSettings {
             }else if(ErrorSet == false){
                 ErrorSet = true;
             }
+            SettingsController.setSetting("ErrorSet", String.valueOf(ErrorSet));
             messageHandler.HandleMessage(1, "Error Messages ON?: " + ErrorSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("warning")){
@@ -105,6 +112,7 @@ public class ConsoleSettings {
             }else if(WarningSet == false){
                 WarningSet = true;
             }
+            SettingsController.setSetting("WarningSet", String.valueOf(WarningSet));
             messageHandler.HandleMessage(1, "Warning Messages ON?: " + WarningSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("system")){
@@ -113,6 +121,7 @@ public class ConsoleSettings {
             }else if(SystemSet == false){
                 SystemSet = true;
             }
+            SettingsController.setSetting("SystemSet", String.valueOf(SystemSet));
             messageHandler.HandleMessage(1, "System Messages ON?: " + SystemSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("user")){
@@ -121,6 +130,7 @@ public class ConsoleSettings {
             }else if(UserNotifySet == false){
                 UserNotifySet = true;
             }
+            SettingsController.setSetting("UserNotifySet", String.valueOf(UserNotifySet));
             messageHandler.HandleMessage(1, "User Messages ON?: " + UserNotifySet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("time")){
@@ -129,6 +139,7 @@ public class ConsoleSettings {
             }else if(timeSet == false){
                 timeSet = true;
             }
+            SettingsController.setSetting("Date/TimeSet", String.valueOf(timeSet));
             messageHandler.HandleMessage(1, "Date Time Stamps ON?: " + timeSet);
             dConsoleSettingsMenu();
         }else if(setToChange.equals("help")){
