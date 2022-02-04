@@ -15,7 +15,7 @@ import messageHandler.messageHandler;
 
 public class installManager{
     public static Scanner scan = new Scanner(System.in);
-    public static String DefaultPath = "\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/";
+    public static String DefaultPath = "\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles";
     public static String DefaultdriveLetter = "C";
     public static String Directory = DefaultPath;
     public static String driveLetter = DefaultdriveLetter;
@@ -42,7 +42,7 @@ public class installManager{
                 manualSetup.ManualMenu();
             }else if(option.equals("auto")){
                 //autoSetup
-                autoSetup.StartSetup();
+                autoSetup.startAutoSetup();
             }else if(option.equals("help")){
 
             }else if(option.equals("isfirsttimeoff")){

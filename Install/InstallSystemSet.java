@@ -4,10 +4,13 @@ import java.io.BufferedWriter;
 import java.io.Console;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+
 //custom imports
 import Assets.VersionController;
 import MainSystem.Settings;
 import MainSystem.SettingsController;
+import UserController.UserController;
 import messageHandler.ConsoleSettings;
 import messageHandler.ErrorMessages;
 import messageHandler.SystemMessages;
@@ -15,12 +18,12 @@ import messageHandler.messageHandler;
 
 public class InstallSystemSet {
     public static String pathLetter = "C";
-    public static String workingPath = "\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles";
+    public static String workingPath = "\\Users\\Public\\Public Documents\\Solar\\InstallationFiles";
     public static String SystemSetPath = pathLetter + ":" + workingPath;
     public static String FilePath = SystemSetPath;
     public static boolean installSystemSets(){
-        FilePath = SystemSetPath + "config.properties";
-        File file = new File(installManager.getSystemPath() + "config.properties");
+        FilePath = SystemSetPath + "/config.properties";
+        File file = new File(installManager.getPath() + "/config.properties");
         try{
             if(!file.exists()){
                 messageHandler.HandleMessage(-2, "Configuration File Missing... Attempting to create.");
@@ -144,6 +147,25 @@ public class InstallSystemSet {
                             ConsoleSettings.SystemSet = true;
                         }
                     //#endregion
+                //#endregion
+                //#region Admin and Debug Account Setup
+                try{
+                    file = new File(installManager.getPath() + "\\Users");
+                    if(!file.exists()){
+                        file.mkdirs();
+                    }
+                    file = new File(installManager.getPath() + "\\Users/UserList.properties");
+                    if(!file.exists()){
+                        file.createNewFile();
+                    }
+                    UserController.saveUserList();
+                    UserController.loadUserList();
+                    UserController.createUser("System", 10);
+                    UserController.createUser("Admin", 8);
+                }catch(IOException e){
+                    messageHandler.HandleMessage(-2, e.toString());
+                    return false;
+                }
                 //#endregion
             }
             return true;

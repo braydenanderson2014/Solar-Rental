@@ -6,7 +6,7 @@ import messageHandler.messageHandler;
 
 public class installDirectories{
     private static boolean isFirstTime = FirstTimeController.checkFirstTime();
-    private static String path = installManager.getSystemPath();
+    private static String path = installManager.getPath();
     private static String tempPath = path;
     public static boolean checkIsFirstTime() {
         return isFirstTime;

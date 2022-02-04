@@ -5,7 +5,7 @@ import java.io.File;
 import messageHandler.messageHandler;
 
 public class getSystemSet {
-private static String path = installManager.getSystemPath();
+private static String path = installManager.getPath();
 private static String tempPath;
     public static boolean populateSystem() {
         tempPath = path + "";

@@ -6,19 +6,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import Install.installManager;
+import Install.autoSetup;
 import messageHandler.messageHandler;
 
 public class SettingsController{
     public static Properties prop = new Properties();
-    private static String path = installManager.getSystemPath();
+    private static String path = autoSetup.autoPath + "\\Solar\\InstallationFiles/config.properties";
     public static String getSetting(String SettingType){
         String Setting = prop.getProperty(SettingType);
         messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting);
         return Setting;
     }
     public static boolean saveSettings(){
-        try (OutputStream output = new FileOutputStream(path + "config.properties")){
+        try (OutputStream output = new FileOutputStream(path)){
             prop.store(output, null);
             return true;
         }catch(IOException e){
@@ -31,7 +31,7 @@ public class SettingsController{
         return exists;
     }
     public static boolean loadSettings(){
-        try (InputStream input = new FileInputStream(path + "config.properties")){
+        try (InputStream input = new FileInputStream(path)){
             prop.load(input);
             return true;
         }catch(IOException e){

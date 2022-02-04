@@ -5,82 +5,82 @@ public class EncryptPass {
         char[] ch = pass.toCharArray();
         for(int i = 0; i < ch.length; i ++){
             switch (ch[i]){
-                case 'A', 'a':
+                case 'A': case 'a':
 
                 break;
-                case 'B', 'b':
+                case 'B': case 'b':
 
                 break;
-                case 'C', 'c':
+                case 'C': case 'c':
 
                 break;
-                case 'D', 'd':
+                case 'D': case 'd':
 
                 break;
-                case 'E', 'e':
+                case 'E': case 'e':
 
                 break;
-                case 'F', 'f':
+                case 'F': case 'f':
 
                 break;
-                case 'G', 'g':
+                case 'G': case 'g':
 
                 break;
-                case 'H', 'h':
+                case 'H': case 'h':
 
                 break;
-                case 'I', 'i':
+                case 'I': case 'i':
 
                 break;
-                case 'J', 'j':
+                case 'J': case 'j':
 
                 break;
-                case 'K', 'k':
+                case 'K': case 'k':
 
                 break;
-                case 'L', 'l':
+                case 'L': case 'l':
 
                 break;
-                case 'M', 'm':
+                case 'M': case 'm':
 
                 break;
-                case 'N', 'n':
+                case 'N': case 'n':
 
                 break;
-                case 'O', 'o':
+                case 'O': case 'o':
 
                 break;
-                case 'P', 'p':
+                case 'P': case 'p':
 
                 break;
-                case 'Q', 'q':
+                case 'Q': case 'q':
 
                 break;
-                case 'R', 'r':
+                case 'R': case 'r':
 
                 break;
-                case 'S', 's':
+                case 'S': case 's':
 
                 break;
-                case 'T', 't':
+                case 'T': case 't':
 
                 break;
-                case 'U', 'u':
+                case 'U': case 'u':
 
                 break;
-                case 'V', 'v':
+                case 'V': case 'v':
 
                 break;
-                case 'W', 'w':
+                case 'W': case 'w':
 
                 break;
-                case 'X', 'x':
+                case 'X': case 'x':
 
                 break;
-                case 'Y', 'y':
+                case 'Y': case 'y':
 
                 break;
-                case 'Z', 'z':
+                case 'Z': case 'z':
 
                 break;
                 case '1':

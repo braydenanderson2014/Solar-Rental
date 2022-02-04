@@ -11,7 +11,7 @@ import messageHandler.messageHandler;
 public class FirstTimeController {
     public static boolean firstTime;
     public static boolean checkFirstTime(){
-        String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/config.properties";
+        String path = "C:\\Users\\Public\\Public Documents\\Solar\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
             messageHandler.HandleMessage(1, "Path Found");
@@ -29,7 +29,6 @@ public class FirstTimeController {
                     SettingsController.setSetting("FirstTime", String.valueOf(true));
                     firstTime = true;
                 }
-                
                 return firstTime;
             } catch (Exception e) {
                 messageHandler.HandleMessage(-2, "Failed to read from config.properties [" + e.toString() + "]");
@@ -45,7 +44,7 @@ public class FirstTimeController {
         firstTime = isFirstTimeUpdate;
         messageHandler.HandleMessage(1, "First Time: " + firstTime);
         System.out.println(SystemMessages.getLastMessage());
-        String path = "C:\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles/config.properties";
+        String path = "C:\\Users\\Public\\Public Documents\\Solar\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
             messageHandler.HandleMessage(1, "Path Found");
