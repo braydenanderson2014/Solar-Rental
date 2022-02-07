@@ -1,9 +1,6 @@
 package Install;
 //java imports
-import java.io.BufferedWriter;
-import java.io.Console;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 //custom imports
@@ -34,8 +31,12 @@ public class InstallSystemSet {
                 messageHandler.HandleMessage(1, "Reloading Configuration");
             }else{
                 //#region PathLetter
+                messageHandler.HandleMessage(1, "Searching for PathLetter in Configuration...");
                 boolean exists = SettingsController.SearchForSet("PathLetter");
+                System.out.println(SystemMessages.getLastMessage());
                 if(exists){
+                    messageHandler.HandleMessage(1, "Found PathLetter in Configuration... Now Assigning PathLetter to variable");
+                    System.out.println(SystemMessages.getLastMessage());
                     pathLetter = SettingsController.getSetting("PathLetter");
                 }else{
                     SettingsController.setSetting("PathLetter", pathLetter);

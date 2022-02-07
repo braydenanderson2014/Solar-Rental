@@ -80,8 +80,10 @@ public class autoSetup{
             SettingsController.loadSettings();
             boolean firstTime = FirstTimeController.checkFirstTime();
             if(firstTime){
+                FirstTimeController.updateFirstTime(false);
                 InstallSystemSet.installSystemSets();
                 installDirectories.installTheDirectoriesDamnit();
+                installManager.installMenu();
             }else{
                 Login.LoginScreen();
             }

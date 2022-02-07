@@ -16,7 +16,7 @@ public class installDirectories{
     }
     public static boolean installTheDirectoriesDamnit(){
         //#region Notebooks
-        tempPath = tempPath + "\\Solar Program Files/Notebooks";
+        tempPath = tempPath + "\\ProgramFiles/Notebooks";
         messageHandler.HandleMessage(1, "Path: " + tempPath);
         File file = new File(tempPath);
         if(!file.exists()){

@@ -15,11 +15,9 @@ public class FirstTimeController {
         File file = new File(path);
         if(file.exists()){
             messageHandler.HandleMessage(1, "Path Found");
-            System.out.println(SystemMessages.getLastMessage());
             try {
                 SettingsController.loadSettings();
                 messageHandler.HandleMessage(1, "Settings Loaded, Checking firstTime setup");
-                System.out.println(SystemMessages.getLastMessage());
                 boolean exists = SettingsController.SearchForSet("FirstTime");
                 if(exists){
                     String FirstTimeSet = SettingsController.getSetting("FirstTime");
@@ -49,7 +47,7 @@ public class FirstTimeController {
         if(file.exists()){
             messageHandler.HandleMessage(1, "Path Found");
             System.out.println(SystemMessages.getLastMessage());
-            messageHandler.HandleMessage(1, "Now Updating config.properties file");
+            messageHandler.HandleMessage(1, "Now Updating configuration file with value: " + isFirstTimeUpdate);
             System.out.println(SystemMessages.getLastMessage());
             messageHandler.HandleMessage(1, "Converting Boolean to String...");
             System.out.println(SystemMessages.getLastMessage());
@@ -58,7 +56,7 @@ public class FirstTimeController {
             System.out.println(SystemMessages.getLastMessage());
             try {
                 SettingsController.setSetting("FirstTime", bool);
-                messageHandler.HandleMessage(1, "Saved converted boolean to isFirstTime.txt");
+                messageHandler.HandleMessage(1, "Saved converted boolean to config.properties");
                 System.out.println(SystemMessages.getLastMessage());
             } catch (Exception e) {
                 messageHandler.HandleMessage(-2, "Failed to convert boolean to String or save the converted boolean" + e.toString());

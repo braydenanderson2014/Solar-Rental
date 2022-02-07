@@ -17,7 +17,6 @@ public class Settings{
     public static Scanner scan = new Scanner(System.in);
     public static String path = installManager.getPath();
     public static String logType = "all";
-    public static boolean FirstTimed = false;
     public static void SettingsMenu(){
         Logo.displayLogo();
         System.out.println();
@@ -26,8 +25,8 @@ public class Settings{
         System.out.println("[PATH]: Program's Working Directory" + path);
         System.out.println("[CONSOLE]: Console Settings");
         System.out.println("[LOG]: Log Dump Type: " + logType);
-        System.out.println("[ViewLogs]: View logs Menu");
-        System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimed);
+        System.out.println("[VIEWLOGS]: View logs Menu");
+        System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeController.checkFirstTime());
         System.out.println("[CLS]: Clear Logs");
         System.out.println("[RETURN]: Return");
         System.out.println();
@@ -53,13 +52,12 @@ public class Settings{
             messageHandler.HandleMessage(1, "Log Type: " + logType);
             SettingsMenu();
         }else if(option.equals("first")){
-            if(FirstTimed == true){
-                FirstTimed = false;
-            }else if(FirstTimed == false){
-                FirstTimed = true;
+            if(FirstTimeController.checkFirstTime() == true){
+                FirstTimeController.updateFirstTime(false);
+            }else if(FirstTimeController.checkFirstTime() == false){
+                FirstTimeController.updateFirstTime(true);
             }
-            messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimed);
-            FirstTimeController.updateFirstTime(FirstTimed);
+            messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimeController.checkFirstTime());
             SettingsMenu();
         }else if(option.equals("return")){
             //MainSystem
@@ -77,8 +75,8 @@ public class Settings{
         System.out.println("[PATH]: Program's Working Directory: " + path);
         System.out.println("[CONSOLE]: Console Settings");
         System.out.println("[LOG]: Log Dump Type: " + logType);
-        System.out.println("[ViewLogs]: View logs Menu");
-        System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimed);
+        System.out.println("[VIEWLOGS]: View logs Menu");
+        System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeController.checkFirstTime());
         System.out.println("[RETURN]: Return");
         System.out.println();
         Console.getConsole();
@@ -100,12 +98,12 @@ public class Settings{
             messageHandler.HandleMessage(1, "Log Type: " + logType);
             configMenu();
         }else if(option.equals("first")){
-            if(FirstTimed == true){
-                FirstTimed = false;
-            }else if(FirstTimed == false){
-                FirstTimed = true;
+            if(FirstTimeController.checkFirstTime() == true){
+                FirstTimeController.updateFirstTime(false);
+            }else if(FirstTimeController.checkFirstTime() == false){
+                FirstTimeController.updateFirstTime(true);
             }
-            FirstTimeController.updateFirstTime(FirstTimed);
+            messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimeController.checkFirstTime());
             configMenu();
         }else if(option.equals("return")){
             installManager.installMenu();
