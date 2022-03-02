@@ -16,7 +16,7 @@ public class installDirectories{
     }
     public static boolean installTheDirectoriesDamnit(){
         //#region Notebooks
-        tempPath = tempPath + "\\ProgramFiles/Notebooks";
+        tempPath = installManager.getPath() + "\\Program Files/Notebooks";
         messageHandler.HandleMessage(1, "Path: " + tempPath);
         File file = new File(tempPath);
         if(!file.exists()){
@@ -27,7 +27,7 @@ public class installDirectories{
         }
         //#endregion
         //#region Users
-        tempPath = path + "\\Solar Program\\Users/Passwords";
+        tempPath = installManager.getPath() + "\\Solar\\Program Files\\Users/Passwords";
         messageHandler.HandleMessage(1, "Path: " + tempPath);
         file = new File(tempPath);
         if(!file.exists()){

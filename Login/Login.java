@@ -8,6 +8,7 @@ import Install.FirstTimeController;
 import Install.installManager;
 import MainSystem.MainMenu;
 import MainSystem.ProgramController;
+import MainSystem.Settings;
 import MainSystem.SettingsController;
 import UserController.UserController;
 import messageHandler.Console;
@@ -18,6 +19,7 @@ public class Login{
     private static String CurrentUser = "Null";
     static String Username;
     protected static String Password;
+    private static int failedLoginAttempts = 0;
     public Login(){
         System.out.println(CurrentUser);
     }
@@ -40,26 +42,37 @@ public class Login{
         Console.getConsole();
         System.out.println("Username: " + User);
         System.out.println("Password: ");
-        ValidateUserSignIn(User, Password);
+        if(Username.equals("command") || Username.equals("Command")){
+            Command();
+        }else if(SwitchController.focusUser.equals(User)){
+            MainMenu.mainMenu();
+        }else{
+            Password = customScanner.nextLine();
+            ValidateUserSignIn(Username, Password);
+        }
     }
     private static void Command() {
         Logo.displayLogo();
         System.out.println("Command: ");
         String Command = customScanner.nextLine().toLowerCase();
         if(Command.equals("swi") || Command.equals("switch")){
-            SwitchController.switchMenu();
+            SwitchController.switchMenu(1);
         }else if(Command.equals("restart")){
             ProgramController.start();
             installManager.installMenu();
         }else if(Command.equals("firsttime on")){
             FirstTimeController.updateFirstTime(true);
             SettingsController.setSetting("FirstTime", "true");
+        }else if(Command.equals("back")){
+            LoginScreen();
         }
     }
     public static boolean ValidateUserSignIn(String user, String Password){
+        UserController.loadUserList();
         boolean userList = UserController.SearchForUser(user);
         if(userList){
-            String path = installManager.getPath() + "Users/" + user + ".properties";
+            String path = installManager.getPath() + "\\Program Files\\Users/" + user + ".properties";
+            UserController.loadUserproperties(user);
             File file = new File(path);
             if(file.exists()){
                 boolean exists = UserController.userprop.containsKey("Password");
@@ -70,10 +83,29 @@ public class Login{
                             messageHandler.HandleMessage(-1, "This Account Is Disabled, Try a different Account");
                             LoginScreen();
                         }else{
-                            MainMenu.mainMenu();
+                            failedLoginAttempts = 0;
+                            UserController.loadUserproperties(user);
+                            if(Boolean.parseBoolean(UserController.getUserProp("PassFlag")) == true){
+                                Settings.ChangePass(user, 1,0);
+                                messageHandler.HandleMessage(-1, "");
+                                MainMenu.mainMenu();
+                            }else{
+                                messageHandler.HandleMessage(-1, "");
+                                messageHandler.HandleMessage(1, user + " Logging in...");
+                                MainMenu.mainMenu();
+                            }
                         }
                     }else{
-                        messageHandler.HandleMessage(-1, "Username or Password was incorrect");
+                        //SwitchController.updateCurrentUser(user);
+                        failedLoginAttempts ++;
+                        messageHandler.HandleMessage(-1, "Username or Password was incorrect; ATTEMPTS: [" + failedLoginAttempts + "]");
+                        if(failedLoginAttempts >= 3){
+                            SwitchController.updateCurrentUser(user);
+                            UserController.loadUserproperties(user);
+                            UserController.SetUserProp(user, "LoginAttempts", String.valueOf(failedLoginAttempts));
+                            UserController.SetUserProp(user, "Account", "Disabled");
+                            messageHandler.HandleMessage(-1, user + " Account was disabled due to too many failed login attempts");
+                        }
                         LoginScreen();
                     }
                 }else{
@@ -85,13 +117,13 @@ public class Login{
                 LoginScreen();
             }
         }else{
-            messageHandler.HandleMessage(-1, "User Not Found");
+            messageHandler.HandleMessage(-1, "User Not Found, Check userlist to verify User Exists");
             LoginScreen();
         }
         return true;
     }
     public static String getCurrentUser() {
-        return CurrentUser;
+        return SwitchController.focusUser;
     }
     public static void SignIn() {
     

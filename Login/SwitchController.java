@@ -1,6 +1,10 @@
 package Login;
 import java.util.ArrayList;
 
+import Assets.Logo;
+import Assets.customScanner;
+import MainSystem.MainMenu;
+import messageHandler.Console;
 import messageHandler.messageHandler;
 public class SwitchController {
     private static ArrayList<String>loggedInUsers = new ArrayList<String>();
@@ -20,7 +24,7 @@ public class SwitchController {
     public static int removeCurrentUser(String currentUser){
         messageHandler.HandleMessage(-1, "Attempting to Log out User: " + currentUser);
         if(loggedInUsers.contains(currentUser)){
-            messageHandler.HandleMessage(1, currentUser + "Logging out!");
+            messageHandler.HandleMessage(2, currentUser + "Logging out!");
             loggedInUsers.remove(currentUser);
             messageHandler.HandleMessage(-1, currentUser + "Logged out!");
             messageHandler.HandleMessage(1, "Attempting to Switch Focus User to Last logged in User in CurrentUser list");
@@ -32,15 +36,41 @@ public class SwitchController {
                     Login.LoginScreen(loggedInUsers.get(size));
                 }else{
                     messageHandler.HandleMessage(-1, "No Users are logged in... Switching to Login Screen");
+                    focusUser = "Null";
                     Login.LoginScreen();
                 }
             }
             return 0;
         }else {
+            messageHandler.HandleMessage(-1, "No Current Users detected. Unable to remove CurrentUser from list");
             return 0;
         }
     }
-    public static void switchMenu() {
-    
+    public static void switchMenu(int mode) {
+        Logo.displayLogo();
+        System.out.println("Switch User Menu; Current user: " + focusUser);
+        if(loggedInUsers.size() >= 2){
+            messageHandler.HandleMessage(2, "Select a user to log in as");
+            int x = 1;
+            for(int i = 0; i < loggedInUsers.size(); i++){
+                System.out.println("[" + x + "]" + loggedInUsers.get(i));
+                x++;
+            }
+            Console.getConsole();
+            String person = customScanner.nextLine().toLowerCase();
+            if(person.equals("back")){
+                if(mode == 1){
+                    Login.LoginScreen();
+                }else if(mode == 2){
+                    MainMenu.mainMenu();
+                }
+            }else{
+                int personAsInt = Integer.parseInt(person);
+                personAsInt--;
+                Login.LoginScreen(loggedInUsers.get(personAsInt));
+            }
+        }else{
+            Login.LoginScreen();
+        }
     }
 }

@@ -1,6 +1,10 @@
 package Assets;
+
+import MainSystem.ProgramController;
+
 public class Logo{
     public static String displayLogo(){
+        ProgramController.clearScreen();
         String Logo = "SOLAR";
         System.out.println(" #####  ####### #          #    ######    ");
         System.out.println("#     # #     # #         # #   #     #   "); 

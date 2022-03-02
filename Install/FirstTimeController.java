@@ -14,14 +14,11 @@ public class FirstTimeController {
         String path = "C:\\Users\\Public\\Public Documents\\Solar\\InstallationFiles/config.properties";
         File file = new File(path);
         if(file.exists()){
-            messageHandler.HandleMessage(1, "Path Found");
             try {
                 SettingsController.loadSettings();
-                messageHandler.HandleMessage(1, "Settings Loaded, Checking firstTime setup");
                 boolean exists = SettingsController.SearchForSet("FirstTime");
                 if(exists){
                     String FirstTimeSet = SettingsController.getSetting("FirstTime");
-                    messageHandler.HandleMessage(1, "First Time Setup?:" + FirstTimeSet);
                     firstTime = Boolean.parseBoolean(FirstTimeSet);
                 }else{
                     SettingsController.setSetting("FirstTime", String.valueOf(true));

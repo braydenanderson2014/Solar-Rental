@@ -15,7 +15,7 @@ import messageHandler.messageHandler;
 
 public class installManager{
     public static Scanner scan = new Scanner(System.in);
-    public static String DefaultPath = "\\Users\\Public\\Documents\\Solar Rentals\\InstallationFiles";
+    public static String DefaultPath = "\\Users\\Public\\Public Documents\\Solar\\InstallationFiles";
     public static String DefaultdriveLetter = "C";
     public static String Directory = DefaultPath;
     public static String driveLetter = DefaultdriveLetter;
@@ -24,6 +24,7 @@ public class installManager{
         Logo.displayLogo();
         System.out.println("Please wait while we check some things...");
         messageHandler.HandleMessage(1, "Checking For FirstTime Install...");
+        System.out.println(SystemMessages.getLastMessage());
         boolean firstTime = FirstTimeController.checkFirstTime();
         if(firstTime){
             //#region FIRST TIME TRUE
@@ -99,11 +100,14 @@ public class installManager{
         } 
     }
     public static String getPath() {
+        messageHandler.HandleMessage(1, "Path Queried: " + driveLetter + ":" + Directory);
         return driveLetter + ":" + Directory;
     }
     public static String setPath(String autoPath, String autoPathLetter) {
         driveLetter = autoPathLetter;
+        System.out.println(driveLetter);
         Directory = autoPath;
+        System.out.println(Directory);
         messageHandler.HandleMessage(1, "Path Set");
         return autoPath;
     }

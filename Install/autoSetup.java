@@ -20,30 +20,6 @@ public class autoSetup{
     public autoSetup(){
         
     }
-
-    public static void StartSetup() {
-        messageHandler.HandleMessage(1, "Starting Auto Setup...");
-        System.out.println(SystemMessages.getLastMessage());
-        messageHandler.HandleMessage(1, "Setting " + autoPath + " as System path...");
-        installManager.setPath(setPathDir, setPathLetter);
-        messageHandler.HandleMessage(1, "Creating System Launch Files...");
-        boolean itWorked = InstallSystemSet.installSystemSets();
-        if(itWorked){
-            messageHandler.HandleMessage(1, "Installation Files Created Successfully!");
-            System.out.println(SystemMessages.getLastMessage());
-            installManager.installMenu();
-        }else if(!itWorked){
-            tries++;
-            if(tries < 2){
-                itWorked = InstallSystemSet.installSystemSets();
-            }else{
-                messageHandler.HandleMessage(-2, "Setup Failed!");
-                System.out.println(ErrorMessages.getLastMessage());
-                System.exit(1);
-            }
-        }
-
-    }
     public static void startAutoSetup(){
         Logo.displayLogo();
         messageHandler.HandleMessage(1, "Starting Automatic Setup...");
@@ -55,6 +31,7 @@ public class autoSetup{
         if(!file.exists()){
             file.mkdirs();
             messageHandler.HandleMessage(1, "Directory created successfully");
+            System.out.println(SystemMessages.getLastMessage());
         }
         path = path + "/config.properties";
         file = new File(path);
@@ -62,19 +39,24 @@ public class autoSetup{
             try{
                 file.createNewFile();
                 messageHandler.HandleMessage(1, "config.properties file created, Now Populating default Properties");
+                System.out.println(SystemMessages.getLastMessage());
                 boolean success = createDefaultProperties();
                 if(!success){
                     messageHandler.HandleMessage(-2, "Default Settings Failed to populate!");
+                    System.out.println(ErrorMessages.getLastMessage());
                     messageHandler.dumpAll();
                     System.exit(3);
                 }else{
                     messageHandler.HandleMessage(1, "Successfully populated Default Settings");
                     System.out.println(SystemMessages.getLastMessage());
+                    installManager.installMenu();
                 }
             }catch(IOException e){
                 messageHandler.HandleMessage(-2, e.toString());
+                System.out.println(ErrorMessages.getLastMessage());
                 messageHandler.dumpAll();
                 System.exit(3);
+                
             }
         }else{
             SettingsController.loadSettings();
@@ -82,7 +64,6 @@ public class autoSetup{
             if(firstTime){
                 FirstTimeController.updateFirstTime(false);
                 InstallSystemSet.installSystemSets();
-                installDirectories.installTheDirectoriesDamnit();
                 installManager.installMenu();
             }else{
                 Login.LoginScreen();
@@ -99,6 +80,6 @@ public class autoSetup{
         
 
 
-        return false;
+        return true;
     }
 }

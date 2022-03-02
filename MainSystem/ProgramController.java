@@ -7,7 +7,6 @@ import Install.installManager;
 import messageHandler.ErrorMessages;
 import messageHandler.SystemMessages;
 import messageHandler.messageHandler;
-
 public class ProgramController{
     public static boolean isRunning = false;
     public static String Version;
@@ -22,13 +21,12 @@ public class ProgramController{
     }
     public static boolean clearScreen(){
         try {
-            if (System.getProperty("os.name").contains("Windows"))
+            if (System.getProperty("os.name").contains("Windows")){
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            else{
+                System.out.flush();
+            }else{
                 Runtime.getRuntime().exec("clear");
             }
-            messageHandler.HandleMessage(2, "Cleared Screen, ready to load next Screen");
-            System.out.println(SystemMessages.getLastMessage());
             return true;
         } catch (IOException | InterruptedException e) {
             messageHandler.HandleMessage(-2, e.toString());
@@ -44,6 +42,5 @@ public class ProgramController{
         new VersionController();//Version Controller sets the Default Version as the Version for now.
         System.out.println(SystemMessages.getLastMessage());
         installManager.installMenu();
-        
     }
 }

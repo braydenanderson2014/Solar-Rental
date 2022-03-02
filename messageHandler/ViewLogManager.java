@@ -51,6 +51,9 @@ public class ViewLogManager{
                 System.out.println(AllMessages.AllMessages.get(i));
             }
         }
+        messageHandler.HandleMessage(1, "Press Enter to continue");
+        System.out.println(SystemMessages.getLastMessage());
+        String enter = customScanner.nextLine();
         return "";
     }
     public static void ViewMenu(int Mode){

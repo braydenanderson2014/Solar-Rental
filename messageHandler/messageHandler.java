@@ -1,22 +1,27 @@
 package messageHandler;
 public class messageHandler{
     public static String HandleMessage(int mode, String message){
-        if(mode == -2){
-            ErrorMessages.addMessage(message);
-            return message;
-        }else if(mode == -1){
-            WarningMessages.addMessage(message);
-            return message;
-        }else if(mode == 1){
-            SystemMessages.addMessage(message);
-            return message;
-        }else if(mode == 2){
-            NotificationMessages.addMessage(message);
-            return message;
+        if(!message.equals("")){
+            if(mode == -2){
+                ErrorMessages.addMessage(message);
+                return message;
+            }else if(mode == -1){
+                WarningMessages.addMessage(message);
+                return message;
+            }else if(mode == 1){
+                SystemMessages.addMessage(message);
+                return message;
+            }else if(mode == 2){
+                NotificationMessages.addMessage(message);
+                return message;
+            }else{
+                HandleMessage(-1, "Invalid Message Route... [" + mode + "]");
+                return WarningMessages.getLastMessage();
+            }
         }else{
-            HandleMessage(-1, "Invalid Message Route... [" + mode + "]");
-            return "Invalid Message Route... [" + mode + "]";
-        }
+            HandleMessage(-2, "Received Improper message on mode channel " + mode);
+            return ErrorMessages.getLastMessage();
+        } 
     }
     public static boolean clearMessages(int mode){
         if(mode == -2){

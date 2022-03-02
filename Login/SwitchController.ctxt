@@ -2,6 +2,10 @@
 comment0.target=SwitchController
 comment1.params=
 comment1.target=SwitchController()
-comment2.params=
-comment2.target=java.lang.String\ updateCurrentUser()
-numComments=3
+comment2.params=currentUser
+comment2.target=java.lang.String\ updateCurrentUser(java.lang.String)
+comment3.params=currentUser
+comment3.target=int\ removeCurrentUser(java.lang.String)
+comment4.params=mode
+comment4.target=void\ switchMenu(int)
+numComments=5

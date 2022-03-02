@@ -50,7 +50,7 @@ public class InstallSystemSet {
                         SettingsController.setSetting("Path", workingPath);
                     }
                 //#endregion
-                installManager.setPath(pathLetter + ":", workingPath);
+                installManager.setPath(workingPath, pathLetter);
                 //#region MainFolderLayout
                 file = new File(SystemSetPath); 
                 if(!file.exists()){
@@ -151,18 +151,30 @@ public class InstallSystemSet {
                 //#endregion
                 //#region Admin and Debug Account Setup
                 try{
-                    file = new File(installManager.getPath() + "\\Users");
+                    System.out.println(installManager.getPath());
+                    file = new File(installManager.getPath() + "\\Program Files\\Users");
                     if(!file.exists()){
                         file.mkdirs();
                     }
-                    file = new File(installManager.getPath() + "\\Users/UserList.properties");
+                    file = new File(installManager.getPath() + "\\Program Files\\Users/UserList.properties");
                     if(!file.exists()){
                         file.createNewFile();
                     }
                     UserController.saveUserList();
+                    messageHandler.HandleMessage(1, "Saved UserList.properties");
+                    System.out.println(SystemMessages.getLastMessage());
                     UserController.loadUserList();
-                    UserController.createUser("System", 10);
-                    UserController.createUser("Admin", 8);
+                    messageHandler.HandleMessage(1, "Loaded UserList.properties");
+                    System.out.println(SystemMessages.getLastMessage());
+                    messageHandler.HandleMessage(1, "Attempting to create User: [SYSTEM]");
+                    System.out.println(SystemMessages.getLastMessage());
+                    UserController.createUser("System", 10, 2);
+                    messageHandler.HandleMessage(1, "Attempting to create User: [ADMIN]");
+                    System.out.println(SystemMessages.getLastMessage());
+                    UserController.createUser("Admin", 8, 3);
+                    messageHandler.HandleMessage(1, "Now installing Directory Structure");
+                    System.out.println(SystemMessages.getLastMessage());
+                    installDirectories.installTheDirectoriesDamnit();
                 }catch(IOException e){
                     messageHandler.HandleMessage(-2, e.toString());
                     return false;
