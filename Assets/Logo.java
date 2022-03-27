@@ -1,6 +1,7 @@
 package Assets;
 
-import MainSystem.ProgramController;
+
+import InstallManager.ProgramController;
 
 public class Logo{
     public static String displayLogo(){
@@ -21,7 +22,9 @@ public class Logo{
         String Logo = "SOLAR RENTALS";
         return Logo;
     }
-    public static boolean clear(){
-        return true;
+    public static String displayLine(){
+        System.out.println("==========================================");
+        return "";
     }
+   
 }

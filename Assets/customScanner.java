@@ -15,7 +15,7 @@ public class customScanner
    
     public customScanner(){
          scan = new Scanner(System.in);
-         messageHandler.HandleMessage(1, "Created Scanner Object for user input");
+         messageHandler.HandleMessage(1, "Created Scanner Object for user input", false);
     }
     public static Scanner getScanner(){
         return scan;
@@ -40,7 +40,7 @@ public class customScanner
         try{
             b = System.in.available();
         }catch(Exception e){
-            messageHandler.HandleMessage(-2, e.toString());
+            messageHandler.HandleMessage(-2, e.toString(), true);
             e.printStackTrace();
             b = 0;
         }

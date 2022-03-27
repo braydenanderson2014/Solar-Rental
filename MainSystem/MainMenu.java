@@ -11,8 +11,11 @@ import messageHandler.messageHandler;
 
 public class MainMenu{
     public static void mainMenu(){
+        if(UserController.getUserProp("AccountName").equals("Blank")){
+            UserController.updateUserProfile(1);
+        }
         Logo.displayLogo();
-        System.out.println("Welcome to Solar! User: " + SwitchController.focusUser);
+        System.out.println("Welcome to Solar! User: " + UserController.getUserProp("AccountName"));
         System.out.println("[POS]:  Point of Sale");
         if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
             System.out.println("[ADMIN]: Administrative Functions");
@@ -33,12 +36,12 @@ public class MainMenu{
             if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
                 AdministrativeFunctions.AdministrativeMenu();
             }else{
-                messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function");
+                messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
                 mainMenu();
             }
             break;
             case "note":
-                messageHandler.HandleMessage(-1, "This function [NOTE] has not yet been implemented.. Check back in a later update");
+                messageHandler.HandleMessage(-1, "This function [NOTE] has not yet been implemented.. Check back in a later update", true);
                 mainMenu();
             break;
             case "swi": 
@@ -48,18 +51,19 @@ public class MainMenu{
                 Settings.SettingsMenu();
             break;
             case "help":
-                messageHandler.HandleMessage(-2, "This option is not yet available! Check back on the next update!");
+                messageHandler.HandleMessage(-2, "This option is not yet available! Check back on the next update!", true);
                 mainMenu();
             break;
             case "off":
-                SwitchController.removeCurrentUser(SwitchController.focusUser);
+                SwitchController.removeCurrentUser(UserController.getUserProp("Username"));
+                Login.Login.LoginScreen();
             break;
             case "exit":
                 LogDump.DumpLog("all");
                 System.exit(1);
             break;
             default:
-                messageHandler.HandleMessage(-1, "Invalid Option, try again!");
+                messageHandler.HandleMessage(-1, "Invalid Option, try again!", true);
                 mainMenu();
             break;
         }

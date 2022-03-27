@@ -2,13 +2,13 @@ package Assets;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Install.installManager;
+import InstallManager.ProgramController;
 import Login.Login;
 public class Notebook {
     private static ArrayList<String>userNotes = new ArrayList<String>();
     private static Scanner scan = new Scanner(System.in);
     private static String user = Login.getCurrentUser();
-    private static String path = installManager.getPath();
+    private static String path = ProgramController.UserRunPath;
     private static String FullPath;
     public static boolean newNote(){
         String note = "Null";

@@ -16,7 +16,7 @@ public class VersionController {
     private static Scanner scan = new Scanner(System.in);
     private static String Version = "";
     public VersionController(){
-        messageHandler.HandleMessage(1, "Version Set as Default, May Correct later");
+        messageHandler.HandleMessage(1, "Version Set as Default, May Correct later", false);
         Version = DefaultVersion;
     }
     public static String updateVersion(){

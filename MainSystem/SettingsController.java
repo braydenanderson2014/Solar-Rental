@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
-
-import Install.autoSetup;
+import InstallManager.ProgramController;
 import messageHandler.messageHandler;
 
 public class SettingsController{
     public static Properties prop = new Properties();
-    private static String path = autoSetup.autoPath + "\\Solar\\InstallationFiles/config.properties";
+    private static String path = ProgramController.SystemPath + ProgramController.SystemSubPath + ProgramController.SystemInstallPath + ProgramController.SystemConfig;
+
     public static String getSetting(String SettingType){
         String Setting = prop.getProperty(SettingType);
-        messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting);
+        messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting, true);
         return Setting;
     }
     public static boolean saveSettings(){
@@ -22,7 +22,7 @@ public class SettingsController{
             prop.store(output, null);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString());
+            messageHandler.HandleMessage(-2, e.toString(), true);
             return false;
         }
     }
@@ -35,11 +35,12 @@ public class SettingsController{
             prop.load(input);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString());
+            messageHandler.HandleMessage(-2, e.toString(), true);
             return false;
         }
     }
     public static String setSetting(String SettingType, String Setting){
+        loadSettings();
         prop.setProperty(SettingType, Setting);
         saveSettings();
         return SettingType + Setting;

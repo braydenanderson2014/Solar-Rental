@@ -1,29 +1,29 @@
 package messageHandler;
 public class messageHandler{
-    public static String HandleMessage(int mode, String message){
+    public static String HandleMessage(int mode, String message, boolean visibleToConsole){
         if(!message.equals("")){
             if(mode == -2){
-                ErrorMessages.addMessage(message);
+                ErrorMessages.addMessage(message, visibleToConsole);
                 return message;
             }else if(mode == -1){
-                WarningMessages.addMessage(message);
+                WarningMessages.addMessage(message, visibleToConsole);
                 return message;
             }else if(mode == 1){
-                SystemMessages.addMessage(message);
+                SystemMessages.addMessage(message, visibleToConsole);
                 return message;
             }else if(mode == 2){
-                NotificationMessages.addMessage(message);
+                NotificationMessages.addMessage(message, visibleToConsole);
                 return message;
             }else{
-                HandleMessage(-1, "Invalid Message Route... [" + mode + "]");
+                HandleMessage(-1, "Invalid Message Route... [" + mode + "]", visibleToConsole);
                 return WarningMessages.getLastMessage();
             }
         }else{
-            HandleMessage(-2, "Received Improper message on mode channel " + mode);
+            HandleMessage(-2, "Received Improper message on mode channel " + mode, visibleToConsole);
             return ErrorMessages.getLastMessage();
         } 
     }
-    public static boolean clearMessages(int mode){
+    public static boolean clearMessages(int mode, boolean visibleToConsole){
         if(mode == -2){
             ErrorMessages.clearMessages();
             return true;
@@ -40,12 +40,12 @@ public class messageHandler{
             NotificationMessages.clearMessages();
             return true;
         }else{
-            HandleMessage(-1, "Invalid Message Clear Route... [" + mode + "]");
+            HandleMessage(-1, "Invalid Message Clear Route... [" + mode + "]", visibleToConsole);
             return false;
         }
     }
     public static boolean dumpAll(){
-        LogDump.DumpLog("ALL");
+        LogDump.DumpLog("all");
         return true;
     }
 }

@@ -11,6 +11,9 @@ public class ViewLogManager{
                 System.out.println(WarningMessages.WarningMessages.get(i));
             }
         }
+        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        System.out.println(SystemMessages.getLastMessage());
+        String enter = customScanner.nextLine();
         return "";
     }
     public static String ViewSystemMessages(){
@@ -21,6 +24,9 @@ public class ViewLogManager{
                 System.out.println(SystemMessages.SystemMessages.get(i));
             }
         }
+        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        System.out.println(SystemMessages.getLastMessage());
+        String enter = customScanner.nextLine();
         return "";
     }
     public static String ViewErrorMessages(){
@@ -31,6 +37,9 @@ public class ViewLogManager{
                 System.out.println(ErrorMessages.ErrorMessages.get(i));
             }
         }
+        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        System.out.println(SystemMessages.getLastMessage());
+        String enter = customScanner.nextLine();
         return "";
     }
     public static String ViewUserMessages(){
@@ -41,6 +50,9 @@ public class ViewLogManager{
                 System.out.println(NotificationMessages.NotificationMessages.get(i));
             }
         }
+        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        System.out.println(SystemMessages.getLastMessage());
+        String enter = customScanner.nextLine();
         return "";
     }
     public static String ViewAllMessages(){
@@ -51,7 +63,7 @@ public class ViewLogManager{
                 System.out.println(AllMessages.AllMessages.get(i));
             }
         }
-        messageHandler.HandleMessage(1, "Press Enter to continue");
+        messageHandler.HandleMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
         String enter = customScanner.nextLine();
         return "";
@@ -82,11 +94,10 @@ public class ViewLogManager{
             ViewSystemMessages();
             ViewMenu(Mode);
         }else if(option.equals("return")){
-            if(Mode == 1){
                 Settings.SettingsMenu();
-            }else if(Mode == 2){
-                Settings.configMenu();
-            }
+        }else{
+            messageHandler.HandleMessage(-1, "Invalid option, try again", true);
+            ViewMenu(Mode);
         }
     }
 }

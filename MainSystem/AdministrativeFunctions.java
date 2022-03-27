@@ -1,5 +1,7 @@
 package MainSystem;
 
+import java.util.InputMismatchException;
+
 import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
@@ -11,26 +13,28 @@ import messageHandler.messageHandler;
 public class AdministrativeFunctions {
     public static void AdministrativeMenu(){
         Logo.displayLogo();
-        System.out.println("Welcome to the Solar Administrative Menu + User:" + SwitchController.focusUser);
+        System.out.println("Welcome to the Solar Administrative Menu User:" + UserController.getUserProp("AccountName"));
         System.out.println("[CREATE]:  Create a User");
         System.out.println("[DELETE]:  Delete a User");
         System.out.println("[CHANGE]:  Change a User Pass");
         System.out.println("[ENABLE]:  Enable an Account");
         System.out.println("[PASSFLAG]: Set Passflag for an account");
         System.out.println("[DISABLE]: Disable a User Account");
+        System.out.println("[TAX]: Tax Percentage adjustment; Current Tax Percentage: " + SettingsController.getSetting("TaxP"));
         System.out.println("[CLS]:     Clear Logs");
         System.out.println("[RETURN]:  Return to Main Menu");
         Console.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         if(option.equals("create") && Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
-            UserController.createUser("", 0, 1);
+            UserController.createNewUser();
+            AdministrativeMenu();
         }else if(option.equals("delete") && Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
             System.out.println("User to delete: ");
             String user = customScanner.nextLine();
             if(UserController.SearchForUser(user) == true){
                 UserController.deleteUser(user);
             }else{
-                messageHandler.HandleMessage(-1, "Unable to find user [" + user + "]");
+                messageHandler.HandleMessage(-1, "Unable to find user [" + user + "]", true);
             }
             AdministrativeMenu();
         }else if(option.equals("change") && Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
@@ -38,13 +42,30 @@ public class AdministrativeFunctions {
             String user = customScanner.nextLine();
             Settings.ChangePass(user, 2,1);
             AdministrativeMenu();
+        }else if(option.equals("tax")){
+            System.out.println("Current TaxP: " + SettingsController.getSetting("TaxP"));
+            System.out.println("New TaxP: ");
+            try{
+                Double TaxP = customScanner.nextDouble();
+                SettingsController.setSetting("TaxP", String.valueOf(TaxP));
+                AdministrativeMenu();
+            }catch(InputMismatchException e){
+                messageHandler.HandleMessage(-2, e.toString(), true);
+                AdministrativeMenu();
+            }
         }else if(option.equals("passflag")){
             Logo.displayLogo();
             System.out.println("Target Account: ");
             String Account = customScanner.nextLine();
-            UserController.loadUserproperties(Account);
-            UserController.SetUserProp(Account, "PassFlag", "true");
-            UserController.loadUserproperties(SwitchController.focusUser);
+            messageHandler.HandleMessage(1, Account + " was targeted for PassFlag change", false);
+            if(UserController.SearchForUser(Account) == true){
+                UserController.loadUserproperties(Account);
+                UserController.SetUserProp(UserController.getUserProp("Username"), "PassFlag", "true");
+                messageHandler.HandleMessage(1, "PassFlag set for user: " + UserController.getUserProp("Username"), true);
+                UserController.loadUserproperties(SwitchController.focusUser);
+            }else{
+                messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
+            }
             AdministrativeMenu();
         }else if(option.equals("cls")){
             System.out.println("Are you sure you want to delete the logs?");
@@ -61,7 +82,7 @@ public class AdministrativeFunctions {
                     AdministrativeMenu();
                 }
             }else{
-                messageHandler.HandleMessage(-1, "User did not erase logs");
+                messageHandler.HandleMessage(-1, "User did not erase logs", true);
                 AdministrativeMenu();
             }
         }else if(option.equals("disable")){
@@ -72,9 +93,9 @@ public class AdministrativeFunctions {
             MainMenu.mainMenu();
         }else{
             if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
-                messageHandler.HandleMessage(-1, "Invalid option, try again!");
+                messageHandler.HandleMessage(-1, "Invalid option, try again!", true);
             }else{
-                messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions for this function. Please return to Main Menu!");
+                messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions for this function. Please return to Main Menu!", true);
             }
             AdministrativeMenu();
         }
