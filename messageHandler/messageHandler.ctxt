@@ -1,9 +1,9 @@
 #BlueJ class context
 comment0.target=messageHandler
-comment1.params=mode\ message
-comment1.target=java.lang.String\ HandleMessage(int,\ java.lang.String)
-comment2.params=mode
-comment2.target=boolean\ clearMessages(int)
+comment1.params=mode\ message\ visibleToConsole
+comment1.target=java.lang.String\ HandleMessage(int,\ java.lang.String,\ boolean)
+comment2.params=mode\ visibleToConsole
+comment2.target=boolean\ clearMessages(int,\ boolean)
 comment3.params=
 comment3.target=boolean\ dumpAll()
 numComments=4

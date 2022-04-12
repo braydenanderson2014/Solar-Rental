@@ -24,26 +24,40 @@ public class SwitchController {
     public static void removeCurrentUser(String currentUser){
         messageHandler.HandleMessage(-1, "Attempting to Log out User: " + currentUser, false);
         if(loggedInUsers.contains(focusUser)){
-            messageHandler.HandleMessage(2, currentUser + "Logging out!", true);
+            messageHandler.HandleMessage(2, currentUser + " Logging out!", true);
             loggedInUsers.remove(currentUser);
-            messageHandler.HandleMessage(-1, currentUser + "Logged out!", true);
+            messageHandler.HandleMessage(-1, currentUser + " Logged out!", true);
             messageHandler.HandleMessage(1, "Attempting to Switch Focus User to Last logged in User in CurrentUser list", false);
-           
-                int size = loggedInUsers.size();
-                if(size > 0){
-                    size --;
-                    messageHandler.HandleMessage(1, "User: " + loggedInUsers.get(size) + "Needs password to login... Moving to LoginScreen", true);
-                    Login.LoginScreen(loggedInUsers.get(size));
-                }else{
-                    messageHandler.HandleMessage(-1, "No Users are logged in... Switching to Login Screen", true);
-                    focusUser = "Null";
-                    Login.LoginScreen();
-                }
-            
+            int size = loggedInUsers.size();
+            if(size > 0){
+                size --;
+                messageHandler.HandleMessage(1, "User: " + loggedInUsers.get(size) + "Needs password to login... Moving to LoginScreen", true);
+                focusUser = loggedInUsers.get(size);
+                Login.LoginScreen(loggedInUsers.get(size));
+            }else{
+                messageHandler.HandleMessage(-1, "No Users are logged in... Switching to Login Screen", true);
+                focusUser = "Null";
+                Login.LoginScreen();
+            } 
         }else {
             messageHandler.HandleMessage(-1, "No Current Users detected. Unable to remove CurrentUser from list", true);
             Login.LoginScreen();
         }
+    }
+    public static boolean forceLogoff(String user){
+        if(loggedInUsers.contains(user)){
+            loggedInUsers.remove(user);
+            messageHandler.HandleMessage(-1, user + " Logged out!", true);
+            return true;
+        }else {
+            messageHandler.HandleMessage(-1, user + " is not logged in", true);
+            return false;
+        }
+    }
+    public static boolean forceAllLogoff(){
+        loggedInUsers.clear();
+        messageHandler.HandleMessage(1, "All Users Logged Off", true);
+        return true;
     }
     public static void switchMenu(int mode) {
         Logo.displayLogo();
@@ -51,6 +65,7 @@ public class SwitchController {
         if(loggedInUsers.size() >= 2){
             messageHandler.HandleMessage(2, "Select a user to log in as", true);
             int x = 1;
+            System.out.println("[0]: Go Back");
             for(int i = 0; i < loggedInUsers.size(); i++){
                 System.out.println("[" + x + "]" + loggedInUsers.get(i));
                 x++;
@@ -65,6 +80,9 @@ public class SwitchController {
                 }
             }else{
                 int personAsInt = Integer.parseInt(person);
+                if(personAsInt == 0){
+                    Login.LoginScreen();
+                }
                 personAsInt--;
                 Login.LoginScreen(loggedInUsers.get(personAsInt));
             }

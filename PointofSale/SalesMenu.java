@@ -21,7 +21,7 @@ public class SalesMenu {
     public static void TheSalesMenu() {
         Logo.displayLogo();
         System.out.println("Sales Menu");
-        System.out.println("[ADD]: Add Item to Invoice");
+        System.out.println("[ADD]: Add Manual Item to Invoice");
         System.out.println("[CAT]: Sales Catalogue");
         System.out.println("[APP]: Apply Discount");
         System.out.println("[REM]: Remove Item from Current Invoice");
@@ -55,7 +55,8 @@ public class SalesMenu {
                 viewInvoice();
             break;
             case "cat":
-                SalesCatalogue();
+                messageHandler.HandleMessage(-1, "This feature is not yet available", true);
+                TheSalesMenu();
             break;
             case "app":
                 DiscountManager.DiscountMenu();
@@ -81,15 +82,55 @@ public class SalesMenu {
     }
 
     private static void viewInvoice() {
+        Logo.displayLogo();
+        System.out.println("View Items On Invoice: ");
+        Logo.displayLine();
+        for(int i = 0; i < ItemsOnInvoice.size(); i ++){
+            System.out.println("ITEM: " + ItemsOnInvoice.get(i) + "ORIGINAL PRICE: $" + OrigPricesOnInvoice.get(i));
+            if(isItemDiscounted.get(i) == true){
+                System.out.println("DISCOUNTED?: " + isItemDiscounted.get(i) + " DISCOUNTED PRICE: $" + CurrentPricesOnInvoice.get(i));
+            }
+        }
+        System.out.println("[PRESS ENTER TO CONTINUE]: ");
+        String enter = customScanner.nextLine();
+        TheSalesMenu();
     }
 
     private static void removeItem() {
+        Logo.displayLogo();
+        System.out.println("Remove Items On Invoice: ");
+        Logo.displayLine();
+        int choice = 0;
+        for(int i = 0; i < ItemsOnInvoice.size(); i ++){
+            System.out.println(choice + ". ITEM: " + ItemsOnInvoice.get(i) + "ORIGINAL PRICE: $" + OrigPricesOnInvoice.get(i));
+            if(isItemDiscounted.get(i) == true){
+                System.out.println("DISCOUNTED?: " + isItemDiscounted.get(i) + " DISCOUNTED PRICE: $" + CurrentPricesOnInvoice.get(i));
+            }
+        }
+        System.out.println("ITEM TO REMOVE: ");
+        int yourChoice = customScanner.nextInt();
+        yourChoice--;
+        ItemsOnInvoice.remove(yourChoice);
+        OrigPricesOnInvoice.remove(yourChoice);
+        isItemDiscounted.remove(yourChoice);
+        CurrentPricesOnInvoice.remove(yourChoice);
+        TheSalesMenu();
     }
 
     private static void addItem() {
+        Logo.displayLogo();
+        System.out.println("Add Item:");
+        Logo.displayLine();
+        System.out.println("ITEM: ");
+        String item = customScanner.nextLine();
+        System.out.println("Price: $");
+        double price = customScanner.nextDouble();
+        ItemsOnInvoice.add(item);
+        CurrentPricesOnInvoice.add(price);
+        OrigPricesOnInvoice.add(price);
+        isItemDiscounted.add(false);
+        TheSalesMenu();
     }
-
-    public static void SalesCatalogue() {
-    }
+    
 
 }

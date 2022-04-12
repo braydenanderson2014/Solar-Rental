@@ -53,22 +53,25 @@ public class UserController {
         return true;
     }
     public static boolean createNewUser(){
-
         System.out.println("Create User");
         Logo.displayLine();
         if(SwitchController.focusUser.equals("Admin") || Integer.parseInt(UserController.getUserProp("PermissionLevel"))>=8){
             System.out.println("New Username");
             String Username = customScanner.nextLine();
+            if(userlist.containsKey("Username")){
+                messageHandler.HandleMessage(-1, "User Already Exists", true);
+                return false;
+            }
             createUserFile(Username);
-            userprop = new Properties();
+            loadUserproperties(Username);
             userprop.setProperty("Username", Username);
             System.out.println("Password: ");
             userprop.setProperty("Password", "");
-            System.out.println("Permission Level: ");
+            System.out.println("Permission Level: (0-10)");
             try{
                 int PermissionLevel = customScanner.nextInt();
                 userprop.setProperty("PermissionLevel", String.valueOf(PermissionLevel));
-                userlist.setProperty(Username, String.valueOf(PermissionLevel));
+                addUsertoList(Username, PermissionLevel);
 
             }catch(InputMismatchException e){
                 messageHandler.HandleMessage(-2, e.toString(), true);
@@ -83,11 +86,57 @@ public class UserController {
             userprop.setProperty("FailedLoginAttempts", "0");
             userprop.setProperty("SuccessfulLogins", "0");
             userprop.setProperty("AllTimeFailedLoginAttempts", "0");
+            userprop.setProperty("LastPassChange", "Never");
+            saveUserProp(Username);
+            loadUserproperties(SwitchController.focusUser);
         }else{
             messageHandler.HandleMessage(-1, "User does not have Permission to use this function", false);
             return false;
         }
         return true;
+    }
+    public static boolean createNewUser(String Username){
+        System.out.println("Create User");
+        Logo.displayLine();
+        if(SwitchController.focusUser.equals("Admin") || Integer.parseInt(UserController.getUserProp("PermissionLevel"))>=8){
+            System.out.println("New Username");
+            System.out.println(Username);
+            if(userlist.containsKey("Username")){
+                messageHandler.HandleMessage(-1, "User Already Exists", true);
+                return false;
+            }
+            createUserFile(Username);
+            userprop = new Properties();
+            loadUserproperties(Username);
+            userprop.setProperty("Username", Username);
+            System.out.println("Password: ");
+            userprop.setProperty("Password", "");
+            System.out.println("Permission Level: (0-10)");
+            try{
+                int PermissionLevel = customScanner.nextInt();
+                userprop.setProperty("PermissionLevel", String.valueOf(PermissionLevel));
+                addUsertoList(Username, PermissionLevel);
+            }catch(InputMismatchException e){
+                messageHandler.HandleMessage(-2, e.toString(), true);
+                messageHandler.dumpAll();
+                return false;
+            }
+            userprop.setProperty("PassFlag", "true");
+            userprop.setProperty("AccountName", "Blank");
+            userprop.setProperty("PassExpires", "true");
+            userprop.setProperty("Account", "Enabled");
+            userprop.setProperty("LastLogin", "Never");
+            userprop.setProperty("FailedLoginAttempts", "0");
+            userprop.setProperty("SuccessfulLogins", "0");
+            userprop.setProperty("AllTimeFailedLoginAttempts", "0");
+            userprop.setProperty("LastPassChange", "Never");
+            saveUserProp(Username);
+            loadUserproperties(SwitchController.focusUser);
+            return true;
+        }else{
+            messageHandler.HandleMessage(-1, "User does not have Permission to use this function", false);
+            return false;
+        }
     }
     public static boolean updateUserProfile(int mode){
         if(mode == 1){
@@ -98,22 +147,33 @@ public class UserController {
                 String AccountName = customScanner.nextLine();
                 SetUserProp(SwitchController.focusUser, "AccountName", AccountName);
             }
-            
         }else if(mode == 2){
             Logo.displayLogo();
             System.out.println("Account Updater: Menu");
             Logo.displayLine();
             System.out.println("[NAME]: Set Account Name");
             System.out.println("[PASS]: Change Password");
-            System.out.println("[RET]: Return to Settings Menu");
+            if(!SwitchController.focusUser.equals("Admin")){
+                System.out.println("[PERM]: Request Permission Level Change");
+            }
+            System.out.println("[RETURN]: Return to Settings Menu");
             Console.getConsole();
             String option = customScanner.nextLine().toLowerCase();
             if(option.equals("name")){
-                setAccountName();
+                updateAccountName();
+                updateUserProfile(mode);
             }else if(option.equals("pass")){
                 Settings.ChangePass(SwitchController.focusUser, 2, 2);
                 updateUserProfile(mode);
-            }else if(option.equals("ret")){
+            }else if(option.equals("perm")){
+                if(!SwitchController.focusUser.equals("Admin")){
+                    AdministrativeFunctions.newRequest(SwitchController.focusUser, "Permissions");
+                    updateUserProfile(mode);
+                }else{
+                    messageHandler.HandleMessage(-1, "Admin is not allowed to update this account setting", true);
+                    updateUserProfile(mode);
+                }
+            }else if(option.equals("return")){
                 Settings.SettingsMenu();
             }else{
                 messageHandler.HandleMessage(-1, "Invalid option, Try again!", true);
@@ -199,6 +259,7 @@ public class UserController {
                 userprop.setProperty("SuccessfulLogins", "0");
                 userprop.setProperty("AllTimeFailedLoginAttempts", "0");                
                 userprop.setProperty("PassFlag", "true");
+                userprop.setProperty("LastPassChange", "Never");
                 saveUserProp();
             }
             return true;
@@ -231,8 +292,14 @@ public class UserController {
         messageHandler.HandleMessage(-1, "User Settings have been erased...", true);
         File file = new File(ProgramController.UserRunPath + "\\Users/" + user + ".properties");
         if(file.exists()){
-            file.deleteOnExit();
-            messageHandler.HandleMessage(1, "User Account will be erased on Program Exit", true);
+            try {
+                file.delete();
+            } catch (SecurityException e) {
+                messageHandler.HandleMessage(-2, e.toString(), true);
+                file.deleteOnExit();
+                messageHandler.HandleMessage(1, "User Account will be erased on Program Exit", true);
+                return false;
+            }
         }else{
             messageHandler.HandleMessage(-2, "User Account Not Found!", true);
         }
@@ -240,14 +307,21 @@ public class UserController {
     }
     //#endregion
     //#region AdjustUserSettings
-    public static int adjPermLev(){
+    public static int adjPermLev(String user){
         return 1;
     }
     public static String setAccountName(){
+        userprop.setProperty("AccountName", "Solar");
+        return userprop.getProperty("AccountName");
+    }
+    public static String updateAccountName(){
         Logo.displayLogo();
+        System.out.println("Update Account Name: ");
+        Logo.displayLine();
         System.out.println("Last Account Name: " + userprop.getProperty("AccountName"));
         System.out.println("Account Name:");
-        userprop.setProperty("AccountName", "Solar");
+        String AccountName = customScanner.nextLine();
+        userprop.setProperty("AccountName", AccountName);
         return userprop.getProperty("AccountName");
     }
     //#endregion
@@ -339,8 +413,10 @@ public class UserController {
         return "";
     }
     public static String addUsertoList(String user, int PermissionLevel){
+        loadUserList();
         String PermissionLevels = String.valueOf(PermissionLevel);
         userlist.setProperty(user, PermissionLevels);
+        saveUserList();
         return "";
     }
     //#endregion

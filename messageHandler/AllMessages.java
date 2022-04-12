@@ -52,4 +52,10 @@ public class AllMessages {
         visibleToConsole.set(size, b);
         return true;
     }
+    public static String getTime(){
+        myDateObj = LocalDateTime.now();
+        myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+        dTime  = myDateObj.format(myFormatObj);
+        return dTime;
+    }
 }

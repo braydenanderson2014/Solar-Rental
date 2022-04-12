@@ -7,6 +7,7 @@ import Assets.customScanner;
 import Login.SwitchController;
 import MainSystem.MainMenu;
 import UserController.UserController;
+import messageHandler.Console;
 import messageHandler.messageHandler;
 
 public class POSMenu {
@@ -32,6 +33,7 @@ public class POSMenu {
         System.out.println("[CAT]:  Sales Catalogue");
         System.out.println("[OFF]:  Log Off");
         System.out.println("[BACK]: BACK to Main Menu");
+        Console.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         switch (option) {
             case "sale":
@@ -49,7 +51,9 @@ public class POSMenu {
                 DiscountManager.DiscountMenu();
             break;
             case "cat":
-                SalesMenu.SalesCatalogue();
+                //Categories.SalesCatalogue();
+                messageHandler.HandleMessage(-1, "This Option is not yet available", true);
+                PointofSaleMenu();
             break;
             case "off":
                 SwitchController.removeCurrentUser(SwitchController.focusUser);
@@ -60,7 +64,7 @@ public class POSMenu {
             default:
                 messageHandler.HandleMessage(-1, "Invalid Option, Try again!" ,true);
                 PointofSaleMenu();
-                break;
+            break;
         }
     }
 }

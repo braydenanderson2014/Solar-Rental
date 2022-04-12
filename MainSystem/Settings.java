@@ -1,4 +1,5 @@
 package MainSystem;
+import java.net.URI;
 import java.util.Scanner;
 import Assets.Logo;
 import Assets.VersionController;
@@ -24,12 +25,15 @@ public class Settings{
         System.out.println("============================================");
         System.out.println("[PATH]: Program's Working Directory" + path);
         System.out.println("[CONSOLE]: Console Settings");
+        System.out.println("[RAB]: Report a Bug");
         System.out.println("[LOG]: Log Dump Type: " + logType.toUpperCase());
         System.out.println("[VIEWLOGS]: View logs Menu");
         System.out.println("[DUMP]: Dump Logs to File");
         System.out.println("[UPDATE]: Manually Update User Profile");
         System.out.println("[FORCE]: Force User Profile to update to latest Settings");
-        System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+        if(Integer.parseInt(UserController.getUserProp("PermissionLevel")) >= 6){
+            System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+        }
         System.out.println("[RETURN]: Return");
         System.out.println();
         Console.getConsole();
@@ -38,6 +42,16 @@ public class Settings{
             //PathController.pathMenu(1);
         }else if(option.equals("update")){
             UserController.updateUserProfile(2);   
+        }else if(option.equals("rab")){
+            try {
+                URI uri= new URI("https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
+                java.awt.Desktop.getDesktop().browse(uri);
+                messageHandler.HandleMessage(1, "Webpage opened in your default Browser...", true);
+                messageHandler.HandleMessage(2, "WebPage: https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew", true);
+            } catch (Exception e) {
+                messageHandler.HandleMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
+            }
+            SettingsMenu();
         }else if(option.equals("force")){
             UserController.updateUserProfile(1);
             SettingsMenu();
@@ -64,15 +78,20 @@ public class Settings{
             messageHandler.HandleMessage(1, "Log Type: " + logType, true);
             SettingsMenu();
         }else if(option.equals("first")){
-            if(FirstTimeManager.checkFirstTime() == true){
-                SettingsController.setSetting("FirstTime", "false");
-                FirstTimeManager.FirstTime = false;
-            }else if(FirstTimeManager.checkFirstTime() == false){
-                FirstTimeManager.FirstTime = true;
-                SettingsController.setSetting("FirstTime", "true");
+            if(Integer.parseInt(UserController.getUserProp("PermissionLevel")) >= 6){
+                if(FirstTimeManager.checkFirstTime() == true){
+                    SettingsController.setSetting("FirstTime", "false");
+                    FirstTimeManager.FirstTime = false;
+                }else if(FirstTimeManager.checkFirstTime() == false){
+                    FirstTimeManager.FirstTime = true;
+                    SettingsController.setSetting("FirstTime", "true");
+                }
+                messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimeManager.checkFirstTime(), true);
+                SettingsMenu();
+            }else{
+                messageHandler.HandleMessage(-1, "User Does not have permission to use this function", true);
+                SettingsMenu();
             }
-            messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimeManager.checkFirstTime(), true);
-            SettingsMenu();
         }else if(option.equals("return")){
             //MainSystem
             MainMenu.mainMenu();
@@ -102,6 +121,7 @@ public class Settings{
                     System.out.println("Unable to Use old Password");
                     ChangePass(user, mode, submode);
                 }else if(newPass.equals(ConfirmNewPass)){
+                    UserController.SetUserProp(UserController.getUserProp("Username"), "LastPassChange", "");
                     UserController.SetUserProp(UserController.getUserProp("Username"), "Password", newPass);
                     messageHandler.HandleMessage(1, "New Password set.", true);
                     SwitchController.updateCurrentUser(user);

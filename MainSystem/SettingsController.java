@@ -14,7 +14,7 @@ public class SettingsController{
 
     public static String getSetting(String SettingType){
         String Setting = prop.getProperty(SettingType);
-        messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting, true);
+        messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting, false);
         return Setting;
     }
     public static boolean saveSettings(){

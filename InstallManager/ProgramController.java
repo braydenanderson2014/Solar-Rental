@@ -19,7 +19,7 @@ public class ProgramController {
     public static String SystemInstallPath = "\\InstallationFiles";
     public static String SystemDefaultRunPath = "\\ProgramFiles";
     public static String SystemConfig = "\\config.properties";
-    public static String SystemRunPath;
+    public static String SystemRunPath = "BLANK";
     public static String UserRunPath = "C:\\Users\\Public\\Documents\\Solar\\ProgramFiles";
     public static void SetupMenu(){
         Logo.displayLogo();

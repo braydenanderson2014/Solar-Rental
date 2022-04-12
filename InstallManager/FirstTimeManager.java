@@ -23,7 +23,7 @@ public class FirstTimeManager {
             boolean exists = SettingsController.SearchForSet("FirstTime");
             if(exists){
                 FirstTime = Boolean.parseBoolean(SettingsController.getSetting("FirstTime"));
-                messageHandler.HandleMessage(1, "FirstTime: " + FirstTime, true);
+                messageHandler.HandleMessage(1, "FirstTime: " + FirstTime, false);
                 return FirstTime;
             }else{
                 messageHandler.HandleMessage(1, "Unable to Find Setting \"FirstTime\" ", true);
