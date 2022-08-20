@@ -10,9 +10,11 @@ import InstallManager.ProgramController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.MainMenu;
 import MainSystem.Settings;
+import UserController.LoginUserController;
 import UserController.UserController;
 import messageHandler.AllMessages;
 import messageHandler.Console;
+import messageHandler.LogDump;
 import messageHandler.messageHandler;
 
 public class Login{
@@ -40,7 +42,12 @@ public class Login{
                 SwitchController.forceLogoff(Username);
                 LoginScreen();
             }else{
-                ValidateUserSignIn(Username, Password);
+                if(LoginUserController.checkPassword(Username, Password) == true){
+                    SwitchController.updateCurrentUser(Username);
+                    MainMenu.mainMenu();
+                }else if(LoginUserController.checkPassword(Username, Password) == false){
+                    LoginScreen();
+                }
             }
         }
     }
@@ -55,7 +62,12 @@ public class Login{
             SwitchController.forceLogoff(User);
             LoginScreen();
         }else{
-            ValidateUserSignIn(User, Password);
+                if(LoginUserController.checkPassword(User, Password) == true){
+                    SwitchController.updateCurrentUser(User);
+                    MainMenu.mainMenu();
+                }else if(LoginUserController.checkPassword(User, Password) == false){
+                    LoginScreen(User);
+                }
         }
     }
     private static void Command() {
@@ -84,7 +96,11 @@ public class Login{
             AdministrativeFunctions.AccountRequestNamePool.add(user);
             LoginScreen();
         }else if(Command.equals("_resetadmin")){
-            AdministrativeFunctions.enableAdminAccount();
+            if(AdministrativeFunctions.enableAdminAccount() == true){
+                messageHandler.HandleMessage(2, "Admin Account Re-Enabled", true);
+            }else{
+                messageHandler.HandleMessage(-1, "Failed to Re-Enable Admin Account", true);
+            }
             LoginScreen();
         }else if(Command.equals("rab")){
             try {
@@ -115,6 +131,7 @@ public class Login{
         System.out.println("[CREATE]: \"Create\" puts in a request for an account... The Admin has to follow up on the request");
         System.out.println("[_RESETADMIN]: \"_ResetAdmin\" re-enables the admin account after it is disabled. Automatically sets the passflag so you will have to change your password.");
         System.out.println("[FORCEOFF]: \"ForceOff\" Forces all users to logoff");
+        System.out.println("[DUMP]: Dump Logs To File [ALL]");
         System.out.println("[_EXIT]: \"_Exit\" Quits the program.");
         Console.getConsole();
         System.out.println("Command: ");
@@ -126,6 +143,9 @@ public class Login{
             listCommands();
         }else if(Command.equals("help") || Command.equals("list")){
             listCommands();
+        }else if(Command.equals("dump")){
+            LogDump.DumpLog("all");
+            Command();
         }else if(Command.equals("restart")){
             ProgramController.Start();
         }else if(Command.equals("first time on")){
@@ -148,69 +168,7 @@ public class Login{
             Command();
         }
     }
-    public static boolean ValidateUserSignIn(String user, String Password){
-        UserController.loadUserList();
-        boolean userList = UserController.SearchForUser(user);
-        if(userList){
-            String path = ProgramController.UserRunPath + "\\Users/" + user + ".properties";
-            UserController.loadUserproperties(user);
-            File file = new File(path);
-            if(file.exists()){
-                boolean exists = UserController.userprop.containsKey("Password");
-                if(exists){
-                    String password = UserController.getUserProp("Password");
-                    if(Password.equals(password)){
-                        if(UserController.getUserProp("Account").equals("Disabled")){
-                            messageHandler.HandleMessage(-1, "This Account Is Disabled, Try a different Account Account:" + user, true);
-                            LoginScreen();
-                        }else{
-                            failedLoginAttempts = 0;
-                            if(Boolean.parseBoolean(UserController.getUserProp("PassFlag")) == true){
-                                Settings.ChangePass(UserController.getUserProp("Username"), 1,0);
-                                messageHandler.HandleMessage(-1, "", false);
-                                messageHandler.HandleMessage(2, user + " Last Login: " + UserController.getUserProp("LastLogin"), true);
-                                UserController.SetUserProp(user, "LastLogin", AllMessages.getTime());
-                                SwitchController.updateCurrentUser(user);
-                                MainMenu.mainMenu();
-                            }else{
-                                messageHandler.HandleMessage(1, user + " Logging in...", true);
-                                messageHandler.HandleMessage(2, user + " Last Login: " + UserController.getUserProp("LastLogin"), true);
-                                UserController.SetUserProp(user, "LastLogin", AllMessages.getTime());
-                                SwitchController.updateCurrentUser(user);
-                                int SuccessfulLogins = Integer.parseInt(UserController.getUserProp("SuccessfulLogins")) + 1;
-                                UserController.SetUserProp(user, "SuccessfulLogins", String.valueOf(SuccessfulLogins));
-                                MainMenu.mainMenu();
-                            }
-                        }
-                    }else{
-                        //SwitchController.updateCurrentUser(user);
-                        failedLoginAttempts ++;
-                        messageHandler.HandleMessage(-1, "Username or Password was incorrect; ATTEMPTS: [" + failedLoginAttempts + "]", true);
-                        UserController.SetUserProp(user, "FailedLoginAttempts", String.valueOf(failedLoginAttempts));
-                        UserController.SetUserProp(user, "AllTimeFailedLoginAttempts", String.valueOf(failedLoginAttempts + Integer.parseInt(UserController.getUserProp("AllTimeFailedLoginAttempts"))));
-                        if(failedLoginAttempts >= 3){
-                            SwitchController.updateCurrentUser(user);
-                            UserController.loadUserproperties(user);
-                            UserController.SetUserProp(user, "Account", "Disabled");
-                            messageHandler.HandleMessage(-1, "This account was locked out due to too many attempts", true);
-                            failedLoginAttempts = 0;
-                        }
-                        LoginScreen();
-                    }
-                }else{
-                    messageHandler.HandleMessage(-1, "User Password Property seems to be missing... Unable to Log In. Please fix \"Password\" Property in User Property field", true);
-                    LoginScreen();
-                }
-            }else{
-                messageHandler.HandleMessage(-1, "User properties seem to be missing... Please sign in as an admin and use the Create user Function", true);
-                LoginScreen();
-            }
-        }else{
-            messageHandler.HandleMessage(-1, "User Not Found, Check userlist to verify User Exists", true);
-            LoginScreen();
-        }
-        return true;
-    }
+    
     public static boolean validateAdmin(){
         Logo.displayLogo();
         System.out.println("ADMIN PASSWORD: ");

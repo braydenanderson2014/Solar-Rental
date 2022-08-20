@@ -24,10 +24,9 @@ public class UserController {
     static String currentUser = SwitchController.focusUser;
     static String User;
     static String Pass;
-    static String UserList = ProgramController.UserRunPath + "\\Users/Userlist.properties";
+    
     static String UserProperties = ProgramController.UserRunPath + "\\Users/" + User + ".properties";
     public static Properties userprop = new Properties();
-    public static Properties userlist = new Properties();
     public static LocalDateTime myDateObj = LocalDateTime.now();
     public static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
     public static String dTime  = myDateObj.format(myFormatObj);
@@ -58,10 +57,7 @@ public class UserController {
         if(SwitchController.focusUser.equals("Admin") || Integer.parseInt(UserController.getUserProp("PermissionLevel"))>=8){
             System.out.println("New Username");
             String Username = customScanner.nextLine();
-            if(userlist.containsKey("Username")){
-                messageHandler.HandleMessage(-1, "User Already Exists", true);
-                return false;
-            }
+            
             createUserFile(Username);
             loadUserproperties(Username);
             userprop.setProperty("Username", Username);
@@ -71,7 +67,7 @@ public class UserController {
             try{
                 int PermissionLevel = customScanner.nextInt();
                 userprop.setProperty("PermissionLevel", String.valueOf(PermissionLevel));
-                addUsertoList(Username, PermissionLevel);
+                //addUsertoList(Username, PermissionLevel);
 
             }catch(InputMismatchException e){
                 messageHandler.HandleMessage(-2, e.toString(), true);
@@ -101,10 +97,7 @@ public class UserController {
         if(SwitchController.focusUser.equals("Admin") || Integer.parseInt(UserController.getUserProp("PermissionLevel"))>=8){
             System.out.println("New Username");
             System.out.println(Username);
-            if(userlist.containsKey("Username")){
-                messageHandler.HandleMessage(-1, "User Already Exists", true);
-                return false;
-            }
+            
             createUserFile(Username);
             userprop = new Properties();
             loadUserproperties(Username);
@@ -115,7 +108,7 @@ public class UserController {
             try{
                 int PermissionLevel = customScanner.nextInt();
                 userprop.setProperty("PermissionLevel", String.valueOf(PermissionLevel));
-                addUsertoList(Username, PermissionLevel);
+                //addUsertoList(Username, PermissionLevel);
             }catch(InputMismatchException e){
                 messageHandler.HandleMessage(-2, e.toString(), true);
                 messageHandler.dumpAll();
@@ -130,6 +123,7 @@ public class UserController {
             userprop.setProperty("SuccessfulLogins", "0");
             userprop.setProperty("AllTimeFailedLoginAttempts", "0");
             userprop.setProperty("LastPassChange", "Never");
+            userprop.setProperty("isPassExpired", "true");
             saveUserProp(Username);
             loadUserproperties(SwitchController.focusUser);
             return true;
@@ -147,6 +141,11 @@ public class UserController {
                 String AccountName = customScanner.nextLine();
                 SetUserProp(SwitchController.focusUser, "AccountName", AccountName);
             }
+            boolean exists = doesPropExists("isPassExpired");
+            if(!exists){
+                SetUserProp(SwitchController.focusUser, "isPassExpired", "false");
+                messageHandler.HandleMessage(1, "New boolean key Value Pair added to User account (isPassExpired)=(false)", false);
+            }
         }else if(mode == 2){
             Logo.displayLogo();
             System.out.println("Account Updater: Menu");
@@ -163,7 +162,7 @@ public class UserController {
                 updateAccountName();
                 updateUserProfile(mode);
             }else if(option.equals("pass")){
-                Settings.ChangePass(SwitchController.focusUser, 2, 2);
+                LoginUserController.ChangePass(User);
                 updateUserProfile(mode);
             }else if(option.equals("perm")){
                 if(!SwitchController.focusUser.equals("Admin")){
@@ -193,8 +192,7 @@ public class UserController {
                 Pass = customScanner.nextLine();
                 System.out.println("Set Permission Level for Account: ");
                 PermissionLevel = customScanner.nextInt();
-                userlist.setProperty(User, String.valueOf(PermissionLevel)); 
-                saveUserList();
+                
                 setupUser(User, PermissionLevel, 2);
             }else{
                 System.out.println("New UserName: ");
@@ -202,23 +200,19 @@ public class UserController {
                 System.out.println("Password: ");
                 Pass = customScanner.nextLine();
                 System.out.println("Set Permission Level for Account: ");
-                PermissionLevel = customScanner.nextInt();
-                userlist.setProperty(User, String.valueOf(PermissionLevel)); 
-                saveUserList();
+                
                 userprop = new Properties();
                 setupUser(user, PermissionLevel, 2);
             }
         }else if(mode ==2){
             User = user;
             userprop = new Properties();
-            userlist.setProperty(user, String.valueOf(PermissionLevel));
-            saveUserList();
+            
             setupUser(user, PermissionLevel, 1);
         }else if(mode == 3){
             User = user;
             userprop = new Properties();
-            userlist.setProperty(user, String.valueOf(PermissionLevel));
-            saveUserList();
+            
             setupUser(user, PermissionLevel, 3);
         }
         return true;
@@ -274,7 +268,7 @@ public class UserController {
             return false;
         }
         User = SwitchController.focusUser;
-        userlist.remove(User);
+        
         userprop.clear();
         saveUserProp(User);
         messageHandler.HandleMessage(-1, "User Settings have been erased...", true);
@@ -288,7 +282,7 @@ public class UserController {
         return true;
     }
     public static boolean deleteUser(String user){
-        userlist.remove(user);
+      
         messageHandler.HandleMessage(-1, "User Settings have been erased...", true);
         File file = new File(ProgramController.UserRunPath + "\\Users/" + user + ".properties");
         if(file.exists()){
@@ -326,24 +320,13 @@ public class UserController {
     }
     //#endregion
     //#region get
-    public static String getUser(String user){
-        return userlist.getProperty(user);
-    }
+    
     public static String getUserProp(String prop){
         return userprop.getProperty(prop);
     }
     //#endregion
     //#region loadProperties files
-    public static boolean loadUserList(){
-        try (InputStream input = new FileInputStream(ProgramController.UserRunPath + "\\Users/Userlist.properties")){
-            userlist.load(input);
-            messageHandler.HandleMessage(1, "UserList Loaded", true);
-            return true;
-        }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
-            return false;
-        }
-    }
+  
     public static boolean loadUserproperties(){
         try (InputStream input = new FileInputStream(UserProperties)){
             userprop.load(input);
@@ -368,16 +351,7 @@ public class UserController {
     //#endregion
     //#region SaveProperties files
 
-    public static boolean saveUserList(){
-        try (OutputStream output = new FileOutputStream(UserList)){
-            userlist.store(output, null);
-            messageHandler.HandleMessage(1, "UserList Saved!", false);
-            return true;
-        }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
-            return false;
-        }
-    }
+    
     public static boolean saveUserProp(){
         try (OutputStream output = new FileOutputStream(UserProperties)){
             userprop.store(output, null);
@@ -412,33 +386,28 @@ public class UserController {
         saveUserProp(user);
         return "";
     }
-    public static String addUsertoList(String user, int PermissionLevel){
-        loadUserList();
-        String PermissionLevels = String.valueOf(PermissionLevel);
-        userlist.setProperty(user, PermissionLevels);
-        saveUserList();
-        return "";
-    }
+    
     //#endregion
     //#region Remove Users/Props
-    public static String removeUserfromList(String user){
-        userlist.remove(user);
-        return "";
-    }
+    
     public static String removeUserProp(String prop){
         userprop.remove(prop);
         return "";
     } 
     //#endregion
     //#region SearchforUser
-    public static boolean SearchForUser(String user){
-        boolean exists = userlist.containsKey(user);
-        return exists;
-    }
+    
     //#endregion
     //#region SearchforProp
     public static String SearchForProp(String prop){
         return userprop.getProperty(prop);
+    }
+    public static boolean doesPropExists(String prop){
+        if(userprop.containsKey("prop")){
+            return true;
+        }else{
+            return false;   
+        }
     }
     //#endregion
 

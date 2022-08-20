@@ -4,6 +4,7 @@ import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
 import PointofSale.POSMenu;
+import UserController.MainSystemUserController;
 import UserController.UserController;
 import messageHandler.Console;
 import messageHandler.LogDump;
@@ -11,13 +12,14 @@ import messageHandler.messageHandler;
 
 public class MainMenu{
     public static void mainMenu(){
-        if(UserController.getUserProp("AccountName").equals("Blank")){
-            UserController.updateUserProfile(1);
+        MainSystemUserController.loadUserProperties(SwitchController.focusUser);
+        if(MainSystemUserController.GetProperty("AccountName").equals("Blank")){
+            //UserController.updateUserProfile(1);
         }
         Logo.displayLogo();
-        System.out.println("Welcome to Solar! User: " + UserController.getUserProp("AccountName"));
+        System.out.println("Welcome to Solar! User: " + MainSystemUserController.GetProperty("AccountName"));
         System.out.println("[POS]:  Point of Sale");
-        if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
+        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
             System.out.println("[ADMIN]: Administrative Functions");
         }
         System.out.println("[NOTE]: Notebook ");
@@ -33,7 +35,7 @@ public class MainMenu{
                 POSMenu.PointofSaleMenu();
             break;
             case "admin":
-            if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
+            if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                 AdministrativeFunctions.AdministrativeMenu();
             }else{
                 messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
@@ -55,7 +57,7 @@ public class MainMenu{
                 mainMenu();
             break;
             case "off":
-                SwitchController.removeCurrentUser(UserController.getUserProp("Username"));
+                SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"));
                 Login.Login.LoginScreen();
             break;
             case "exit":

@@ -6,7 +6,9 @@ import java.util.InputMismatchException;
 import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
+import UserController.LoginUserController;
 import UserController.UserController;
+import UserController.UserListController;
 import messageHandler.ClearAllMessages;
 import messageHandler.Console;
 import messageHandler.messageHandler;
@@ -41,7 +43,7 @@ public class AdministrativeFunctions {
         }else if(option.equals("delete") && Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
             System.out.println("User to delete: ");
             String user = customScanner.nextLine();
-            if(UserController.SearchForUser(user) == true){
+            if(UserListController.SearchForUser(user) == true){
                 UserController.deleteUser(user);
             }else{
                 messageHandler.HandleMessage(-1, "Unable to find user [" + user + "]", true);
@@ -50,7 +52,7 @@ public class AdministrativeFunctions {
         }else if(option.equals("change") && Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
             System.out.println("Target Account for password change: ");
             String user = customScanner.nextLine();
-            Settings.ChangePass(user, 2,1);
+            LoginUserController.AdminUpdateUserPass(user);
             AdministrativeMenu();
         }else if(option.equals("requests")){
             resolutionAdvisory();
@@ -71,7 +73,7 @@ public class AdministrativeFunctions {
             System.out.println("Target Account: ");
             String Account = customScanner.nextLine();
             messageHandler.HandleMessage(1, Account + " was targeted for PassFlag change", false);
-            if(UserController.SearchForUser(Account) == true){
+            if(UserListController.SearchForUser(Account) == true){
                 UserController.loadUserproperties(Account);
                 UserController.SetUserProp(UserController.getUserProp("Username"), "PassFlag", "true");
                 messageHandler.HandleMessage(1, "PassFlag set for user: " + UserController.getUserProp("Username"), true);
@@ -188,10 +190,11 @@ public class AdministrativeFunctions {
         System.out.println("Target Account: ");
         String Account = customScanner.nextLine();
         messageHandler.HandleMessage(1, Account + " was enabled", false);
-        if(UserController.SearchForUser(Account) == true){
+        if(UserListController.SearchForUser(Account) == true){
             UserController.loadUserproperties(Account);
-            UserController.SetUserProp(UserController.getUserProp("Username"), "Account", "Enabled");
+            UserController.SetUserProp(Account, "Account", "Enabled");
             messageHandler.HandleMessage(1, "User: " + UserController.getUserProp("Username") + " Account was Enabled", true);
+            UserController.SetUserProp(Account, "PassFlag", "true");
             UserController.loadUserproperties(SwitchController.focusUser);
         }else{
             messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
@@ -200,18 +203,15 @@ public class AdministrativeFunctions {
         return true;
     }
     public static boolean enableAdminAccount() {
-        Logo.displayLogo();
-        String Account = "Admin";
-        messageHandler.HandleMessage(1, Account + " was enabled", false);
-        if(UserController.SearchForUser(Account) == true){
-            UserController.loadUserproperties(Account);
-            UserController.SetUserProp(UserController.getUserProp("Username"), "Account", "Enabled");
-            messageHandler.HandleMessage(1, "User: " + UserController.getUserProp("Username") + " Account was Enabled", true);
-            UserController.SetUserProp(UserController.getUserProp("Username"), "PassFlag", "true");
+        if(UserListController.SearchForUser("Admin") == true){
+            LoginUserController.setValue("Admin", "Account", "Enabled");
+            messageHandler.HandleMessage(1, "User: " + "Admin" + " Account was Enabled", true);
+            LoginUserController.setValue("Admin", "PassFlag", "true");
+            return true;
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
+            messageHandler.HandleMessage(-1, "Unable to find user [" + "Admin" + "]", true);
+            return false;
         }
-        return true;
     }
 
     private static boolean disableAnAccount() {
@@ -221,7 +221,7 @@ public class AdministrativeFunctions {
         System.out.println("Target Account: ");
         String Account = customScanner.nextLine();
         messageHandler.HandleMessage(1, Account + " was disabled", false);
-        if(UserController.SearchForUser(Account) == true){
+        if(UserListController.SearchForUser(Account) == true){
             UserController.loadUserproperties(Account);
             UserController.SetUserProp(UserController.getUserProp("Username"), "Account", "Disabled");
             messageHandler.HandleMessage(1, "User: " + UserController.getUserProp("Username") + " Account was Disabled", true);
