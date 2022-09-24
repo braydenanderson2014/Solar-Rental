@@ -94,7 +94,12 @@ public class ViewLogManager{
             ViewSystemMessages();
             ViewMenu(Mode);
         }else if(option.equals("return")){
+            try {
                 Settings.SettingsMenu();
+            } catch (Exception e) {
+                messageHandler.HandleMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
+                Settings.SettingsMenu();
+            }
         }else{
             messageHandler.HandleMessage(-1, "Invalid option, try again", true);
             ViewMenu(Mode);

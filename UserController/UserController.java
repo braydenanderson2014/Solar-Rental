@@ -166,7 +166,7 @@ public class UserController {
                 updateUserProfile(mode);
             }else if(option.equals("perm")){
                 if(!SwitchController.focusUser.equals("Admin")){
-                    AdministrativeFunctions.newRequest(SwitchController.focusUser, "Permissions");
+                    AdministrativeFunctions.newRequest(SwitchController.focusUser, "Permissions", "User requesting a Permissions change", "NA");
                     updateUserProfile(mode);
                 }else{
                     messageHandler.HandleMessage(-1, "Admin is not allowed to update this account setting", true);

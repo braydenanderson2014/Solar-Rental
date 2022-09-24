@@ -6,6 +6,7 @@ import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
 import MainSystem.MainMenu;
+import UserController.MainSystemUserController;
 import UserController.UserController;
 import messageHandler.Console;
 import messageHandler.messageHandler;
@@ -26,13 +27,13 @@ public class POSMenu {
         Logo.displayLogo();
         System.out.println("Welcome to the Solar Point of Sale Menu; User: " + SwitchController.focusUser);
         System.out.println("[SALE]:  Sales Menu");
-        if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
+        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
             System.out.println("[RET]:  Returns Menu");
         }
         System.out.println("[APP]:  Apply Discount Menu");
         System.out.println("[CAT]:  Sales Catalogue");
         System.out.println("[OFF]:  Log Off");
-        System.out.println("[BACK]: BACK to Main Menu");
+        System.out.println("[RETURN]: RETURN to Main Menu");
         Console.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         switch (option) {
@@ -40,7 +41,7 @@ public class POSMenu {
                 SalesMenu.TheSalesMenu();
             break;
             case "ret":
-                if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >=8){
+                if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >=8){
                     ReturnsMenu.TheReturnsMenu();
                 }else{
                     messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
@@ -59,7 +60,7 @@ public class POSMenu {
                 SwitchController.removeCurrentUser(SwitchController.focusUser);
                 Login.Login.LoginScreen();
             break;
-            case "back":
+            case "return":
                 MainMenu.mainMenu();
             default:
                 messageHandler.HandleMessage(-1, "Invalid Option, Try again!" ,true);

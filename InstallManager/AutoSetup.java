@@ -139,7 +139,11 @@ public class AutoSetup {
             SettingsController.setSetting("TaxP", "7.43");
             messageHandler.HandleMessage(1, "Setting \"TaxP\" was created successfully. Default Value: 7.43%", false);
         }
-        
+        exists = SettingsController.SearchForSet("FailedAttempts");
+        if(!exists){
+            SettingsController.setSetting("FailedAttempts",  "3");
+            messageHandler.HandleMessage(1, "Setting \"FailedAttempts\" was created successfully. Default Value: 7.43%", false);
+        }
         createAdminAccount();
     }
     private static void createAdminAccount() {

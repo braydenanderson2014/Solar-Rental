@@ -76,7 +76,12 @@ public class ConsoleSettings {
             messageHandler.HandleMessage(-2, "Help System Not Implemented yet, Try again in a later update", true);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("return")){
-            Settings.SettingsMenu();
+            try {
+                Settings.SettingsMenu();
+            } catch (Exception e) {
+                messageHandler.HandleMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
+                Settings.SettingsMenu();
+            }
         }else{
             messageHandler.HandleMessage(-1, "Invalid option, try again", true);
             ConsoleSettingsMenu();

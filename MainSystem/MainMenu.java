@@ -5,7 +5,6 @@ import Assets.customScanner;
 import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
-import UserController.UserController;
 import messageHandler.Console;
 import messageHandler.LogDump;
 import messageHandler.messageHandler;
@@ -50,7 +49,12 @@ public class MainMenu{
                 SwitchController.switchMenu(2);
             break;
             case "set":
-                Settings.SettingsMenu();
+                try{
+                    Settings.SettingsMenu();
+                }catch(NumberFormatException e){
+                    messageHandler.HandleMessage(-2, "Failed to access Settings Menu", true);
+                    mainMenu();
+                }
             break;
             case "help":
                 messageHandler.HandleMessage(-2, "This option is not yet available! Check back on the next update!", true);

@@ -1,5 +1,6 @@
 package Assets;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import messageHandler.messageHandler;
@@ -20,7 +21,7 @@ public class customScanner
     public static Scanner getScanner(){
         return scan;
     }
-    public static double nextDouble(){
+    public static double nextDouble() throws InputMismatchException{
         double d = scan.nextDouble();
         return d;
     }
@@ -30,9 +31,23 @@ public class customScanner
         return s;
     }
     
-    public static int nextInt(){
+    public static int nextInt() throws InputMismatchException{
         int i = scan.nextInt();
         return i;
+    }
+
+    public static byte nextByte() throws InputMismatchException{
+        byte b = scan.nextByte();
+        return b;
+    }
+
+    public static short nextShort() throws InputMismatchException{
+        short s = scan.nextShort();
+        return s;
+    }
+    public static Boolean nextBoolean() throws InputMismatchException{
+        boolean b = scan.nextBoolean();
+        return b;
     }
     
     public int close(int b){

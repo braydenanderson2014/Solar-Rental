@@ -1,16 +1,18 @@
 package UserController;
 import java.io.*;
 import java.util.Properties;
+
 //Custom Import
 import Assets.Logo;
 import Assets.customScanner;
 import InstallManager.ProgramController;
+import MainSystem.SettingsController;
 import messageHandler.AllMessages;
 import messageHandler.messageHandler;
 public class LoginUserController {
     static String UserProperties = ProgramController.UserRunPath + "\\Users/";
     static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
-    static byte Attempts = 0;
+    static int FailedAttemptsLOMG = 0;
     static byte passChangeAttempts = 0;
     public static Properties userprop = new Properties();
     private static boolean loadUserlist(){
@@ -66,6 +68,7 @@ public class LoginUserController {
                                 int logins = Integer.parseInt(GetProperty("SuccessfulLogins"));
                                 logins ++;
                                 setValue(User, "SuccessfulLogins", String.valueOf(logins));
+                                setValue(User, "s", "0");
                                 if(Boolean.parseBoolean(GetProperty("PassFlag")) == true){
                                     ChangePass(User);
                                     return true;
@@ -82,10 +85,13 @@ public class LoginUserController {
                         }
                     }else{
                         messageHandler.HandleMessage(-1, "Invalid Username or Password.",true);
-                        Attempts++;
-                        setValue(User, "FailedLoginAttempts", String.valueOf(Attempts));
+
+                        FailedAttemptsLOMG = Integer.parseInt(GetProperty("FailedLoginAttempts"));
+                        FailedAttemptsLOMG= FailedAttemptsLOMG ++;
+                        setValue(User, "FailedLoginAttempts", String.valueOf(FailedAttemptsLOMG));
+                        setValue(User, "AllTimeFailedLoginAttempts", String.valueOf(Integer.parseInt(GetProperty("AllTimeFailedLoginAttempts")) +1));
                         int FailedAttempts = Integer.parseInt(GetProperty("FailedLoginAttempts"));
-                        if(Attempts >= 3 || FailedAttempts >= 3){
+                        if(FailedAttempts >= Integer.parseInt(SettingsController.getSetting("FailedAttempts"))){
                             setValue(User, "Account", "Disabled");
                         }
                         return false;
@@ -114,37 +120,46 @@ public class LoginUserController {
         String oldPass = customScanner.nextLine();
         if(oldPass.equals("back") || oldPass.equals("Back")){
             return false;
-        }
-        System.out.println("New Password: ");
-        String newPass = customScanner.nextLine();
-        if(newPass.equals("back") || newPass.equals("Back")){
-            return false;
-        }
-        System.out.println("Confirm New Password: ");
-        String cNewPass = customScanner.nextLine();
-        if(cNewPass.equals("back") || cNewPass.equals("Back")){
-            return false;
-        }
-        if(oldPass.equals(GetProperty("Password"))){
-            if(cNewPass.equals(newPass)){
-                setValue(User, "Password", newPass);
-                setValue(User, "PassFlag", "false");
-                setValue(User, "LastPassChange", AllMessages.getTime());
-                messageHandler.HandleMessage(1, "Password Changed Sucessfully: ChangePass", true);
-                return true;
-            }else{
-                messageHandler.HandleMessage(-1, "Passwords do not match, Try Again. Type \"Back\" to cancel", true);
-                ChangePass(User);
-            }
         }else {
-            passChangeAttempts++;
-            if(passChangeAttempts >=3){
-                setValue(User, "Account", "Disabled");
-                messageHandler.HandleMessage(-1, "Account was Disabled due to too many Attempts", true);
+            System.out.println("New Password: ");
+            String newPass = customScanner.nextLine();
+            if(newPass.equals("back") || newPass.equals("Back")){
                 return false;
+            }else{
+                System.out.println("Confirm New Password: ");
+                String cNewPass = customScanner.nextLine();
+                if(cNewPass.equals("back") || cNewPass.equals("Back")){
+                    return false;
+                }else{
+                    if(oldPass.equals(GetProperty("Password"))){
+                        if(cNewPass.equals(newPass)){
+                            setValue(User, "Password", newPass);
+                            setValue(User, "PassFlag", "false");
+                            setValue(User, "LastPassChange", AllMessages.getTime());
+                            messageHandler.HandleMessage(1, "Password Changed Sucessfully: ChangePass", true);
+                            return true;
+                        }else{
+                            messageHandler.HandleMessage(-1, "Passwords do not match, Try Again. Type \"Back\" to cancel", true);
+                            ChangePass(User);
+                        }
+                    }else {
+                        passChangeAttempts++;
+                        if(passChangeAttempts >=3){
+                            setValue(User, "Account", "Disabled");
+                            messageHandler.HandleMessage(-1, "Account was Disabled due to too many Attempts", true);
+                            return false;
+                        }else{
+                            messageHandler.HandleMessage(-1, "Old Password was incorrect, Password Change Failed", true);
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
         }
-        return true;
+        
+        
+       
     }
     public static boolean AdminUpdateUserPass(String User){
         return true;

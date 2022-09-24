@@ -1,5 +1,7 @@
 package MainSystem;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import Assets.Logo;
 import Assets.VersionController;
@@ -8,6 +10,7 @@ import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;
 import Login.SwitchController;
 import UserController.MainSystemUserController;
+import UserController.MaintainUserController;
 import UserController.UserController;
 import messageHandler.AllMessages;
 import messageHandler.Console;
@@ -19,13 +22,78 @@ import messageHandler.messageHandler;
 public class Settings{
     public static Scanner scan = new Scanner(System.in);
     public static String path = ProgramController.UserRunPath;
+    public static ArrayList<String> MyRequests = new ArrayList<String>();
     public static String logType = "all";
-    public static void SettingsMenu(){
+    public static boolean checkRequests(){
+        MyRequests.clear();
+        for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestUser.size(); i++){
+            if(AdministrativeFunctions.AdministrativeRequestUser.get(i).equals(SwitchController.focusUser)){
+                MyRequests.add(AdministrativeFunctions.AdministrativeRequestFull.get(i));
+            }
+        }
+        return true;
+    }
+    public static boolean printRequests(){
+        checkRequests();
+        int item = 0;
+        Logo.displayLogo();
+        for(int i = 0; i < MyRequests.size(); i++){
+            item++;
+            System.out.println(item + ": " + MyRequests.get(i));
+        }
+        try {
+            int option = 23;
+            System.out.println("Select An Item: (Type \"0\" to go back to the main menu)");
+            option = customScanner.nextInt();
+            option--;
+            if(option == 0){
+                SettingsMenu();
+            }else{
+                String temp = "NULL";
+                Logo.displayLogo();
+                System.out.println("Selected Item: " + MyRequests.get(option));
+                System.out.println("Would you like to Revoke your Request? (y/n)");
+                temp = scan.nextLine();
+                if(temp.equals("y") || temp.equals("yes")){
+                    for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestKeyWord.size(); i++){
+                        if(AdministrativeFunctions.AdministrativeRequestFull.get(i).contains(MyRequests.get(option))){
+                            MyRequests.remove(option);
+                            AdministrativeFunctions.AdministrativeRequestFull.remove(i);
+                            messageHandler.HandleMessage(1, "Removed From Administrative Request Full", false);
+                            AdministrativeFunctions.AdministrativeRequestID.remove(i);
+                            messageHandler.HandleMessage(1, "Removed From Request ID", false);
+                            AdministrativeFunctions.AdministrativeRequestKeyWord.remove(i);
+                            messageHandler.HandleMessage(1, "Removed From Request Keyword", false);
+                            AdministrativeFunctions.AdministrativeRequestUser.remove(i);
+                            messageHandler.HandleMessage(1, "Removed From Request User", false);
+                            AdministrativeFunctions.AdministrativeRequestedName.remove(i);
+                            messageHandler.HandleMessage(1, "Removed From Requested Name", false);
+                            AdministrativeFunctions.AdministrativeRequests.remove(i);
+                            messageHandler.HandleMessage(1, "Removed From Administrative Requests", false);
+                            messageHandler.HandleMessage(1, "Successfully Removed Requests", true);
+                        }else{
+                            messageHandler.HandleMessage(-1, "Unable to find requests in the main Request queue", true);
+                        }
+                    }
+                }else{
+                    messageHandler.HandleMessage(-1, "Invalid option, Try again.", true);
+                    printRequests();
+                }
+            }
+        } catch (InputMismatchException e) {
+            messageHandler.HandleMessage(-2,e.toString(), true);
+        }catch (IndexOutOfBoundsException e) {
+            messageHandler.HandleMessage(-2, e.toString(), true);
+        }
+        return true;
+    }
+    public static void SettingsMenu() throws NumberFormatException{
+        checkRequests();
         Logo.displayLogo();
         System.out.println();
         System.out.println("Settings Menu");
         System.out.println("============================================");
-        System.out.println("[PATH]: Program's Working Directory" + path);
+        System.out.println("[PATH]: Program's Working Directory: \"" + path + "\"");
         System.out.println("[CONSOLE]: Console Settings");
         System.out.println("[RAB]: Report a Bug");
         System.out.println("[LOG]: Log Dump Type: " + logType.toUpperCase());
@@ -36,6 +104,7 @@ public class Settings{
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 6){
             System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
         }
+        System.out.println("[REQUESTS]: My Requests: Current Requests: " + MyRequests.size());
         System.out.println("[RETURN]: Return");
         System.out.println();
         Console.getConsole();
@@ -43,7 +112,8 @@ public class Settings{
         if(option.equals("path")){
             //PathController.pathMenu(1);
         }else if(option.equals("update")){
-            //UserController.updateUserProfile(2);   
+            MaintainUserController.loadUserProperties(SwitchController.focusUser);
+            MaintainUserController.updateProfileSettings(MaintainUserController.GetProperty("Username"));  
         }else if(option.equals("rab")){
             try {
                 URI uri= new URI("https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
@@ -64,6 +134,13 @@ public class Settings{
             SettingsMenu();   
         }else if(option.equals("console")){
             ConsoleSettings.ConsoleSettingsMenu();
+        }else if(option.equals("requests")){
+            if(MyRequests.size() == 0){
+                messageHandler.HandleMessage(-1, "No Requests Have Been Made", true);
+            }else {
+                printRequests();
+            }
+            SettingsMenu();
         }else if(option.equals("log")){
             if(logType.equals("all")){
                 logType = "system";

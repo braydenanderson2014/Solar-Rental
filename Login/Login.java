@@ -92,7 +92,7 @@ public class Login{
         }else if(Command.equals("create")){
             System.out.println("New Username: ");
             String user = customScanner.nextLine();
-            AdministrativeFunctions.newRequest(user, "new Account");
+            AdministrativeFunctions.newRequest("Guest", "new Account", "Blank Account", user);
             AdministrativeFunctions.AccountRequestNamePool.add(user);
             LoginScreen();
         }else if(Command.equals("_resetadmin")){
@@ -156,7 +156,7 @@ public class Login{
         }else if(Command.equals("create")){
             System.out.println("New Username: ");
             String user = customScanner.nextLine();
-            AdministrativeFunctions.newRequest(user, "new Account");
+            AdministrativeFunctions.newRequest("Guest", "new Account", "Admin Created Blank Account" , user);
             AdministrativeFunctions.AccountRequestNamePool.add(user);
             LoginScreen();
         }else if(Command.equals("_resetadmin")){
@@ -173,13 +173,9 @@ public class Login{
         Logo.displayLogo();
         System.out.println("ADMIN PASSWORD: ");
         String password = customScanner.nextLine();
-        String user = SwitchController.focusUser;
-        UserController.loadUserproperties("Admin");
-        if(password.equals(UserController.getUserProp("Password"))){
-            UserController.loadUserproperties(user);
+        if((LoginUserController.checkPassword("Admin", password) == true)){
             return true;
         }else{
-            UserController.loadUserproperties(user);
             return false;
         }
     }
