@@ -25,6 +25,7 @@ public class Login{
     public Login(){
         System.out.println(CurrentUser);
     }
+
     public static void LoginScreen(){
         Logo.displayLogo();
         Console.getConsole();
@@ -51,6 +52,7 @@ public class Login{
             }
         }
     }
+
     public static void LoginScreen(String User){
         Logo.displayLogo();
         messageHandler.HandleMessage(1, "AutoFilling Username with " + User, true);
@@ -62,14 +64,15 @@ public class Login{
             SwitchController.forceLogoff(User);
             LoginScreen();
         }else{
-                if(LoginUserController.checkPassword(User, Password) == true){
-                    SwitchController.updateCurrentUser(User);
-                    MainMenu.mainMenu();
-                }else if(LoginUserController.checkPassword(User, Password) == false){
-                    LoginScreen(User);
-                }
+            if(LoginUserController.checkPassword(User, Password) == true){
+                SwitchController.updateCurrentUser(User);
+                MainMenu.mainMenu();
+            }else if(LoginUserController.checkPassword(User, Password) == false){
+                LoginScreen(User);
+            }
         }
     }
+
     private static void Command() {
         Logo.displayLogo();
         Console.getConsole();
@@ -118,7 +121,7 @@ public class Login{
             Command();
         }
     }
-    
+
     private static void listCommands() {
         Logo.displayLogo();
         System.out.println("Commands:");
@@ -168,7 +171,7 @@ public class Login{
             Command();
         }
     }
-    
+
     public static boolean validateAdmin(){
         Logo.displayLogo();
         System.out.println("ADMIN PASSWORD: ");
@@ -179,9 +182,9 @@ public class Login{
             return false;
         }
     }
+
     public static String getCurrentUser() {
         return SwitchController.focusUser;
     }
-    
-    
+
 }

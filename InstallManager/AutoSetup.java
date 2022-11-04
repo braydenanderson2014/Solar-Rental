@@ -15,7 +15,7 @@ public class AutoSetup {
     public static String userPathLetter = ProgramController.UserPathLetter;
     public static String userWorkingPath = ProgramController.UserDefaultPath;
     public static void startAutoSetup() {
-    //#region Folder/File Install
+        //#region Folder/File Install
         //#region SystemPathLetter
         messageHandler.HandleMessage(1, "Searching for System PathLetter in Configuration...", false);
         boolean exists = SettingsController.SearchForSet("SystemPathLetter");
@@ -34,7 +34,7 @@ public class AutoSetup {
             SystemWorkingPath = SettingsController.getSetting("SystemPath");
         }else{
             SettingsController.setSetting("SystemPath", SystemWorkingPath);
-        
+
         }
         //#endregion
         //#region SystemPathCheck/Creation
@@ -63,7 +63,7 @@ public class AutoSetup {
             userWorkingPath = SettingsController.getSetting("UserPath");
         }else{
             SettingsController.setSetting("UserPath", userWorkingPath);
-        
+
         }
         //#endregion
         //#region UserSystemPathCheck/Creation
@@ -91,6 +91,24 @@ public class AutoSetup {
                 messageHandler.HandleMessage(1, "Created Userlist.properties at: " + UserDir, false);
             } catch (IOException e) {
                 messageHandler.HandleMessage(-2, "Failed to create Userlist.properties at: " + UserDir, true);
+                messageHandler.HandleMessage(-1, "Unable to complete Setup", true);
+                ProgramController.SetupMenu();
+            }
+        }
+        //#endregion
+        //#region Categories
+        String Categories = ProgramController.UserRunPath + "\\Categories/";
+        file = new File(Categories);
+        if(!file.exists()){
+            try {
+                file.mkdirs();
+                messageHandler.HandleMessage(1, "Created Categories at: " + Categories, false);
+                Categories = Categories + "Categories.properties";
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+            } catch (IOException e) {
+                messageHandler.HandleMessage(-2, "Failed to create Directory at: " + Categories, true);
                 messageHandler.HandleMessage(-1, "Unable to complete Setup", true);
                 ProgramController.SetupMenu();
             }
@@ -146,11 +164,11 @@ public class AutoSetup {
         }
         createAdminAccount();
     }
+
     private static void createAdminAccount() {
         UserController.createUser("Admin", 8 , 3);
         FirstTimeManager.updateFirstTime();
         Login.LoginScreen();
     }
-    
 
 }

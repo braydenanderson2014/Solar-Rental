@@ -26,12 +26,14 @@ public class MaintainUserController {
         boolean success = UserListController.loadUserList();
         return success;
     }
+
     public static boolean setValue(String User, String key, String value){
         loadUserProperties(User);
         userprop.setProperty(key, value);
         saveUserProperties(User);
         return true;
     }
+
     public static boolean createNewUser(String UserToCreate){
         Logo.displayLogo();
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >=8){
@@ -82,6 +84,7 @@ public class MaintainUserController {
             return false;
         }
     }
+
     public static boolean createNewFile(String User){
         if(UserListController.SearchForUser(User) == true){
             messageHandler.HandleMessage(-1, "This User Already Exists: " + User, true);
@@ -102,7 +105,7 @@ public class MaintainUserController {
         }
         return true;
     }
-    
+
     public static boolean loadUserProperties(String User){
         loadUserlist();
         if(UserListController.SearchForUser(User) == true){
@@ -121,6 +124,7 @@ public class MaintainUserController {
             return false;
         }
     }
+
     public static boolean saveUserProperties(String User){
         loadUserlist();
         boolean success = UserListController.SearchForUser(User);
@@ -140,13 +144,16 @@ public class MaintainUserController {
         }
         return false;
     }
+
     public static boolean SearchForKey(String Key){
         boolean exists = userprop.containsKey(Key);
         return exists;
     }
+
     public static String GetProperty(String Key){
         return userprop.getProperty(Key);
     }
+
     public static void updateProfileSettings(String User){
         Logo.displayLogo();
         System.out.println("Account Updater: Menu");
@@ -189,6 +196,7 @@ public class MaintainUserController {
             updateProfileSettings(User);
         }
     }
+
     public static boolean forceProfileUpdate(String User){
         UserListController.loadUserList();
         if(UserListController.SearchForUser(User) == true){
@@ -206,6 +214,7 @@ public class MaintainUserController {
             return false;
         }
     }
+
     public static boolean requestAccountChange(String User){
         UserListController.loadUserList();
         if(UserListController.SearchForUser(User) == true){
@@ -220,6 +229,7 @@ public class MaintainUserController {
         }
         return true;
     }
+
     public static boolean updateAccountName(String User, String AccountName){
         UserListController.loadUserList();
         if(UserListController.SearchForUser(User) == true){
@@ -250,6 +260,6 @@ public class MaintainUserController {
             messageHandler.HandleMessage(-1, "Failed to find the User Properties.", true);
             return false;
         }
-        
+
     }
 }

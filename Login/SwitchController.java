@@ -12,6 +12,7 @@ public class SwitchController {
     public SwitchController(){
         loggedInUsers.add("Temp");
     }
+
     public static String updateCurrentUser(String currentUser){
         if(!loggedInUsers.contains(currentUser)){
             loggedInUsers.add(currentUser);
@@ -21,6 +22,7 @@ public class SwitchController {
         focusUser = currentUser;
         return Login.getCurrentUser();
     }
+
     public static void removeCurrentUser(String currentUser){
         messageHandler.HandleMessage(-1, "Attempting to Log out User: " + currentUser, false);
         if(loggedInUsers.contains(focusUser)){
@@ -44,6 +46,7 @@ public class SwitchController {
             Login.LoginScreen();
         }
     }
+
     public static boolean forceLogoff(String user){
         if(loggedInUsers.contains(user)){
             loggedInUsers.remove(user);
@@ -54,11 +57,13 @@ public class SwitchController {
             return false;
         }
     }
+
     public static boolean forceAllLogoff(){
         loggedInUsers.clear();
         messageHandler.HandleMessage(1, "All Users Logged Off", true);
         return true;
     }
+
     public static void switchMenu(int mode) {
         Logo.displayLogo();
         System.out.println("Switch User Menu; Current user: " + focusUser);

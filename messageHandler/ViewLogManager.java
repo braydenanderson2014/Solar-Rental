@@ -16,6 +16,7 @@ public class ViewLogManager{
         String enter = customScanner.nextLine();
         return "";
     }
+
     public static String ViewSystemMessages(){
         for(int i = 0; i < SystemMessages.size(); i++){
             if(ConsoleSettings.timeSet = true){
@@ -29,6 +30,7 @@ public class ViewLogManager{
         String enter = customScanner.nextLine();
         return "";
     }
+
     public static String ViewErrorMessages(){
         for(int i = 0; i < ErrorMessages.size(); i++){
             if(ConsoleSettings.timeSet = true){
@@ -42,6 +44,7 @@ public class ViewLogManager{
         String enter = customScanner.nextLine();
         return "";
     }
+
     public static String ViewUserMessages(){
         for(int i = 0; i < NotificationMessages.size(); i++){
             if(ConsoleSettings.timeSet = true){
@@ -55,6 +58,7 @@ public class ViewLogManager{
         String enter = customScanner.nextLine();
         return "";
     }
+
     public static String ViewAllMessages(){
         for(int i = 0; i < AllMessages.size(); i++){
             if(ConsoleSettings.timeSet = true){
@@ -68,6 +72,7 @@ public class ViewLogManager{
         String enter = customScanner.nextLine();
         return "";
     }
+
     public static void ViewMenu(int Mode){
         Logo.displayLogo();
         System.out.println("[All]: View All Messages");

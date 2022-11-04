@@ -12,9 +12,9 @@ public class SalesProcessor {
     public static double discountTotal = 0;
     public static double TotalAmount = 0;
     public static void ProcessSale() {
-      updateArrays();
+        updateArrays();
     }
-    
+
     public static boolean updateArrays(){
         ItemsOnInvoice = SalesMenu.ItemsOnInvoice;
         CurrentPricesOnInvoice = SalesMenu.CurrentPricesOnInvoice;

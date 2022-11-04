@@ -19,6 +19,7 @@ public class MainSystemUserController {
         boolean success = UserListController.loadUserList();
         return success;
     }
+
     public static boolean loadUserProperties(String User){
         loadUserlist();
         if(UserListController.SearchForUser(User) == true){
@@ -37,6 +38,7 @@ public class MainSystemUserController {
             return false;
         }
     }
+
     public static boolean saveUserProperties(String User){
         loadUserlist();
         boolean success = UserListController.SearchForUser(User);
@@ -56,13 +58,16 @@ public class MainSystemUserController {
         }
         return false;
     }
+
     public static boolean SearchForKey(String Key){
         boolean exists = userprop.containsKey(Key);
         return exists;
     }
+
     public static String GetProperty(String Key){
         return userprop.getProperty(Key);
     }
+
     public static boolean checkUserProfileFile(String User) {
         UserProperties = UserProperties2 + User + ".properties";
         File file = new File(UserProperties);

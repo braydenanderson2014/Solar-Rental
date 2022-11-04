@@ -33,6 +33,7 @@ public class Settings{
         }
         return true;
     }
+
     public static boolean printRequests(){
         checkRequests();
         int item = 0;
@@ -87,6 +88,7 @@ public class Settings{
         }
         return true;
     }
+
     public static void SettingsMenu() throws NumberFormatException{
         checkRequests();
         Logo.displayLogo();
@@ -179,15 +181,14 @@ public class Settings{
             SettingsMenu();
         }
     }
-    
-    
+
     public static boolean LoadSettings(){
         messageHandler.HandleMessage(1, "Loading Settings file from config.properties", false);
         System.out.println(SystemMessages.getLastMessage());
         SettingsController.loadSettings();
         messageHandler.HandleMessage(1, "Settings File Loaded... Now reading from Settings", false);
         System.out.println(SystemMessages.getLastMessage());
-        
+
         messageHandler.HandleMessage(1, "FirstTime Setting: False", false);
         System.out.println(SystemMessages.getLastMessage());
         messageHandler.HandleMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: " + SettingsController.getSetting("Path"), false);

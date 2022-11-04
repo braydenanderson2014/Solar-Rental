@@ -20,16 +20,18 @@ public class AllMessages {
         visibleToConsole.add(VisibleToConsole);
         return message;
     }
-    
+
     public static boolean clearMessages(){
         AllMessages.clear();
         AllMessagesT.clear();
         visibleToConsole.clear();
         return true;
     }
+
     public static int size(){// Normal array (Get) size
         return AllMessages.size();
     }
+
     public static String getLastMessage() {
         int size = AllMessages.size();
         size --;
@@ -46,12 +48,14 @@ public class AllMessages {
             return "No Messages";
         }
     }
+
     public static boolean setLastVisibleSet(boolean b) {
         int size = visibleToConsole.size();
         size --;
         visibleToConsole.set(size, b);
         return true;
     }
+
     public static String getTime(){
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");

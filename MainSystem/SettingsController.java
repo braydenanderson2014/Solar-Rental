@@ -17,6 +17,7 @@ public class SettingsController{
         messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting, false);
         return Setting;
     }
+
     public static boolean saveSettings(){
         try (OutputStream output = new FileOutputStream(path)){
             prop.store(output, null);
@@ -26,10 +27,12 @@ public class SettingsController{
             return false;
         }
     }
+
     public static boolean SearchForSet(String Setting){
         boolean exists = prop.containsKey(Setting);
         return exists;
     }
+
     public static boolean loadSettings(){
         try (InputStream input = new FileInputStream(path)){
             prop.load(input);
@@ -39,6 +42,7 @@ public class SettingsController{
             return false;
         }
     }
+
     public static String setSetting(String SettingType, String Setting){
         loadSettings();
         prop.setProperty(SettingType, Setting);

@@ -21,29 +21,35 @@ public class ErrorMessages {
         AllMessages.addMessage("[Error]: " + message, VisibleToConsole);
         return message;
     }
+
     public static int size(){// Normal array (Get) size
         return ErrorMessages.size();
     }
+
     public static int tSize(){ //Time array (Get) size
         return ErrorMessagesT.size();
     }
+
     public static boolean clearMessages(){
         ErrorMessages.clear();
         ErrorMessagesT.clear();
         visibleToConsole.clear();
         return true;
     }
+
     public static boolean getLastVisibleSet(){
         int size = visibleToConsole.size();
         size --;
         return visibleToConsole.get(size);
     }
+
     public static boolean setLastVisibleSet(boolean b) {
         int size = visibleToConsole.size();
         size --;
         visibleToConsole.set(size, b);
         return true;
     }
+
     public static String getLastMessage() {
         int size = ErrorMessages.size();
         size --;

@@ -19,18 +19,22 @@ public class SystemMessages{
         AllMessages.addMessage("[System]: " + message, VisibleToConsole);
         return message;
     }
+
     public static boolean clearMessages(){
         SystemMessages.clear();
         SystemMessagesT.clear();
         visibleToConsole.clear();
         return true;
     }
+
     public static int size(){
         return SystemMessages.size();
     }
+
     public static int tSize(){
         return SystemMessagesT.size();
     }
+
     public static String getLastMessage() {
         int size = SystemMessages.size();
         size --;
@@ -50,14 +54,16 @@ public class SystemMessages{
         }else {
             return "";
         }
-        
+
     }
+
     public static boolean setLastVisibleSet(boolean b) {
         int size = visibleToConsole.size();
         size --;
         visibleToConsole.set(size, b);
         return true;
     }
+
     public static boolean getLastVisibleSet() {
         int size = visibleToConsole.size();
         size--;

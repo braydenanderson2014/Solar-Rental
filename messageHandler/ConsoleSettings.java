@@ -1,6 +1,5 @@
 package messageHandler;
 
-
 import Assets.Logo;
 import Assets.customScanner;
 import MainSystem.Settings;
@@ -12,7 +11,7 @@ public class ConsoleSettings {
     public static boolean SystemSet = true;
     public static boolean UserNotifySet = true;
     public static boolean timeSet = true;
-    
+
     public static void ConsoleSettingsMenu(){
         Logo.displayLogo();
         System.out.println();
@@ -87,5 +86,5 @@ public class ConsoleSettings {
             ConsoleSettingsMenu();
         }
     }
-    
+
 }

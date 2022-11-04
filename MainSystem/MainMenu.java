@@ -32,22 +32,22 @@ public class MainMenu{
         switch(option){
             case "pos":
                 POSMenu.PointofSaleMenu();
-            break;
+                break;
             case "admin":
-            if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-                AdministrativeFunctions.AdministrativeMenu();
-            }else{
-                messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
-                mainMenu();
-            }
-            break;
+                if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+                    AdministrativeFunctions.AdministrativeMenu();
+                }else{
+                    messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
+                    mainMenu();
+                }
+                break;
             case "note":
                 messageHandler.HandleMessage(-1, "This function [NOTE] has not yet been implemented.. Check back in a later update", true);
                 mainMenu();
-            break;
+                break;
             case "swi": 
                 SwitchController.switchMenu(2);
-            break;
+                break;
             case "set":
                 try{
                     Settings.SettingsMenu();
@@ -55,23 +55,23 @@ public class MainMenu{
                     messageHandler.HandleMessage(-2, "Failed to access Settings Menu", true);
                     mainMenu();
                 }
-            break;
+                break;
             case "help":
                 messageHandler.HandleMessage(-2, "This option is not yet available! Check back on the next update!", true);
                 mainMenu();
-            break;
+                break;
             case "off":
                 SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"));
                 Login.Login.LoginScreen();
-            break;
+                break;
             case "exit":
                 LogDump.DumpLog("all");
                 System.exit(1);
-            break;
+                break;
             default:
                 messageHandler.HandleMessage(-1, "Invalid Option, try again!", true);
                 mainMenu();
-            break;
+                break;
         }
     }
 }

@@ -24,8 +24,6 @@ public class UserMessageHandler {
         return true;
     }
 
-    
-
     private static boolean CheckUserAccount(String user) {
         UserListController.loadUserList();
         if(UserListController.SearchForUser(user) == true){
@@ -41,5 +39,5 @@ public class UserMessageHandler {
             return false;
         }
     }
-    
+
 }

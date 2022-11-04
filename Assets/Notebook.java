@@ -19,22 +19,28 @@ public class Notebook {
         }
         return true;
     }
+
     public static boolean addNote(String note){
         userNotes.add(note);
         return true;
     }
+
     public static boolean deleteNote(){
         return true;
     }
+
     public static boolean submitNotesToFile(){
         return true;
     }
+
     public static String viewNotes(){
         return "Notes";
     }
+
     public static String resetNotes(){
         return "Notes";
     }
+
     public static String loadUserNotes(){
         return "Notes";
     }

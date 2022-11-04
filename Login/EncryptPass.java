@@ -7,212 +7,213 @@ public class EncryptPass {
             switch (ch[i]){
                 case 'A': case 'a':
 
-                break;
+                    break;
                 case 'B': case 'b':
 
-                break;
+                    break;
                 case 'C': case 'c':
 
-                break;
+                    break;
                 case 'D': case 'd':
 
-                break;
+                    break;
                 case 'E': case 'e':
 
-                break;
+                    break;
                 case 'F': case 'f':
 
-                break;
+                    break;
                 case 'G': case 'g':
 
-                break;
+                    break;
                 case 'H': case 'h':
 
-                break;
+                    break;
                 case 'I': case 'i':
 
-                break;
+                    break;
                 case 'J': case 'j':
 
-                break;
+                    break;
                 case 'K': case 'k':
 
-                break;
+                    break;
                 case 'L': case 'l':
 
-                break;
+                    break;
                 case 'M': case 'm':
 
-                break;
+                    break;
                 case 'N': case 'n':
 
-                break;
+                    break;
                 case 'O': case 'o':
 
-                break;
+                    break;
                 case 'P': case 'p':
 
-                break;
+                    break;
                 case 'Q': case 'q':
 
-                break;
+                    break;
                 case 'R': case 'r':
 
-                break;
+                    break;
                 case 'S': case 's':
 
-                break;
+                    break;
                 case 'T': case 't':
 
-                break;
+                    break;
                 case 'U': case 'u':
 
-                break;
+                    break;
                 case 'V': case 'v':
 
-                break;
+                    break;
                 case 'W': case 'w':
 
-                break;
+                    break;
                 case 'X': case 'x':
 
-                break;
+                    break;
                 case 'Y': case 'y':
 
-                break;
+                    break;
                 case 'Z': case 'z':
 
-                break;
+                    break;
                 case '1':
-                
-                break;
+
+                    break;
                 case '2':
 
-                break;
+                    break;
                 case '3':
 
-                break;
+                    break;
                 case '4':
 
-                break;
+                    break;
                 case '5':
 
-                break;
+                    break;
                 case '6':
 
-                break;
+                    break;
                 case '7':
-                
-                break;
+
+                    break;
                 case '8':
 
-                break;
+                    break;
                 case '9':
 
-                break;
+                    break;
                 case '0':
 
-                break;
+                    break;
                 case '!':
 
-                break;
+                    break;
                 case '@':
 
-                break;
+                    break;
                 case '#':
 
-                break;
+                    break;
                 case '$':
 
-                break;
+                    break;
                 case '%':
 
-                break;
+                    break;
                 case '^':
 
-                break;
+                    break;
                 case '&':
 
-                break;
+                    break;
                 case '*':
 
-                break;
+                    break;
                 case '(':
 
-                break;
+                    break;
                 case ')':
 
-                break;
+                    break;
                 case '_':
 
-                break;
+                    break;
                 case '-':
 
-                break;
+                    break;
                 case '=':
 
-                break;
+                    break;
                 case '+':
 
-                break;
+                    break;
                 case '[':
 
-                break;
+                    break;
                 case ']':
 
-                break;
+                    break;
                 case '{':
 
-                break;
+                    break;
                 case '}':
 
-                break;
+                    break;
                 case '|': 
 
-                break;
+                    break;
                 case '\\':
 
-                break;
+                    break;
                 case '/':
 
-                break;
+                    break;
                 case '?': 
-                
-                break;
+
+                    break;
                 case '<':
 
-                break;
+                    break;
                 case '>':
 
-                break;
+                    break;
                 case '~':
 
-                break;
+                    break;
                 case '`': 
 
-                break;
+                    break;
                 case ':':
 
-                break;
+                    break;
                 case ';':
 
-                break;
+                    break;
                 case '\'':
 
-                break;
+                    break;
                 case '"':
 
-                break;
+                    break;
                 case '.':
 
-                break;
+                    break;
                 case ',':
 
-                break;
+                    break;
             }
         }
         return true;
     }
+
     public static boolean decryptPass(String EncryptedPass){
         char[] ch = EncryptedPass.toCharArray();
         for(int i = 0; i < ch.length; i ++){

@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
+import UserController.MainSystemUserController;
 import messageHandler.Console;
 import messageHandler.LogDump;
+import messageHandler.NotificationMessages;
 import messageHandler.messageHandler;
 
 public class SalesMenu {
@@ -22,7 +24,13 @@ public class SalesMenu {
         Logo.displayLogo();
         System.out.println("Sales Menu");
         System.out.println("[ADD]: Add Manual Item to Invoice");
+        System.out.println("[Search] Search for item or Category by id");
         System.out.println("[CAT]: Sales Catalogue");
+        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+            System.out.println("[ADDC]: Add Category");
+            System.out.println("[ADDS]: Add Sub-Category");
+            System.out.println("[DEL] Remove a category");
+        }
         System.out.println("[APP]: Apply Discount");
         System.out.println("[REM]: Remove Item from Current Invoice");
         System.out.println("[CLS]: Clear All Items and Discounts from invoice");
@@ -36,7 +44,7 @@ public class SalesMenu {
         switch(option){
             case "add":
                 addItem();
-            break;
+                break;
             case "pay":
                 if(TotalAmount > 0 && ItemsOnInvoice.size() > 0){
                     SalesProcessor.ProcessSale();
@@ -50,35 +58,86 @@ public class SalesMenu {
                         TheSalesMenu();
                     }
                 }
-            break;
+                break;
             case "view":
                 viewInvoice();
-            break;
+                break;
             case "cat":
-                messageHandler.HandleMessage(-1, "This feature is not yet available", true);
+                boolean success = CategoriesManager.ListAllCat();
+                if(!success){
+                    messageHandler.HandleMessage(2, "No Categories to list at this time", success);
+                    System.out.println(NotificationMessages.getLastMessage());
+                }
+                String Enter = customScanner.nextLine();
+                messageHandler.HandleMessage(1, "[Enter]", false);
                 TheSalesMenu();
-            break;
+                break;
+            case "addc":
+                if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+                    System.out.println("Category Name?");
+                    String Cat = customScanner.nextLine();
+                    System.out.println("Category ID?");
+                    String CatID = customScanner.nextLine();
+                    CategoriesManager.AddCat(Cat, CatID);
+                    TheSalesMenu();
+                }
+                break;
+            case "adds":
+                if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+                    System.out.println("Sub-Category Name?");
+                    String SubCat = customScanner.nextLine();
+                    System.out.println("Sub-Category ID's?");
+                    String SubCatID = customScanner.nextLine();
+                    SubCategoriesManager.addSubCat(SubCat, SubCatID);
+                    TheSalesMenu();
+
+                }
+                break;
+            case "del":
+                if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+                    System.out.println("Category ID?: ");
+                    String id = customScanner.nextLine().toLowerCase();
+                    boolean idExists = CategoriesManager.checkID(id);
+                    if(idExists){
+                        boolean successful = CategoriesManager.removeCategoryByID(id);
+                        if(successful){
+                            messageHandler.HandleMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                        }else{
+                            messageHandler.HandleMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                        }
+                    }
+                }
+                TheSalesMenu();
+                break;
             case "app":
                 DiscountManager.DiscountMenu();
-            break;
+                break;
             case "rem":
                 removeItem();
-            break;
+                break;
             case "ret":
                 POSMenu.PointofSaleMenu();
-            break;
+                break;
             case "off":
                 SwitchController.removeCurrentUser(SwitchController.focusUser);
-            break;
+                break;
             case "exit":
                 LogDump.DumpLog("all");
                 System.exit(1);
-            break;
+                break;
             default:
                 messageHandler.HandleMessage(-1, "Invalid option, try again", true);
                 TheSalesMenu();
-            break;
+                break;
         }
+    }
+
+    private static boolean SearchForItem(int itemNum){
+        return true;
+    }
+
+    private static boolean addItem(int item){
+        return true;
     }
 
     private static void viewInvoice() {
@@ -131,6 +190,5 @@ public class SalesMenu {
         isItemDiscounted.add(false);
         TheSalesMenu();
     }
-    
 
 }

@@ -17,6 +17,7 @@ public class UserListController {
             return false;
         }
     }
+
     public static boolean loadUserList() {
         if(CheckUserListAvailability() == true){
             try (InputStream input = new FileInputStream(UserList)){
@@ -31,13 +32,15 @@ public class UserListController {
             messageHandler.HandleMessage(-2, "UserList Missing", true);
             return false;
         }
-        
+
     }
+
     public static boolean SearchForUser(String user){
         loadUserList();
         boolean exists = userlist.containsKey(user);
         return exists;
     }
+
     private static boolean SaveUserList(){
         loadUserList();
         try (OutputStream output = new FileOutputStream(UserList)){
@@ -49,9 +52,11 @@ public class UserListController {
             return false;
         }
     }
+
     public static boolean checkUserList(String User){
         return userlist.containsKey(User);
     }
+
     public static boolean addUserToList(String user, int PermissionLevel){
         String PermissionLevelToString = String.valueOf(PermissionLevel);
         userlist.setProperty(user, PermissionLevelToString);
@@ -65,11 +70,11 @@ public class UserListController {
         }
         return success;
     }
+
     public static boolean removeUserFromList(String user){
         userlist.remove(user);
         SaveUserList();
         return true;
     }
 
-    
 }

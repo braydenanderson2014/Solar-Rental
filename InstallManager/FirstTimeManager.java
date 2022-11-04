@@ -45,15 +45,16 @@ public class FirstTimeManager {
             }
         }
     }
+
     public static boolean updateFirstTime(){
         SettingsController.loadSettings();
         if(FirstTime){
-           FirstTime=  !FirstTime;
+            FirstTime=  !FirstTime;
         }else if(!FirstTime){
             FirstTime=true;
         }
         SettingsController.setSetting("FirstTime", String.valueOf(FirstTime));
-        
+
         return FirstTime;
     }
 }

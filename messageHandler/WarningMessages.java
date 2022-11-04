@@ -21,18 +21,22 @@ public class WarningMessages{
         AllMessages.addMessage("[Warning]: " + message, VisibleToConsole);
         return message;
     }
+
     public static boolean clearMessages(){
         WarningMessages.clear();
         WarningMessagesT.clear();
         visibleToConsole.clear();
         return true;
     }
+
     public static int size(){
         return WarningMessages.size();
     }
+
     public static int tSize(){
         return WarningMessagesT.size();
     }
+
     public static String getLastMessage() {
         int size = WarningMessages.size();
         size --;
@@ -53,12 +57,14 @@ public class WarningMessages{
             return "";
         }
     }
+
     public static boolean setLastVisibleSet(boolean b) {
         int size = visibleToConsole.size();
         size --;
         visibleToConsole.set(size, b);
         return true;
     }
+
     public static boolean getLastVisibleSet() {
         int size = visibleToConsole.size();
         size --;

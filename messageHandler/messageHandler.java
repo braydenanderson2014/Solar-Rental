@@ -23,6 +23,7 @@ public class messageHandler{
             return ErrorMessages.getLastMessage();
         } 
     }
+
     public static boolean clearMessages(int mode, boolean visibleToConsole){
         if(mode == -2){
             ErrorMessages.clearMessages();
@@ -44,6 +45,7 @@ public class messageHandler{
             return false;
         }
     }
+
     public static boolean dumpAll(){
         LogDump.DumpLog("all");
         return true;

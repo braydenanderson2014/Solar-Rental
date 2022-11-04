@@ -29,6 +29,7 @@ public class AdministrativeFunctions {
         requestsMade = AdministrativeRequests.size();
         return requestsMade;
     }
+
     public static void AdministrativeMenu(){
         updateRequestsMade();
         Logo.displayLogo();
@@ -195,10 +196,11 @@ public class AdministrativeFunctions {
         }
 
         //if(request.contains("Permissions")){
-            
+
         //}
         return true;
     }
+
     private static boolean viewAccountList() {
         if(AccountRequestNamePool.size() <= 0){
             messageHandler.HandleMessage(-1, "No Account Requests have been made", true);
@@ -224,7 +226,8 @@ public class AdministrativeFunctions {
             return true;
         }
     }
-    private static boolean enableAnAccount() {
+
+    private static boolean enableAnAccount() {  //TODO: Remove User controller References 
         Logo.displayLogo();
         System.out.println("Enable An Account");
         Logo.displayLine();
@@ -243,6 +246,7 @@ public class AdministrativeFunctions {
         AdministrativeMenu();
         return true;
     }
+
     public static boolean enableAdminAccount() {
         if(UserListController.SearchForUser("Admin") == true){
             LoginUserController.setValue("Admin", "Account", "Enabled");
@@ -287,11 +291,13 @@ public class AdministrativeFunctions {
         messageHandler.HandleMessage(1, "Request saved successfully, an Administrator will review the request as soon as possible. [Request ID: " + RequestID + "]", true);
         return true;
     }
+
     private static int RequestIDGenerator() {
         Random gen = new Random();
         int RequestIDGenerator = gen.nextInt(99999);
         return RequestIDGenerator;
     }
+
     public static boolean removeRequest(){
         return true;
     }

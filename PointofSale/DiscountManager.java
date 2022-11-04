@@ -35,14 +35,17 @@ public class DiscountManager {
             DiscountMenu();
         }
     }
+
     private static void remIDis() {
     }
+
     private static void appIDis() {
     }
+
     private static void remDis() {
     }
+
     private static void appDis() {
     }
-
 
 }

@@ -19,7 +19,7 @@ public class LogDump {
     public static int SMT = 0;
     public static int AMT = 0;
     public static boolean DumpLog(String Mode){
-        
+
         Console.getConsole();
         String path;
         path = ProgramController.SystemRunPath + "/Logs";
@@ -147,5 +147,5 @@ public class LogDump {
             return false;
         }
     }
-    
+
 }

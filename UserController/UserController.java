@@ -24,7 +24,7 @@ public class UserController {
     static String currentUser = SwitchController.focusUser;
     static String User;
     static String Pass;
-    
+
     static String UserProperties = ProgramController.UserRunPath + "\\Users/" + User + ".properties";
     public static Properties userprop = new Properties();
     public static LocalDateTime myDateObj = LocalDateTime.now();
@@ -51,13 +51,14 @@ public class UserController {
         }
         return true;
     }
+
     public static boolean createNewUser(){
         System.out.println("Create User");
         Logo.displayLine();
         if(SwitchController.focusUser.equals("Admin") || Integer.parseInt(UserController.getUserProp("PermissionLevel"))>=8){
             System.out.println("New Username");
             String Username = customScanner.nextLine();
-            
+
             createUserFile(Username);
             loadUserproperties(Username);
             userprop.setProperty("Username", Username);
@@ -91,13 +92,14 @@ public class UserController {
         }
         return true;
     }
+
     public static boolean createNewUser(String Username){
         System.out.println("Create User");
         Logo.displayLine();
         if(SwitchController.focusUser.equals("Admin") || Integer.parseInt(UserController.getUserProp("PermissionLevel"))>=8){
             System.out.println("New Username");
             System.out.println(Username);
-            
+
             createUserFile(Username);
             userprop = new Properties();
             loadUserproperties(Username);
@@ -132,6 +134,7 @@ public class UserController {
             return false;
         }
     }
+
     public static boolean updateUserProfile(int mode){
         if(mode == 1){
             if(getUserProp("AccountName").equals("Blank")){
@@ -162,7 +165,7 @@ public class UserController {
                 updateAccountName();
                 updateUserProfile(mode);
             }else if(option.equals("pass")){
-                LoginUserController.ChangePass(User);
+                //LoginUserController.ChangePass(User);
                 updateUserProfile(mode);
             }else if(option.equals("perm")){
                 if(!SwitchController.focusUser.equals("Admin")){
@@ -181,6 +184,7 @@ public class UserController {
         }
         return true;
     }
+
     public static boolean createUser(String user, int PermissionLevel, int mode){
         Logo.displayLogo();
         System.out.println("createUser");
@@ -192,7 +196,7 @@ public class UserController {
                 Pass = customScanner.nextLine();
                 System.out.println("Set Permission Level for Account: ");
                 PermissionLevel = customScanner.nextInt();
-                
+
                 setupUser(User, PermissionLevel, 2);
             }else{
                 System.out.println("New UserName: ");
@@ -200,33 +204,34 @@ public class UserController {
                 System.out.println("Password: ");
                 Pass = customScanner.nextLine();
                 System.out.println("Set Permission Level for Account: ");
-                
+
                 userprop = new Properties();
                 setupUser(user, PermissionLevel, 2);
             }
         }else if(mode ==2){
             User = user;
             userprop = new Properties();
-            
+
             setupUser(user, PermissionLevel, 1);
         }else if(mode == 3){
             User = user;
             userprop = new Properties();
-            
+
             setupUser(user, PermissionLevel, 3);
         }
         return true;
     }
+
     public static boolean setupUser(String user, int PermissionLevel, int mode){
         UserProperties = ProgramController.UserRunPath + "\\Users/" + user + ".properties";
-        
+
         createUserFile(user);
         if(userExisted){
             return true;
         }else{
             Logo.displayLogo();
             if(mode == 1){
-                
+
             }else if(mode == 2){
                 System.out.println("Please Set a Account Name");
                 String name = customScanner.nextLine();
@@ -239,7 +244,7 @@ public class UserController {
                 userprop.setProperty("LastLogin", "Never");
                 userprop.setProperty("LoginAttempts", "0");
                 userprop.setProperty("PassFlag", "true");
-    
+
                 saveUserProp();
             }else if(mode == 3){
                 userprop.setProperty("AccountName", "ADMIN ACCOUNT");
@@ -258,7 +263,7 @@ public class UserController {
             }
             return true;
         }
-        
+
     }
     //#endregion
     //#region Deletion
@@ -268,7 +273,7 @@ public class UserController {
             return false;
         }
         User = SwitchController.focusUser;
-        
+
         userprop.clear();
         saveUserProp(User);
         messageHandler.HandleMessage(-1, "User Settings have been erased...", true);
@@ -281,8 +286,9 @@ public class UserController {
         }
         return true;
     }
+
     public static boolean deleteUser(String user){
-      
+
         messageHandler.HandleMessage(-1, "User Settings have been erased...", true);
         File file = new File(ProgramController.UserRunPath + "\\Users/" + user + ".properties");
         if(file.exists()){
@@ -304,10 +310,12 @@ public class UserController {
     public static int adjPermLev(String user){
         return 1;
     }
+
     public static String setAccountName(){
         userprop.setProperty("AccountName", "Solar");
         return userprop.getProperty("AccountName");
     }
+
     public static String updateAccountName(){
         Logo.displayLogo();
         System.out.println("Update Account Name: ");
@@ -320,13 +328,13 @@ public class UserController {
     }
     //#endregion
     //#region get
-    
+
     public static String getUserProp(String prop){
         return userprop.getProperty(prop);
     }
     //#endregion
     //#region loadProperties files
-  
+
     public static boolean loadUserproperties(){
         try (InputStream input = new FileInputStream(UserProperties)){
             userprop.load(input);
@@ -337,6 +345,7 @@ public class UserController {
             return false;
         }
     }
+
     public static boolean loadUserproperties(String Username){
         try (InputStream input = new FileInputStream(ProgramController.UserRunPath + "\\Users/" + Username + ".properties")){
             userprop.load(input);
@@ -351,7 +360,6 @@ public class UserController {
     //#endregion
     //#region SaveProperties files
 
-    
     public static boolean saveUserProp(){
         try (OutputStream output = new FileOutputStream(UserProperties)){
             userprop.store(output, null);
@@ -362,6 +370,7 @@ public class UserController {
             return false;
         }
     }
+
     public static boolean saveUserProp(String user){
         try (OutputStream output = new FileOutputStream(ProgramController.UserRunPath + "\\Users/" + user + ".properties")){
             userprop.store(output, null);
@@ -380,28 +389,30 @@ public class UserController {
         saveUserProp();
         return "";
     }
+
     public static String SetUserProp(String user, String prop, String value){
         messageHandler.HandleMessage(1, user + " " + prop + " was updated with value: " + value, false);
         userprop.setProperty(prop, value);
         saveUserProp(user);
         return "";
     }
-    
+
     //#endregion
     //#region Remove Users/Props
-    
+
     public static String removeUserProp(String prop){
         userprop.remove(prop);
         return "";
     } 
     //#endregion
     //#region SearchforUser
-    
+
     //#endregion
     //#region SearchforProp
     public static String SearchForProp(String prop){
         return userprop.getProperty(prop);
     }
+
     public static boolean doesPropExists(String prop){
         if(userprop.containsKey("prop")){
             return true;

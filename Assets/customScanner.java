@@ -13,24 +13,26 @@ import messageHandler.messageHandler;
 public class customScanner
 {
     public static Scanner scan;
-   
+
     public customScanner(){
-         scan = new Scanner(System.in);
-         messageHandler.HandleMessage(1, "Created Scanner Object for user input", false);
+        scan = new Scanner(System.in);
+        messageHandler.HandleMessage(1, "Created Scanner Object for user input", false);
     }
+
     public static Scanner getScanner(){
         return scan;
     }
+
     public static double nextDouble() throws InputMismatchException{
         double d = scan.nextDouble();
         return d;
     }
-    
+
     public static String nextLine(){
         String s = scan.nextLine();
         return s;
     }
-    
+
     public static int nextInt() throws InputMismatchException{
         int i = scan.nextInt();
         return i;
@@ -45,11 +47,12 @@ public class customScanner
         short s = scan.nextShort();
         return s;
     }
+
     public static Boolean nextBoolean() throws InputMismatchException{
         boolean b = scan.nextBoolean();
         return b;
     }
-    
+
     public int close(int b){
         scan.close();
         try{

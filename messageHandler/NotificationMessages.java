@@ -25,18 +25,22 @@ public class NotificationMessages{
         messageHandler.HandleMessage(1, "Last Visible Set: " + getLastVisibleSet(), false);
         return message;
     }
+
     public static boolean clearMessages(){
         NotificationMessages.clear();
         NotificationMessagesT.clear();
         visibleToConsole.clear();
         return true;
     }
+
     public static int size(){
         return NotificationMessages.size();
     }
+
     public static int tSize(){
         return NotificationMessagesT.size();
     }
+
     public static String getLastMessage() {
         int size = NotificationMessages.size();
         size --;
@@ -57,11 +61,13 @@ public class NotificationMessages{
             return "";
         }
     }
+
     public static boolean getLastVisibleSet() {
         int size = visibleToConsole.size();
         size --;
         return visibleToConsole.get(size);
     }
+
     public static boolean setLastVisibleSet(boolean b) {
         int size = visibleToConsole.size();
         size --;

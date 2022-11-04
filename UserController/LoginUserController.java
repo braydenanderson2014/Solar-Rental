@@ -19,6 +19,7 @@ public class LoginUserController {
         boolean success = UserListController.loadUserList();
         return success;
     }
+
     public static boolean loadUserProperties(String User){
         loadUserlist();
         if(UserListController.SearchForUser(User) == true){
@@ -37,6 +38,7 @@ public class LoginUserController {
             return false;
         }
     }
+
     public static boolean saveUserProperties(String User){
         loadUserlist();
         boolean success = UserListController.SearchForUser(User);
@@ -56,6 +58,7 @@ public class LoginUserController {
         }
         return false;
     }
+
     public static boolean checkPassword(String User, String Pass){
         loadUserlist();
         if(UserListController.SearchForUser(User) == true){
@@ -85,7 +88,6 @@ public class LoginUserController {
                         }
                     }else{
                         messageHandler.HandleMessage(-1, "Invalid Username or Password.",true);
-
                         FailedAttemptsLOMG = Integer.parseInt(GetProperty("FailedLoginAttempts"));
                         FailedAttemptsLOMG= FailedAttemptsLOMG ++;
                         setValue(User, "FailedLoginAttempts", String.valueOf(FailedAttemptsLOMG));
@@ -112,6 +114,7 @@ public class LoginUserController {
         }
         return true;
     }
+
     public static boolean ChangePass(String User) {
         messageHandler.HandleMessage(1, "Password Change Initiated: ChangePass", false);
         loadUserProperties(User);
@@ -157,26 +160,28 @@ public class LoginUserController {
                 }
             }
         }
-        
-        
-       
+
     }
     public static boolean AdminUpdateUserPass(String User){
         return true;
     }
+
     public static boolean setValue(String User, String key, String value){
         loadUserProperties(User);
         userprop.setProperty(key, value);
         saveUserProperties(User);
         return true;
     }
+
     private static boolean SearchForKey(String Key){
         boolean exists = userprop.containsKey(Key);
         return exists;
     }
+
     private static String GetProperty(String Key){
         return userprop.getProperty(Key);
     }
+
     private static boolean checkUserProfileFile(String User) {
         UserProperties = UserProperties2 + User + ".properties";
         File file = new File(UserProperties);

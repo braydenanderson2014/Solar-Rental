@@ -19,16 +19,19 @@ public class VersionController {
         messageHandler.HandleMessage(1, "Version Set as Default, May Correct later", false);
         Version = DefaultVersion;
     }
+
     public static String updateVersion(){
         Version = scan.nextLine();
         SettingsController.setSetting("Version", Version);
         return Version;
     }
+
     public static String setVersion(String version){
         Version = version;
         SettingsController.setSetting("Version", Version);
         return Version;
     }
+
     public static String getVersion(){
         boolean exists = SettingsController.SearchForSet("Version");
         if(exists){
