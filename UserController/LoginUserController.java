@@ -14,6 +14,7 @@ public class LoginUserController {
     static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
     static int FailedAttemptsLOMG = 0;
     static byte passChangeAttempts = 0;
+    public static boolean passFlag = false;
     public static Properties userprop = new Properties();
     private static boolean loadUserlist(){
         boolean success = UserListController.loadUserList();
@@ -71,7 +72,8 @@ public class LoginUserController {
                                 int logins = Integer.parseInt(GetProperty("SuccessfulLogins"));
                                 logins ++;
                                 setValue(User, "SuccessfulLogins", String.valueOf(logins));
-                                setValue(User, "s", "0");
+                                setValue(User, "LastLogin", AllMessages.dTime);
+
                                 if(Boolean.parseBoolean(GetProperty("PassFlag")) == true){
                                     ChangePass(User);
                                     return true;

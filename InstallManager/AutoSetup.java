@@ -5,7 +5,8 @@ import java.io.IOException;
 
 import Login.Login;
 import MainSystem.SettingsController;
-import UserController.UserController;
+import UserController.AutoSetupUserController;
+
 import messageHandler.SystemMessages;
 import messageHandler.messageHandler;
 
@@ -166,7 +167,8 @@ public class AutoSetup {
     }
 
     private static void createAdminAccount() {
-        UserController.createUser("Admin", 8 , 3);
+        AutoSetupUserController.AutoCreateAdmin();
+        //UserController.createUser("Admin", 8 , 3);
         FirstTimeManager.updateFirstTime();
         Login.LoginScreen();
     }

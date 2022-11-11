@@ -262,4 +262,8 @@ public class MaintainUserController {
         }
 
     }
+
+    public static boolean deleteUser(String user) {
+        return true;
+    }
 }

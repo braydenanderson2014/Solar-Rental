@@ -74,4 +74,10 @@ public class SecondaryUserController{
         return true;
     }
 
+    public static void adjPermLev(String user) {
+    }
+
+    public static void loadUserproperties(String account) {
+    }
+
 }

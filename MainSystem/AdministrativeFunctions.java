@@ -10,7 +10,7 @@ import Login.SwitchController;
 import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
-import UserController.UserController;
+import UserController.SecondaryUserController;
 import UserController.UserListController;
 import messageHandler.ClearAllMessages;
 import messageHandler.Console;
@@ -54,7 +54,7 @@ public class AdministrativeFunctions {
                 System.out.println("User to delete: ");
                 String user = customScanner.nextLine();
                 if(UserListController.SearchForUser(user) == true){
-                    UserController.deleteUser(user);
+                   MaintainUserController.deleteUser(user);
                 }else{
                     messageHandler.HandleMessage(-1, "Unable to find user [" + user + "]", true);
                 }
@@ -86,7 +86,7 @@ public class AdministrativeFunctions {
                 if(UserListController.SearchForUser(Account) == true){
                     LoginUserController.loadUserProperties(Account);
                     LoginUserController.setValue(Account, "PassFlag", "true");
-                    messageHandler.HandleMessage(1, "PassFlag set for user: " + UserController.getUserProp("Username"), true);
+                    messageHandler.HandleMessage(1, "PassFlag set for user: " + MaintainUserController.GetProperty("Username"), true);
                 }else{
                     messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
                 }
@@ -118,7 +118,7 @@ public class AdministrativeFunctions {
             }else if(option.equals("return")){
                 MainMenu.mainMenu();
             }else{
-                if(Integer.parseInt(UserController.SearchForProp("PermissionLevel")) >= 8){
+                if(Integer.parseInt(MaintainUserController.GetProperty("PermissionLevel")) >= 8){
                     messageHandler.HandleMessage(-1, "Invalid option, try again!", true);
                 }else{
                     messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions for this function. Please return to Main Menu!", true);
@@ -155,7 +155,7 @@ public class AdministrativeFunctions {
             System.out.println(size + ". " + AdministrativeRequests.get(option));
             String user = customScanner.nextLine();
             if(AdministrativeRequestKeyWord.get(option).contains("Permissions")){
-                UserController.adjPermLev(user);
+                SecondaryUserController.adjPermLev(user);
                 AdministrativeRequests.remove(option);
                 AdministrativeRequestFull.remove(option);
                 AdministrativeRequestID.remove(option);
@@ -217,7 +217,7 @@ public class AdministrativeFunctions {
             try{
                 int choice = customScanner.nextInt();
                 choice -- ;
-                UserController.createNewUser(AccountRequestNamePool.get(choice));
+                MaintainUserController.createNewUser(AccountRequestNamePool.get(choice));
                 return true;
             }catch(InputMismatchException e){
                 messageHandler.HandleMessage(-2, e.toString(), true);
@@ -235,11 +235,11 @@ public class AdministrativeFunctions {
         String Account = customScanner.nextLine();
         messageHandler.HandleMessage(1, Account + " was enabled", false);
         if(UserListController.SearchForUser(Account) == true){
-            UserController.loadUserproperties(Account);
-            UserController.SetUserProp(Account, "Account", "Enabled");
-            messageHandler.HandleMessage(1, "User: " + UserController.getUserProp("Username") + " Account was Enabled", true);
-            UserController.SetUserProp(Account, "PassFlag", "true");
-            UserController.loadUserproperties(SwitchController.focusUser);
+            SecondaryUserController.loadUserproperties(Account);
+            SecondaryUserController.setUserProp("Account", "Enabled");
+            messageHandler.HandleMessage(1, "User: " + SecondaryUserController.getUserProp("Username") + " Account was Enabled", true);
+            SecondaryUserController.setUserProp("PassFlag", "true");
+            SecondaryUserController.loadUserproperties(SwitchController.focusUser);
         }else{
             messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
         }
@@ -268,10 +268,10 @@ public class AdministrativeFunctions {
         messageHandler.HandleMessage(1, Account + " was disabled", false);
         if(UserListController.SearchForUser(Account) == true){
             if(!SwitchController.focusUser.equals("Admin")){
-                UserController.loadUserproperties(Account);
-                UserController.SetUserProp(UserController.getUserProp("Username"), "Account", "Disabled");
-                messageHandler.HandleMessage(1, "User: " + UserController.getUserProp("Username") + " Account was Disabled", true);
-                UserController.loadUserproperties(SwitchController.focusUser);
+                SecondaryUserController.loadUserproperties(Account);
+                SecondaryUserController.setUserProp("Account", "Disabled");
+                messageHandler.HandleMessage(1, "User: " + SecondaryUserController.getUserProp("Username") + " Account was Disabled", true);
+                SecondaryUserController.loadUserproperties(SwitchController.focusUser);
             }
         }else{
             messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
