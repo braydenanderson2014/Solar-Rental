@@ -132,7 +132,7 @@ public class AdministrativeFunctions {
         }
     }
 
-    private static boolean resolutionAdvisory() {
+    public static boolean resolutionAdvisory() {
         if(updateRequestsMade() == 0){
             messageHandler.HandleMessage(-1, "No Requests have been made", true);
             return false;
@@ -162,7 +162,6 @@ public class AdministrativeFunctions {
                 AdministrativeRequestKeyWord.remove(option);
                 AdministrativeRequestUser.remove(option);   
                 AdministrativeRequestedName.remove(option);
-                //}else if(AdministrativeRequests.get(option).contains("")){}
             }else if(AdministrativeRequestKeyWord.get(option).contains("new Account")){
                 MaintainUserController.createNewUser(AdministrativeRequestedName.get(option));
                 AdministrativeRequests.remove(option);
@@ -235,11 +234,9 @@ public class AdministrativeFunctions {
         String Account = customScanner.nextLine();
         messageHandler.HandleMessage(1, Account + " was enabled", false);
         if(UserListController.SearchForUser(Account) == true){
-            SecondaryUserController.loadUserproperties(Account);
-            SecondaryUserController.setUserProp("Account", "Enabled");
+            LoginUserController.setValue(Account, "Account", "Enabled");
             messageHandler.HandleMessage(1, "User: " + SecondaryUserController.getUserProp("Username") + " Account was Enabled", true);
-            SecondaryUserController.setUserProp("PassFlag", "true");
-            SecondaryUserController.loadUserproperties(SwitchController.focusUser);
+            LoginUserController.setValue(Account, "PassFlag", "true");
         }else{
             messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
         }
@@ -267,17 +264,18 @@ public class AdministrativeFunctions {
         String Account = customScanner.nextLine();
         messageHandler.HandleMessage(1, Account + " was disabled", false);
         if(UserListController.SearchForUser(Account) == true){
-            if(!SwitchController.focusUser.equals("Admin")){
-                SecondaryUserController.loadUserproperties(Account);
-                SecondaryUserController.setUserProp("Account", "Disabled");
-                messageHandler.HandleMessage(1, "User: " + SecondaryUserController.getUserProp("Username") + " Account was Disabled", true);
-                SecondaryUserController.loadUserproperties(SwitchController.focusUser);
+            if(!Account.equals("Admin")){
+                LoginUserController.setValue(Account, "Account", "Disabled");
+                messageHandler.HandleMessage(1, "User: " + LoginUserController.GetProperty(Account, "Username") + " Account was Disabled", true);
+                return true;
+            }else {
+            	messageHandler.HandleMessage(-1, "CANNOT Disable Admin Account", true);
+            	return false;
             }
         }else{
             messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
+            return false;
         }
-        AdministrativeMenu();
-        return true;
     }
 
     public static boolean newRequest(String focusUser, String request, String Description, String NewAccountName){

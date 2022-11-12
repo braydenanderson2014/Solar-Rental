@@ -1,0 +1,36 @@
+<?xml version = "1.0"?>
+<Categories>
+    <Category type="Appliances">
+        <Appliances type= "Fridges"> 
+            <Item itemNum=123>
+                <Brand>LG</Brand>
+                <ModelNum> sdja16531 </ModelNum>
+                <Price> 7.50$ </Price>
+                <ItemNum>123</ItemNum>
+                <Color> White</Color>
+                <ItemDescription>White LG Fridge</ItemDescription>
+            </Item>
+            <Item itemNum = 456>
+                <Brand>Maytag</Brand>
+                <ModelNum> djdkada </ModelNum>
+                <Price> 53.54</Price>
+                <ItemNum> 456 </ItemNum>
+                <Color> GunMetal Grey </Color>
+                <ItemDescription>GunMetal Grey Maytag Fridge</ItemDescription>
+            </Item>
+        </Appliances>
+        <Appliances type="MicroWaves">
+            <Item>
+            
+            </Item>
+        </Appliances>  
+    </Category>
+    <Category type="Furniture">
+        <Furniture type="Couches">
+            <Item>
+            
+            </Item>
+        </Furniture>
+    </Category>
+    
+</Categories>

@@ -45,7 +45,8 @@ public class SecondaryUserController{
         }catch(IOException e){
             messageHandler.HandleMessage(-2,e.toString(), true);
             return false;
-        }    }
+        }    
+     }
 
     public static boolean saveTargetUserProps(){ //Save The properties to the users properties file.
         try (OutputStream output = new FileOutputStream(ProgramController.UserRunPath + "\\Users/" + TargetedAccount + ".properties")){
@@ -74,7 +75,8 @@ public class SecondaryUserController{
         return true;
     }
 
-    public static void adjPermLev(String user) {
+    public static Boolean adjPermLev(String user) {
+    	return true;
     }
 
     public static void loadUserproperties(String account) {

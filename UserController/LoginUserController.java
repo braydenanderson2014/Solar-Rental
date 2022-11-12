@@ -183,6 +183,10 @@ public class LoginUserController {
     private static String GetProperty(String Key){
         return userprop.getProperty(Key);
     }
+    public static String GetProperty(String User, String Key) {
+    	loadUserProperties(User);
+    	return userprop.getProperty(Key);
+    }	
 
     private static boolean checkUserProfileFile(String User) {
         UserProperties = UserProperties2 + User + ".properties";

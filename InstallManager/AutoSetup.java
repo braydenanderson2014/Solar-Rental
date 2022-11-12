@@ -19,14 +19,25 @@ public class AutoSetup {
         //#region Folder/File Install
         //#region SystemPathLetter
         messageHandler.HandleMessage(1, "Searching for System PathLetter in Configuration...", false);
-        boolean exists = SettingsController.SearchForSet("SystemPathLetter");
+        String setting = "SystemPathLetter";
+		boolean exists = SettingsController.SearchForSet(setting);
         System.out.println(SystemMessages.getLastMessage());
         if(exists){
             messageHandler.HandleMessage(1, "Found SystemPathLetter in Configuration... Now Assigning SystemPathLetter to variable", false);
             System.out.println(SystemMessages.getLastMessage());
-            SystemPathLetter = SettingsController.getSetting("SystemPathLetter");
+            SystemPathLetter = SettingsController.getSetting(setting);
         }else{
-            SettingsController.setSetting("SystemPathLetter", SystemPathLetter);
+            SettingsController.setSetting(setting, SystemPathLetter);
+        }
+        //#endregion
+        //#region Debug
+        setting = "debugSite";
+        exists = SettingsController.SearchForSet(setting);
+        if(exists) {
+        	messageHandler.HandleMessage(1, "Found debugSite in Configureation... ", false);
+        	System.out.println(SystemMessages.getLastMessage());
+        }else {
+        	SettingsController.setSetting(setting,"https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
         }
         //#endregion
         //#region SystemPath

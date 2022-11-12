@@ -1,7 +1,10 @@
 package MainSystem;
+import static java.lang.Integer.parseInt;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 import Assets.Logo;
 import Assets.VersionController;
@@ -20,10 +23,14 @@ import messageHandler.SystemMessages;
 import messageHandler.ViewLogManager;
 import messageHandler.messageHandler;
 public class Settings{
-    public static Scanner scan = new Scanner(System.in);
     public static String path = ProgramController.UserRunPath;
-    public static ArrayList<String> MyRequests = new ArrayList<String>();
+    public static List<String> MyRequests = new ArrayList<>();
     public static String logType = "all";
+    public static int requestsMade = 0;
+    public static int updateRequestsMade(){
+        requestsMade = AdministrativeFunctions.AdministrativeRequests.size();
+        return requestsMade;
+    }
     public static boolean checkRequests(){
         MyRequests.clear();
         for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestUser.size(); i++){
@@ -43,18 +50,18 @@ public class Settings{
             System.out.println(item + ": " + MyRequests.get(i));
         }
         try {
-            int option = 23;
+            int option;
             System.out.println("Select An Item: (Type \"0\" to go back to the main menu)");
             option = customScanner.nextInt();
             option--;
-            if(option == 0){
+            if(option == -1){
                 SettingsMenu();
             }else{
-                String temp = "NULL";
+                String temp;
                 Logo.displayLogo();
                 System.out.println("Selected Item: " + MyRequests.get(option));
                 System.out.println("Would you like to Revoke your Request? (y/n)");
-                temp = scan.nextLine();
+                temp = customScanner.nextLine();
                 if(temp.equals("y") || temp.equals("yes")){
                     for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestKeyWord.size(); i++){
                         if(AdministrativeFunctions.AdministrativeRequestFull.get(i).contains(MyRequests.get(option))){
@@ -81,10 +88,8 @@ public class Settings{
                     printRequests();
                 }
             }
-        } catch (InputMismatchException e) {
+        } catch (InputMismatchException|IndexOutOfBoundsException e) {
             messageHandler.HandleMessage(-2,e.toString(), true);
-        }catch (IndexOutOfBoundsException e) {
-            messageHandler.HandleMessage(-2, e.toString(), true);
         }
         return true;
     }
@@ -103,31 +108,37 @@ public class Settings{
         System.out.println("[DUMP]: Dump Logs to File");
         System.out.println("[UPDATE]: Manually Update User Profile");
         System.out.println("[FORCE]: Force User Profile to update to latest Settings");
-        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 6){
-            System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+        String key = "PermissionLevel";
+		if(parseInt(MainSystemUserController.GetProperty(key)) >= 6){
+            System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());  	
         }
-        System.out.println("[REQUESTS]: My Requests: Current Requests: " + MyRequests.size());
+        if(parseInt(MainSystemUserController.GetProperty(key)) >= 8) {
+        	System.out.println("[REQUESTS]: View User Requests; Current Request Count: [" + requestsMade + "]");
+        }else {
+        	System.out.println("[REQUESTS]: My Requests: Current Requests: " + MyRequests.size());
+        }
         System.out.println("[RETURN]: Return");
         System.out.println();
         Console.getConsole();
-        String option = scan.nextLine().toLowerCase();
+        String option = customScanner.nextLine().toLowerCase();
         if(option.equals("path")){
-            //PathController.pathMenu(1);
+        	messageHandler.HandleMessage(-1, "Path Controller has not yet been implemented, Check back at a later update", true);
+        	SettingsMenu();
         }else if(option.equals("update")){
             MaintainUserController.loadUserProperties(SwitchController.focusUser);
             MaintainUserController.updateProfileSettings(MaintainUserController.GetProperty("Username"));  
         }else if(option.equals("rab")){
             try {
-                URI uri= new URI("https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
+                URI uri= new URI(SettingsController.getSetting("debugSite"));
                 java.awt.Desktop.getDesktop().browse(uri);
                 messageHandler.HandleMessage(1, "Webpage opened in your default Browser...", true);
-                messageHandler.HandleMessage(2, "WebPage: https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew", true);
+                messageHandler.HandleMessage(2, SettingsController.getSetting("debugSite"), true);
             } catch (Exception e) {
                 messageHandler.HandleMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
             }
             SettingsMenu();
         }else if(option.equals("force")){
-            //UserController.updateUserProfile(1);
+            messageHandler.HandleMessage(-1, "Force (Update) has not been implemented yet. Check back at a later update", false);
             SettingsMenu();
         }else if(option.equals("viewlogs")){
             ViewLogManager.ViewMenu(1);
@@ -137,11 +148,11 @@ public class Settings{
         }else if(option.equals("console")){
             ConsoleSettings.ConsoleSettingsMenu();
         }else if(option.equals("requests")){
-            if(MyRequests.size() == 0){
-                messageHandler.HandleMessage(-1, "No Requests Have Been Made", true);
-            }else {
-                printRequests();
-            }
+        	if(SwitchController.focusUser.equals("Admin")) {
+        		AdministrativeFunctions.resolutionAdvisory();
+        	}else {
+        		printRequests();
+        	}
             SettingsMenu();
         }else if(option.equals("log")){
             if(logType.equals("all")){
@@ -155,15 +166,16 @@ public class Settings{
             }else if(logType.equals("error")){
                 logType = "all";
             }
-            SettingsController.setSetting("LogType", logType);
+            String settingType = "LogType";
+			SettingsController.setSetting(settingType, logType);
             messageHandler.HandleMessage(1, "Log Type: " + logType, true);
             SettingsMenu();
         }else if(option.equals("first")){
-            if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 6){
-                if(FirstTimeManager.checkFirstTime() == true){
+            if(parseInt(MainSystemUserController.GetProperty(key)) >= 6){
+                if(FirstTimeManager.checkFirstTime()){
                     SettingsController.setSetting("FirstTime", "false");
                     FirstTimeManager.FirstTime = false;
-                }else if(FirstTimeManager.checkFirstTime() == false){
+                }else if(!FirstTimeManager.checkFirstTime()){
                     FirstTimeManager.FirstTime = true;
                     SettingsController.setSetting("FirstTime", "true");
                 }
@@ -182,7 +194,7 @@ public class Settings{
         }
     }
 
-    public static boolean LoadSettings(){
+    public static boolean loadSettings(){
         messageHandler.HandleMessage(1, "Loading Settings file from config.properties", false);
         System.out.println(SystemMessages.getLastMessage());
         SettingsController.loadSettings();
