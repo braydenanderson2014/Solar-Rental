@@ -46,9 +46,9 @@ public class ConsoleHandler{
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
 			}
-			
+			indexesToRemove.clear();
 		}
-		indexesToRemove.clear();
+		
 		if(!SettingsController.getSetting("ErrorSet").equals("true")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[Error]:")) {
@@ -58,8 +58,9 @@ public class ConsoleHandler{
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
 			}
+			indexesToRemove.clear();
 		}
-		indexesToRemove.clear();
+		
 		if(!SettingsController.getSetting("WarningSet").equals("true")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[Warning]:")) {
@@ -69,8 +70,9 @@ public class ConsoleHandler{
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
 			}
+			indexesToRemove.clear();
 		}
-		indexesToRemove.clear();
+		
 		if(!SettingsController.getSetting("UserNotifySet").equals("true")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[Notification]:")) {
@@ -80,8 +82,9 @@ public class ConsoleHandler{
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
 			}
+			indexesToRemove.clear();
 		}
-		indexesToRemove.clear();
+		
 		return true;
 	}
 }
