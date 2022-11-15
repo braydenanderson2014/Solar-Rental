@@ -24,33 +24,27 @@ public class customScanner
     }
 
     public static double nextDouble() throws InputMismatchException{
-        double d = scan.nextDouble();
-        return d;
+        return scan.nextDouble();
     }
 
     public static String nextLine(){
-        String s = scan.nextLine();
-        return s;
+        return scan.nextLine();
     }
 
     public static int nextInt() throws InputMismatchException{
-        int i = scan.nextInt();
-        return i;
+        return scan.nextInt();
     }
 
     public static byte nextByte() throws InputMismatchException{
-        byte b = scan.nextByte();
-        return b;
+        return scan.nextByte();
     }
 
     public static short nextShort() throws InputMismatchException{
-        short s = scan.nextShort();
-        return s;
+        return scan.nextShort();
     }
 
     public static Boolean nextBoolean() throws InputMismatchException{
-        boolean b = scan.nextBoolean();
-        return b;
+        return scan.nextBoolean();
     }
 
     public int close(int b){

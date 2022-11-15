@@ -18,8 +18,7 @@ public class Logo{
     }
 
     public static String displayLogo2(){
-        String Logo = "SOLAR RENTALS";
-        return Logo;
+        return "SOLAR RENTALS";
     }
 
     public static String displayLine(){

@@ -23,8 +23,7 @@ public class MaintainUserController {
     public static Properties userprop = new Properties();
     public static String status = "Disabled";
     private static boolean loadUserlist(){
-        boolean success = UserListController.loadUserList();
-        return success;
+        return UserListController.loadUserList();
     }
 
     public static boolean setValue(String User, String key, String value){
@@ -86,7 +85,7 @@ public class MaintainUserController {
     }
 
     public static boolean createNewFile(String User){
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             messageHandler.HandleMessage(-1, "This User Already Exists: " + User, true);
             return false;
         }else{
@@ -108,7 +107,7 @@ public class MaintainUserController {
 
     public static boolean loadUserProperties(String User){
         loadUserlist();
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
@@ -138,16 +137,14 @@ public class MaintainUserController {
                 messageHandler.HandleMessage(-2, e.toString(), true);
                 return false;
             }
-        }else if(!success){
+        }else{
             messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
-        return false;
     }
 
     public static boolean SearchForKey(String Key){
-        boolean exists = userprop.containsKey(Key);
-        return exists;
+        return userprop.containsKey(Key);
     }
 
     public static String GetProperty(String Key){
@@ -199,9 +196,9 @@ public class MaintainUserController {
 
     public static boolean forceProfileUpdate(String User){
         UserListController.loadUserList();
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             MaintainUserController.loadUserProperties(User);
-            if(SearchForKey("Notification") == false){
+            if(!SearchForKey("Notification")){
                 setValue(User, "Notification", "true"); 
                 messageHandler.HandleMessage(1, "Successfully added new Value to profile.", true);
                 return true;
@@ -217,7 +214,7 @@ public class MaintainUserController {
 
     public static boolean requestAccountChange(String User){
         UserListController.loadUserList();
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             MaintainUserController.loadUserProperties(User);
             Logo.displayLogo();
             System.out.println("Update Account Name: ");
@@ -232,7 +229,7 @@ public class MaintainUserController {
 
     public static boolean updateAccountName(String User, String AccountName){
         UserListController.loadUserList();
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             MaintainUserController.loadUserProperties(User);
             Logo.displayLogo();
             System.out.println("Update Account Name: ");

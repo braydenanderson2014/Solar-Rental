@@ -38,13 +38,13 @@ public class LogDump {
                     file.createNewFile();
                 }
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("Solar Logs (TYPE: [ALL MESSAGES])\r\n");
-                for(int i = 0; i< AllMessages.AllMessagesT.size();i++){
-                    bw.write(AllMessages.AllMessagesT.get(i) + "\r\n");
-                }
-                bw.write("Report Generated at Time: " + AllMessages.getTime());
-                bw.close();
+                try (BufferedWriter bw = new BufferedWriter(fw)) {
+					bw.write("Solar Logs (TYPE: [ALL MESSAGES])\r\n");
+					for(int i = 0; i< AllMessages.AllMessagesT.size();i++){
+					    bw.write(AllMessages.AllMessagesT.get(i) + "\r\n");
+					}
+					bw.write("Report Generated at Time: " + AllMessages.getTime());
+				}
                 messageHandler.HandleMessage(2, "Log Generated at Time: " + AllMessages.getTime(), true);
                 messageHandler.HandleMessage(1, "Log File Saved at: " + path, true);
                 return true;
@@ -58,13 +58,14 @@ public class LogDump {
                     file.createNewFile();
                 }
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("Solar Logs (TYPE: [System Messages Only])\r\n");
-                for(int i = 0; i< SystemMessages.SystemMessagesT.size();i++){
-                    bw.write(SystemMessages.SystemMessagesT.get(i) + "\r\n");
-                }
-                bw.write("Report Generated at Time: " + AllMessages.getTime());
-                bw.close();
+                try (BufferedWriter bw = new BufferedWriter(fw)) {
+					bw.write("Solar Logs (TYPE: [System Messages Only])\r\n");
+					for(int i = 0; i< SystemMessages.SystemMessagesT.size();i++){
+					    bw.write(SystemMessages.SystemMessagesT.get(i) + "\r\n");
+					}
+					bw.write("Report Generated at Time: " + AllMessages.getTime());
+					
+				}
                 messageHandler.HandleMessage(2, "Log Generated at Time: " + AllMessages.getTime(), true);
                 messageHandler.HandleMessage(1, "Log File Saved at: " + path, true);
                 return true;
@@ -78,13 +79,14 @@ public class LogDump {
                     file.createNewFile();
                 }
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("Solar Logs (TYPE: [UserNotification Messages Only])\r\n");
-                for(int i = 0; i< NotificationMessages.NotificationMessagesT.size();i++){
-                    bw.write(NotificationMessages.NotificationMessagesT.get(i) + "\r\n");
-                }
-                bw.write("Report Generated at Time: " + AllMessages.getTime());
-                bw.close();
+                try (BufferedWriter bw = new BufferedWriter(fw)) {
+					bw.write("Solar Logs (TYPE: [UserNotification Messages Only])\r\n");
+					for(int i = 0; i< NotificationMessages.NotificationMessagesT.size();i++){
+					    bw.write(NotificationMessages.NotificationMessagesT.get(i) + "\r\n");
+					}
+					bw.write("Report Generated at Time: " + AllMessages.getTime());
+					
+				}
                 messageHandler.HandleMessage(2, "Log Generated at Time: " + AllMessages.getTime(), true);
                 messageHandler.HandleMessage(1, "Log File Saved at: " + path, true);
                 return true;
@@ -98,13 +100,14 @@ public class LogDump {
                     file.createNewFile();
                 }
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("Solar Logs (TYPE: [WARNING Messages Only])\r\n");
-                for(int i = 0; i< WarningMessages.WarningMessagesT.size();i++){
-                    bw.write(WarningMessages.WarningMessagesT.get(i) + "\r\n");
-                }
-                bw.write("Report Generated at Time: " + AllMessages.getTime());
-                bw.close();
+                try (BufferedWriter bw = new BufferedWriter(fw)) {
+					bw.write("Solar Logs (TYPE: [WARNING Messages Only])\r\n");
+					for(int i = 0; i< WarningMessages.WarningMessagesT.size();i++){
+					    bw.write(WarningMessages.WarningMessagesT.get(i) + "\r\n");
+					}
+					bw.write("Report Generated at Time: " + AllMessages.getTime());
+					
+				}
                 messageHandler.HandleMessage(2, "Log Generated at Time: " + AllMessages.getTime(), true);
                 messageHandler.HandleMessage(1, "Log File Saved at: " + path, true);
                 return true;
@@ -118,13 +121,14 @@ public class LogDump {
                     file.createNewFile();
                 }
                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write("Solar Logs (TYPE: [ERROR Messages Only])\r\n");
-                for(int i = 0; i< ErrorMessages.ErrorMessagesT.size();i++){
-                    bw.write(ErrorMessages.ErrorMessagesT.get(i) + "\r\n");
-                }
-                bw.write("Report Generated at Time: " + AllMessages.getTime());
-                bw.close();
+                try (BufferedWriter bw = new BufferedWriter(fw)) {
+					bw.write("Solar Logs (TYPE: [ERROR Messages Only])\r\n");
+					for(int i = 0; i< ErrorMessages.ErrorMessagesT.size();i++){
+					    bw.write(ErrorMessages.ErrorMessagesT.get(i) + "\r\n");
+					}
+					bw.write("Report Generated at Time: " + AllMessages.getTime());
+					
+				}
                 messageHandler.HandleMessage(2, "Log Generated at Time: " + AllMessages.getTime(), true);
                 messageHandler.HandleMessage(1, "Log File Saved at: " + path, true);
                 return true;

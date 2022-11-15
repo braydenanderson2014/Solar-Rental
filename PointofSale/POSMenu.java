@@ -1,6 +1,7 @@
 package PointofSale;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Assets.Logo;
 import Assets.customScanner;
@@ -8,13 +9,14 @@ import Login.SwitchController;
 import MainSystem.MainMenu;
 import UserController.MainSystemUserController;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 
 public class POSMenu {
-    public static ArrayList<String> ItemsOnInvoice = new ArrayList<String>();
-    public static ArrayList<Double> CurrentPricesOnInvoice = new ArrayList<Double>();
-    public static ArrayList<Double> OrigPricesOnInvoice = new ArrayList<Double>();
-    public static ArrayList<Boolean> isItemDiscounted = new ArrayList<Boolean>();    
+    public static List<String> ItemsOnInvoice = new ArrayList<>();
+    public static List<Double> CurrentPricesOnInvoice = new ArrayList<>();
+    public static List<Double> OrigPricesOnInvoice = new ArrayList<>();
+    public static List<Boolean> isItemDiscounted = new ArrayList<>();    
     public static boolean updateArrays(){
         ItemsOnInvoice = SalesMenu.ItemsOnInvoice;
         CurrentPricesOnInvoice = SalesMenu.CurrentPricesOnInvoice;
@@ -39,7 +41,7 @@ public class POSMenu {
         }
         System.out.println("[OFF]: Log Off");
         System.out.println("[RETURN]: RETURN to Main Menu");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         switch (option) {
             case "sale":
@@ -109,6 +111,7 @@ public class POSMenu {
                 break;
             case "return":
                 MainMenu.mainMenu();
+                break;
             default:
                 messageHandler.HandleMessage(-1, "Invalid Option, Try again!" ,true);
                 PointofSaleMenu();

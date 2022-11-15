@@ -16,13 +16,12 @@ public class MainSystemUserController {
     static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
     public static Properties userprop = new Properties();
     private static boolean loadUserlist(){
-        boolean success = UserListController.loadUserList();
-        return success;
+        return UserListController.loadUserList();
     }
 
     public static boolean loadUserProperties(String User){
         loadUserlist();
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
@@ -52,16 +51,15 @@ public class MainSystemUserController {
                 messageHandler.HandleMessage(-2, e.toString(), true);
                 return false;
             }
-        }else if(!success){
+        }else{
             messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
-        return false;
+
     }
 
     public static boolean SearchForKey(String Key){
-        boolean exists = userprop.containsKey(Key);
-        return exists;
+        return userprop.containsKey(Key);
     }
 
     public static String GetProperty(String Key){
@@ -71,10 +69,6 @@ public class MainSystemUserController {
     public static boolean checkUserProfileFile(String User) {
         UserProperties = UserProperties2 + User + ".properties";
         File file = new File(UserProperties);
-        if(file.exists()){
-            return true;
-        }else{
-            return false;
-        }
+        return file.exists();
     }
 }

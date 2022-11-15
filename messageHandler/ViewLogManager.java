@@ -5,7 +5,7 @@ import MainSystem.Settings;
 public class ViewLogManager{
     public static String ViewWarnings(){
         for(int i = 0; i < WarningMessages.size(); i++){
-            if(ConsoleSettings.timeSet = true){
+            if(ConsoleSettings.timeSet){
                 System.out.println(WarningMessages.WarningMessagesT.get(i));
             }else {
                 System.out.println(WarningMessages.WarningMessages.get(i));
@@ -19,7 +19,7 @@ public class ViewLogManager{
 
     public static String ViewSystemMessages(){
         for(int i = 0; i < SystemMessages.size(); i++){
-            if(ConsoleSettings.timeSet = true){
+            if(ConsoleSettings.timeSet){
                 System.out.println(SystemMessages.SystemMessagesT.get(i));
             }else {
                 System.out.println(SystemMessages.SystemMessages.get(i));
@@ -33,7 +33,7 @@ public class ViewLogManager{
 
     public static String ViewErrorMessages(){
         for(int i = 0; i < ErrorMessages.size(); i++){
-            if(ConsoleSettings.timeSet = true){
+            if(ConsoleSettings.timeSet){
                 System.out.println(ErrorMessages.ErrorMessagesT.get(i));
             }else {
                 System.out.println(ErrorMessages.ErrorMessages.get(i));
@@ -47,7 +47,7 @@ public class ViewLogManager{
 
     public static String ViewUserMessages(){
         for(int i = 0; i < NotificationMessages.size(); i++){
-            if(ConsoleSettings.timeSet = true){
+            if(ConsoleSettings.timeSet){
                 System.out.println(NotificationMessages.NotificationMessagesT.get(i));
             }else {
                 System.out.println(NotificationMessages.NotificationMessages.get(i));
@@ -61,7 +61,7 @@ public class ViewLogManager{
 
     public static String ViewAllMessages(){
         for(int i = 0; i < AllMessages.size(); i++){
-            if(ConsoleSettings.timeSet = true){
+            if(ConsoleSettings.timeSet){
                 System.out.println(AllMessages.AllMessagesT.get(i));
             }else {
                 System.out.println(AllMessages.AllMessages.get(i));

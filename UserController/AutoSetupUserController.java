@@ -24,7 +24,6 @@ public class AutoSetupUserController {
                     success = PopulateUserProperties();
                     UserListController.addUserToList("Admin", 8);
                 } catch (Exception e) {
-                    // TODO: handle exception
                     messageHandler.HandleMessage(-2, e.toString(), true);
                     return false;
                 }

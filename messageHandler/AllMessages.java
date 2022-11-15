@@ -3,14 +3,15 @@ package messageHandler;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AllMessages {
     public static LocalDateTime myDateObj = LocalDateTime.now();
     public static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
     public static String dTime  = myDateObj.format(myFormatObj);
-    public static ArrayList<String> AllMessages = new ArrayList<String>();
-    public static ArrayList<String> AllMessagesT = new ArrayList<String>();
-    public static ArrayList<Boolean> visibleToConsole = new ArrayList<Boolean>();
+    public static List<String> AllMessages = new ArrayList<>();
+    public static List<String> AllMessagesT = new ArrayList<>();
+    public static List<Boolean> visibleToConsole = new ArrayList<>();
     public static String addMessage(String message, boolean VisibleToConsole){
         AllMessages.add(message);
         myDateObj = LocalDateTime.now();
@@ -36,9 +37,9 @@ public class AllMessages {
         int size = AllMessages.size();
         size --;
         if(size > 0){
-            if(ConsoleSettings.timeSet == true){
+            if(ConsoleSettings.timeSet){
                 return AllMessagesT.get(size);
-            }else if(ConsoleSettings.timeSet == false){
+            }else if(!ConsoleSettings.timeSet){
                 return AllMessages.get(size);
             }else {
                 messageHandler.HandleMessage(-2, "An Error Occured While Getting Time Setting (E)", true);

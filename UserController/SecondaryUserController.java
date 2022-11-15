@@ -1,5 +1,4 @@
 package UserController;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,8 +59,7 @@ public class SecondaryUserController{
     }
 
     public static boolean doesUserPropExist(String key){//Checks to see if a certain key type exists in the user's properties.
-        boolean exists = userprop.containsKey(key);
-        return exists;
+        return userprop.containsKey(key);
     }
 
     public static String getUserProp(String key){//retrieves the value stored under the key specified in the argument

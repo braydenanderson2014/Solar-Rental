@@ -1,12 +1,14 @@
 package PointofSale;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.List;
 
 public class SalesProcessor {
-    public static ArrayList<String> ItemsOnInvoice = new ArrayList<String>();
-    public static ArrayList<Double> CurrentPricesOnInvoice = new ArrayList<Double>();
-    public static ArrayList<Double> OrigPricesOnInvoice = new ArrayList<Double>();
-    public static ArrayList<Boolean> isItemDiscounted = new ArrayList<Boolean>();
+    public static List<String> ItemsOnInvoice = new ArrayList<>();
+    public static List<Double> CurrentPricesOnInvoice = new ArrayList<>();
+    public static List<Double> OrigPricesOnInvoice = new ArrayList<>();
+    public static List<Boolean> isItemDiscounted = new ArrayList<>();
     public static double taxPercentage = 0;
     public static double taxDAmount = 0;
     public static double discountTotal = 0;

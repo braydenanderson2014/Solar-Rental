@@ -1,7 +1,9 @@
 package MainSystem;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Random;
 
 import Assets.Logo;
@@ -14,16 +16,17 @@ import UserController.SecondaryUserController;
 import UserController.UserListController;
 import messageHandler.ClearAllMessages;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 
 public class AdministrativeFunctions {
-    public static ArrayList<String>AdministrativeRequests = new ArrayList<String>();
-    public static ArrayList<String>AdministrativeRequestKeyWord = new ArrayList<String>();
-    public static ArrayList<String>AdministrativeRequestUser = new ArrayList<String>();
-    public static ArrayList<String>AdministrativeRequestedName = new ArrayList<String>();
-    public static ArrayList<String>AdministrativeRequestFull = new ArrayList<String>();
-    public static ArrayList<Integer>AdministrativeRequestID = new ArrayList<Integer>();
-    public static ArrayList<String>AccountRequestNamePool = new ArrayList<String>();
+    public static List<String>AdministrativeRequests = new ArrayList<>();
+    public static List<String>AdministrativeRequestKeyWord = new ArrayList<>();
+    public static List<String>AdministrativeRequestUser = new ArrayList<>();
+    public static List<String>AdministrativeRequestedName = new ArrayList<>();
+    public static List<String>AdministrativeRequestFull = new ArrayList<>();
+    public static List<Integer>AdministrativeRequestID = new ArrayList<>();
+    public static List<String>AccountRequestNamePool = new ArrayList<>();
     public static int requestsMade = 0;
     public static int updateRequestsMade(){
         requestsMade = AdministrativeRequests.size();
@@ -40,11 +43,12 @@ public class AdministrativeFunctions {
         System.out.println("[CHANGE]:  Change a User Pass");
         System.out.println("[ENABLE]:  Enable an Account");
         System.out.println("[PASSFLAG]: Set Passflag for an account");
+        System.out.println("[LIST]: List All Registered Users");
         System.out.println("[DISABLE]: Disable a User Account");
         System.out.println("[TAX]: Tax Percentage adjustment; Current Tax Percentage: " + SettingsController.getSetting("TaxP") + "%");
         System.out.println("[CLS]:     Clear Logs");
         System.out.println("[RETURN]:  Return to Main Menu");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         try{
             if(option.equals("create") && Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
@@ -62,7 +66,7 @@ public class AdministrativeFunctions {
             }else if(option.equals("change") && Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                 System.out.println("Target Account for password change: ");
                 String user = customScanner.nextLine();
-                LoginUserController.AdminUpdateUserPass(user);
+                LoginUserController.adminUpdateUserPass(user);
                 AdministrativeMenu();
             }else if(option.equals("requests")){
                 resolutionAdvisory();
@@ -78,6 +82,20 @@ public class AdministrativeFunctions {
                     messageHandler.HandleMessage(-2, e.toString(), true);
                     AdministrativeMenu();
                 }
+            }else if(option.equals("list")){
+            	Logo.displayLogo();
+            	System.out.println("Users on List");
+            	Logo.displayLine();
+            	UserListController.loadUserList();
+            	Enumeration keys = UserListController.userlist.keys();
+            	while (keys.hasMoreElements()) {
+                    String key = (String)keys.nextElement();
+                    String value = (String)UserListController.userlist.get(key);
+                    System.out.println(key + ": " + value);
+                    messageHandler.HandleMessage(1, key + ": " + value, false);
+                }
+            	String enter = customScanner.nextLine();
+            	AdministrativeMenu();
             }else if(option.equals("passflag")){
                 Logo.displayLogo();
                 System.out.println("Target Account: ");
@@ -226,7 +244,7 @@ public class AdministrativeFunctions {
         }
     }
 
-    private static boolean enableAnAccount() {  //TODO: Remove User controller References 
+    private static boolean enableAnAccount() { 
         Logo.displayLogo();
         System.out.println("Enable An Account");
         Logo.displayLine();
@@ -245,7 +263,7 @@ public class AdministrativeFunctions {
     }
 
     public static boolean enableAdminAccount() {
-        if(UserListController.SearchForUser("Admin") == true){
+        if(UserListController.SearchForUser("Admin")){
             LoginUserController.setValue("Admin", "Account", "Enabled");
             messageHandler.HandleMessage(1, "User: " + "Admin" + " Account was Enabled", true);
             LoginUserController.setValue("Admin", "PassFlag", "true");
@@ -263,10 +281,10 @@ public class AdministrativeFunctions {
         System.out.println("Target Account: ");
         String Account = customScanner.nextLine();
         messageHandler.HandleMessage(1, Account + " was disabled", false);
-        if(UserListController.SearchForUser(Account) == true){
+        if(UserListController.SearchForUser(Account)){
             if(!Account.equals("Admin")){
                 LoginUserController.setValue(Account, "Account", "Disabled");
-                messageHandler.HandleMessage(1, "User: " + LoginUserController.GetProperty(Account, "Username") + " Account was Disabled", true);
+                messageHandler.HandleMessage(1, "User: " + LoginUserController.getProperty(Account, "Username") + " Account was Disabled", true);
                 return true;
             }else {
             	messageHandler.HandleMessage(-1, "CANNOT Disable Admin Account", true);
@@ -292,8 +310,7 @@ public class AdministrativeFunctions {
 
     private static int RequestIDGenerator() {
         Random gen = new Random();
-        int RequestIDGenerator = gen.nextInt(99999);
-        return RequestIDGenerator;
+        return gen.nextInt(99999);
     }
 
     public static boolean removeRequest(){

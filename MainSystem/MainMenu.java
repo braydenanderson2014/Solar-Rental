@@ -6,6 +6,7 @@ import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.messageHandler;
 
@@ -27,7 +28,7 @@ public class MainMenu{
         System.out.println("[HELP]: Display Help Messages");
         System.out.println("[OFF]:  Log Off");
         System.out.println("[EXIT]: Exit the Program");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         switch(option){
             case "pos":

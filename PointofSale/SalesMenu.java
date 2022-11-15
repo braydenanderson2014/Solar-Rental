@@ -1,21 +1,23 @@
 package PointofSale;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
 import UserController.MainSystemUserController;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.NotificationMessages;
 import messageHandler.messageHandler;
 
 public class SalesMenu {
-    public static ArrayList<String> ItemsOnInvoice = new ArrayList<String>();
-    public static ArrayList<Double> CurrentPricesOnInvoice = new ArrayList<Double>();
-    public static ArrayList<Double> OrigPricesOnInvoice = new ArrayList<Double>();
-    public static ArrayList<Boolean> isItemDiscounted = new ArrayList<Boolean>();
+    public static List<String> ItemsOnInvoice = new ArrayList<>();
+    public static List<Double> CurrentPricesOnInvoice = new ArrayList<>();
+    public static List<Double> OrigPricesOnInvoice = new ArrayList<>();
+    public static List<Boolean> isItemDiscounted = new ArrayList<>();
     public static double taxPercentage = 0;
     public static double taxDAmount = 0;
     public static double discountTotal = 0;
@@ -39,16 +41,16 @@ public class SalesMenu {
         System.out.println("[RET]: Return to POSMenu");
         System.out.println("[OFF]: Log Off");
         System.out.println("[EXIT]: Exit");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         switch(option){
             case "add":
                 addItem();
                 break;
             case "pay":
-                if(TotalAmount > 0 && ItemsOnInvoice.size() > 0){
+                if(TotalAmount > 0 && !ItemsOnInvoice.isEmpty()){
                     SalesProcessor.ProcessSale();
-                }else if(TotalAmount == 0 && ItemsOnInvoice.size() > 0){
+                }else if(TotalAmount == 0 && !ItemsOnInvoice.isEmpty()){
                     System.out.println("Total Amount is \"0\" Are you sure you want to Process Payment?");
                     String options = customScanner.nextLine().toLowerCase();
                     if(options.equals("y") || options.equals("yes")){
@@ -146,7 +148,7 @@ public class SalesMenu {
         Logo.displayLine();
         for(int i = 0; i < ItemsOnInvoice.size(); i ++){
             System.out.println("ITEM: " + ItemsOnInvoice.get(i) + "ORIGINAL PRICE: $" + OrigPricesOnInvoice.get(i));
-            if(isItemDiscounted.get(i) == true){
+            if(Boolean.TRUE.equals(isItemDiscounted.get(i))){
                 System.out.println("DISCOUNTED?: " + isItemDiscounted.get(i) + " DISCOUNTED PRICE: $" + CurrentPricesOnInvoice.get(i));
             }
         }
@@ -162,7 +164,7 @@ public class SalesMenu {
         int choice = 0;
         for(int i = 0; i < ItemsOnInvoice.size(); i ++){
             System.out.println(choice + ". ITEM: " + ItemsOnInvoice.get(i) + "ORIGINAL PRICE: $" + OrigPricesOnInvoice.get(i));
-            if(isItemDiscounted.get(i) == true){
+            if(Boolean.TRUE.equals(isItemDiscounted.get(i))){
                 System.out.println("DISCOUNTED?: " + isItemDiscounted.get(i) + " DISCOUNTED PRICE: $" + CurrentPricesOnInvoice.get(i));
             }
         }

@@ -7,7 +7,7 @@ import MainSystem.MainMenu;
 import messageHandler.Console;
 import messageHandler.messageHandler;
 public class SwitchController {
-    private static ArrayList<String>loggedInUsers = new ArrayList<String>();
+    private static ArrayList<String>loggedInUsers = new ArrayList<>();
     public static String focusUser;
     public SwitchController(){
         loggedInUsers.add("Temp");
@@ -72,12 +72,12 @@ public class SwitchController {
             int x = 1;
             System.out.println("[0]: Go Back");
             for(int i = 0; i < loggedInUsers.size(); i++){
-                System.out.println("[" + x + "]" + loggedInUsers.get(i));
+                System.out.println("[" + x + "]: " + loggedInUsers.get(i));
                 x++;
             }
             Console.getConsole();
             String person = customScanner.nextLine().toLowerCase();
-            if(person.equals("back")){
+            if(person.equals("back") || person.equals("0")){
                 if(mode == 1){
                     Login.LoginScreen();
                 }else if(mode == 2){
@@ -89,9 +89,13 @@ public class SwitchController {
                     Login.LoginScreen();
                 }
                 personAsInt--;
+                if(loggedInUsers.get(personAsInt).equals(focusUser)) {
+                	MainMenu.mainMenu();
+                }
                 Login.LoginScreen(loggedInUsers.get(personAsInt));
             }
         }else{
+        	messageHandler.HandleMessage(-1, "No other Logged in users", true);
             Login.LoginScreen();
         }
     }

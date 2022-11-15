@@ -10,10 +10,12 @@ import InstallManager.ProgramController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.MainMenu;
 import MainSystem.Settings;
+import MainSystem.SettingsController;
 import UserController.LoginUserController;
 
 import messageHandler.AllMessages;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.messageHandler;
 
@@ -64,10 +66,10 @@ public class Login{
             SwitchController.forceLogoff(User);
             LoginScreen();
         }else{
-            if(LoginUserController.checkPassword(User, Password) == true){
+            if(LoginUserController.checkPassword(User, Password)){
                 SwitchController.updateCurrentUser(User);
                 MainMenu.mainMenu();
-            }else if(LoginUserController.checkPassword(User, Password) == false){
+            }else if(!LoginUserController.checkPassword(User, Password)){
                 LoginScreen(User);
             }
         }
@@ -107,10 +109,10 @@ public class Login{
             LoginScreen();
         }else if(Command.equals("rab")){
             try {
-                URI uri= new URI("https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
+                URI uri= new URI(SettingsController.getSetting("debugSite"));
                 java.awt.Desktop.getDesktop().browse(uri);
                 messageHandler.HandleMessage(1, "Webpage opened in your default Browser...", true);
-                messageHandler.HandleMessage(2, "WebPage: https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew", true);
+                messageHandler.HandleMessage(2, "WebPage: " + SettingsController.getSetting("debugSite"), true);
             } catch (Exception e) {
                 messageHandler.HandleMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
             }
@@ -136,7 +138,7 @@ public class Login{
         System.out.println("[FORCEOFF]: \"ForceOff\" Forces all users to logoff");
         System.out.println("[DUMP]: Dump Logs To File [ALL]");
         System.out.println("[_EXIT]: \"_Exit\" Quits the program.");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         System.out.println("Command: ");
         String Command = customScanner.nextLine().toLowerCase();
         if(Command.equals("swi") || Command.equals("switch")){

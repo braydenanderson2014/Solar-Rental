@@ -24,48 +24,48 @@ public class ConsoleSettings {
         System.out.println("[TIME]: Date Time Set: " + timeSet);
         System.out.println("[HELP]: Help");
         System.out.println("[RETURN]: Return ");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String setToChange = customScanner.nextLine().toLowerCase();
         if(setToChange.equals("error")){
-            if(ErrorSet == true){
+            if(ErrorSet){
                 ErrorSet = false;
-            }else if(ErrorSet == false){
+            }else{
                 ErrorSet = true;
             }
             SettingsController.setSetting("ErrorSet", String.valueOf(ErrorSet));
             messageHandler.HandleMessage(1, "Error Messages ON?: " + ErrorSet, true);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("warning")){
-            if(WarningSet == true){
+            if(WarningSet){
                 WarningSet = false;
-            }else if(WarningSet == false){
+            }else{
                 WarningSet = true;
             }
             SettingsController.setSetting("WarningSet", String.valueOf(WarningSet));
             messageHandler.HandleMessage(1, "Warning Messages ON?: " + WarningSet, true);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("system")){
-            if(SystemSet == true){
+            if(SystemSet){
                 SystemSet = false;
-            }else if(SystemSet == false){
+            }else{
                 SystemSet = true;
             }
             SettingsController.setSetting("SystemSet", String.valueOf(SystemSet));
             messageHandler.HandleMessage(1, "System Messages ON?: " + SystemSet, true);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("user")){
-            if(UserNotifySet == true){
+            if(UserNotifySet){
                 UserNotifySet = false;
-            }else if(UserNotifySet == false){
+            }else{
                 UserNotifySet = true;
             }
             SettingsController.setSetting("UserNotifySet", String.valueOf(UserNotifySet));
             messageHandler.HandleMessage(1, "User Notifications Messages ON?: " + UserNotifySet, true);
             ConsoleSettingsMenu();
         }else if(setToChange.equals("time")){
-            if(timeSet == true){
+            if(timeSet){
                 timeSet = false;
-            }else if(timeSet == false){
+            }else{
                 timeSet = true;
             }
             SettingsController.setSetting("Date/TimeSet", String.valueOf(timeSet));

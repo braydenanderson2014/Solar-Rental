@@ -17,13 +17,12 @@ public class LoginUserController {
     public static boolean passFlag = false;
     public static Properties userprop = new Properties();
     private static boolean loadUserlist(){
-        boolean success = UserListController.loadUserList();
-        return success;
+        return UserListController.loadUserList();
     }
 
     public static boolean loadUserProperties(String User){
         loadUserlist();
-        if(UserListController.SearchForUser(User) == true){
+        if(UserListController.SearchForUser(User)){
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
@@ -53,64 +52,63 @@ public class LoginUserController {
                 messageHandler.HandleMessage(-2, e.toString(), true);
                 return false;
             }
-        }else if(!success){
+        }else{
             messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
-        return false;
     }
 
     public static boolean checkPassword(String User, String Pass){
         loadUserlist();
-        if(UserListController.SearchForUser(User) == true){
-            if(checkUserProfileFile(User) == true){
+        if(UserListController.SearchForUser(User)){
+            if(checkUserProfileFile(User)){
                 loadUserProperties(User);
-                if(SearchForKey("Password") == true){
-                    if(GetProperty("Password").equals(Pass)){
-                        if(SearchForKey("Account") == true){
-                            if(GetProperty("Account").equals("Enabled")){
-                                int logins = Integer.parseInt(GetProperty("SuccessfulLogins"));
+                if(SearchForKey("Password")){
+                    if(getProperty("Password").equals(Pass)){
+                        if(SearchForKey("Account")){
+                            if(getProperty("Account").equals("Enabled")){
+                                int logins = Integer.parseInt(getProperty("SuccessfulLogins"));
                                 logins ++;
                                 setValue(User, "SuccessfulLogins", String.valueOf(logins));
                                 setValue(User, "LastLogin", AllMessages.dTime);
 
-                                if(Boolean.parseBoolean(GetProperty("PassFlag")) == true){
+                                if(Boolean.parseBoolean(getProperty("PassFlag"))){
                                     ChangePass(User);
                                     return true;
-                                }else if(Boolean.parseBoolean(GetProperty("PassFlag")) == false){
+                                }else if(!Boolean.parseBoolean(getProperty("PassFlag"))){
                                     return true;
                                 }
-                            }else if(GetProperty("Account").equals("Disabled")){
+                            }else if(getProperty("Account").equals("Disabled")){
                                 messageHandler.HandleMessage(-1, "Account is Disabled", true);
                                 return false;
                             }
-                        }else if(SearchForKey("Account") == false){
+                        }else if(!SearchForKey("Account")){
                             messageHandler.HandleMessage(-1, "Unable to locate Account Property, Repair needed for profile, Auto Account Disable Activating...", true);
                             return false;
                         }
                     }else{
                         messageHandler.HandleMessage(-1, "Invalid Username or Password.",true);
-                        FailedAttemptsLOMG = Integer.parseInt(GetProperty("FailedLoginAttempts"));
+                        FailedAttemptsLOMG = Integer.parseInt(getProperty("FailedLoginAttempts"));
                         FailedAttemptsLOMG= FailedAttemptsLOMG ++;
                         setValue(User, "FailedLoginAttempts", String.valueOf(FailedAttemptsLOMG));
-                        setValue(User, "AllTimeFailedLoginAttempts", String.valueOf(Integer.parseInt(GetProperty("AllTimeFailedLoginAttempts")) +1));
-                        int FailedAttempts = Integer.parseInt(GetProperty("FailedLoginAttempts"));
+                        setValue(User, "AllTimeFailedLoginAttempts", String.valueOf(Integer.parseInt(getProperty("AllTimeFailedLoginAttempts")) +1));
+                        int FailedAttempts = Integer.parseInt(getProperty("FailedLoginAttempts"));
                         if(FailedAttempts >= Integer.parseInt(SettingsController.getSetting("FailedAttempts"))){
                             setValue(User, "Account", "Disabled");
                         }
                         return false;
                     }
-                }else if(SearchForKey("Password") == false){
+                }else if(!SearchForKey("Password")){
                     messageHandler.HandleMessage(-1, "Unable to locate Password Property, Repair needed for profile... Auto Account Disable Activating...", true);
                     return false;
                     //Auto Disable.
                 }
-            }else if(checkUserProfileFile(User) == false){
+            }else if(!checkUserProfileFile(User)){
                 messageHandler.HandleMessage(-1, "Unable to locate User Profile.", true);
                 messageHandler.HandleMessage(-2, "User is on Userlist, But the Profile is not able to found.", true);
                 return false;
             }
-        }else if(UserListController.SearchForUser(User) == false){
+        }else if(!UserListController.SearchForUser(User)){
             messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: CheckPassword", true);
             return false;
         }
@@ -136,7 +134,7 @@ public class LoginUserController {
                 if(cNewPass.equals("back") || cNewPass.equals("Back")){
                     return false;
                 }else{
-                    if(oldPass.equals(GetProperty("Password"))){
+                    if(oldPass.equals(getProperty("Password"))){
                         if(cNewPass.equals(newPass)){
                             setValue(User, "Password", newPass);
                             setValue(User, "PassFlag", "false");
@@ -164,37 +162,36 @@ public class LoginUserController {
         }
 
     }
-    public static boolean AdminUpdateUserPass(String User){
+    public static boolean adminUpdateUserPass(String user){
+    	setValue(user, "Password", "Solar");
+    	setValue(user, "PassFlag", "true");
+    	messageHandler.HandleMessage(1, "Password Update for User: " + user + "; Password: Solar", true);
         return true;
     }
 
-    public static boolean setValue(String User, String key, String value){
-        loadUserProperties(User);
+    public static boolean setValue(String user, String key, String value){
+        loadUserProperties(user);
         userprop.setProperty(key, value);
-        saveUserProperties(User);
+        saveUserProperties(user);
         return true;
     }
 
-    private static boolean SearchForKey(String Key){
-        boolean exists = userprop.containsKey(Key);
-        return exists;
+    private static boolean SearchForKey(String key){
+        return userprop.containsKey(key);
+        
     }
 
-    private static String GetProperty(String Key){
-        return userprop.getProperty(Key);
+    private static String getProperty(String key){
+        return userprop.getProperty(key);
     }
-    public static String GetProperty(String User, String Key) {
-    	loadUserProperties(User);
-    	return userprop.getProperty(Key);
+    public static String getProperty(String user, String key) {
+    	loadUserProperties(user);
+    	return userprop.getProperty(key);
     }	
 
-    private static boolean checkUserProfileFile(String User) {
-        UserProperties = UserProperties2 + User + ".properties";
+    private static boolean checkUserProfileFile(String user) {
+        UserProperties = UserProperties2 + user + ".properties";
         File file = new File(UserProperties);
-        if(file.exists()){
-            return true;
-        }else{
-            return false;
-        }
+        return file.exists();
     }
 }

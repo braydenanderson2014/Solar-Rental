@@ -3,6 +3,7 @@ package PointofSale;
 import Assets.Logo;
 import Assets.customScanner;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 
 public class DiscountManager {
@@ -18,7 +19,7 @@ public class DiscountManager {
         System.out.println("[APPI]: Apply Item to Invoice");
         System.out.println("[REMI]: Remove Discount from invoice");
         System.out.println("[RET]: Return to POS Menu");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         if(option.equals("app")){
             appDis();

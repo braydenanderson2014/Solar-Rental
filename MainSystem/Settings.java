@@ -17,6 +17,7 @@ import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
 import messageHandler.AllMessages;
 import messageHandler.Console;
+import messageHandler.ConsoleHandler;
 import messageHandler.ConsoleSettings;
 import messageHandler.LogDump;
 import messageHandler.SystemMessages;
@@ -119,7 +120,7 @@ public class Settings{
         }
         System.out.println("[RETURN]: Return");
         System.out.println();
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         if(option.equals("path")){
         	messageHandler.HandleMessage(-1, "Path Controller has not yet been implemented, Check back at a later update", true);

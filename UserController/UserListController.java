@@ -19,7 +19,7 @@ public class UserListController {
     }
 
     public static boolean loadUserList() {
-        if(CheckUserListAvailability() == true){
+        if(CheckUserListAvailability()){
             try (InputStream input = new FileInputStream(UserList)){
                 userlist.load(input);
                 messageHandler.HandleMessage(1, "UserList Loaded", true);
@@ -37,8 +37,7 @@ public class UserListController {
 
     public static boolean SearchForUser(String user){
         loadUserList();
-        boolean exists = userlist.containsKey(user);
-        return exists;
+        return userlist.containsKey(user);
     }
 
     private static boolean SaveUserList(){
@@ -65,7 +64,7 @@ public class UserListController {
             messageHandler.HandleMessage(1, "New User Added to List: " + user, false);
             messageHandler.HandleMessage(1, "User Was Added using UserListController", false);
             SaveUserList();
-        }else if(!success){
+        }else{
             messageHandler.HandleMessage(-1, "Failed to add user to list", true);
         }
         return success;

@@ -3,17 +3,17 @@ public class messageHandler{
     public static String HandleMessage(int mode, String message, boolean visibleToConsole){
         if(!message.equals("")){
             if(mode == -2){
-                ErrorMessages.addMessage(message, visibleToConsole);
-                return message;
+                return ErrorMessages.addMessage(message, visibleToConsole);
+               
             }else if(mode == -1){
-                WarningMessages.addMessage(message, visibleToConsole);
-                return message;
+                return WarningMessages.addMessage(message, visibleToConsole);
+ 
             }else if(mode == 1){
-                SystemMessages.addMessage(message, visibleToConsole);
-                return message;
+                return SystemMessages.addMessage(message, visibleToConsole);
+              
             }else if(mode == 2){
-                NotificationMessages.addMessage(message, visibleToConsole);
-                return message;
+                return NotificationMessages.addMessage(message, visibleToConsole);
+               
             }else{
                 HandleMessage(-1, "Invalid Message Route... [" + mode + "]", visibleToConsole);
                 return WarningMessages.getLastMessage();

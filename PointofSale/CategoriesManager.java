@@ -82,10 +82,7 @@ public class CategoriesManager {
 
     public static Boolean AddCat(String Category, String CatID){
         LoadCatProperties();
-        if(CatList.contains(CatID)){
-            messageHandler.HandleMessage(-1, "ID or Category already Exists", false);
-            return false;
-        }else if(CatList.containsKey(Category)){
+        if(CatList.contains(CatID) || CatList.containsKey(Category)){
             messageHandler.HandleMessage(-1, "ID or Category already Exists", false);
             return false;
         }else{
@@ -108,11 +105,7 @@ public class CategoriesManager {
     }
 
     public static boolean checkID(String id) {
-        if(CatList.containsValue(id)){
-            return true;
-        }else{
-            return false;
-        }
+        return CatList.containsValue(id);
     }
 
     public static String RetrieveCatbyID(String id) {

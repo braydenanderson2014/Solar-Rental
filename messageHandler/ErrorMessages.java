@@ -3,14 +3,15 @@ package messageHandler;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ErrorMessages {
     public static LocalDateTime myDateObj = LocalDateTime.now();
     public static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
     public static String dTime  = myDateObj.format(myFormatObj);
-    public static ArrayList<String> ErrorMessages = new ArrayList<String>();
-    public static ArrayList<String> ErrorMessagesT = new ArrayList<String>();
-    public static ArrayList<Boolean> visibleToConsole = new ArrayList<Boolean>();
+    public static List<String> ErrorMessages = new ArrayList<>();
+    public static List<String> ErrorMessagesT = new ArrayList<>();
+    public static List<Boolean> visibleToConsole = new ArrayList<>();
     public static String addMessage(String message, boolean VisibleToConsole){
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
@@ -53,11 +54,11 @@ public class ErrorMessages {
     public static String getLastMessage() {
         int size = ErrorMessages.size();
         size --;
-        if(ConsoleSettings.ErrorSet == true){
+        if(ConsoleSettings.ErrorSet){
             if(size > 0){
-                if(ConsoleSettings.timeSet == true){
+                if(ConsoleSettings.timeSet){
                     return ErrorMessagesT.get(size);
-                }else if(ConsoleSettings.timeSet == false){
+                }else if(!ConsoleSettings.timeSet){
                     return ErrorMessages.get(size);
                 }else {
                     messageHandler.HandleMessage(-2, "An Error Occured While Getting Time Setting (E)", true);

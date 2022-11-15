@@ -29,8 +29,7 @@ public class SettingsController{
     }
 
     public static boolean SearchForSet(String Setting){
-        boolean exists = prop.containsKey(Setting);
-        return exists;
+        return prop.containsKey(Setting);
     }
 
     public static boolean loadSettings(){

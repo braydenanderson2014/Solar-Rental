@@ -10,8 +10,8 @@ public class UserMessageHandler {
     static String UserProperties = ProgramController.UserRunPath + "\\Users/";
     static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
     public static boolean sendMessageToUser(String user, String message) {
-        if(UserListController.SearchForUser(user) == true){
-            if(CheckUserAccount(user) == true){
+        if(UserListController.SearchForUser(user)){
+            if(CheckUserAccount(user)){
 
             }else{
                 messageHandler.HandleMessage(-1, "User Account Notifications cannot be found, Sending Request to admin for a new Account", true);
@@ -26,14 +26,10 @@ public class UserMessageHandler {
 
     private static boolean CheckUserAccount(String user) {
         UserListController.loadUserList();
-        if(UserListController.SearchForUser(user) == true){
+        if(UserListController.SearchForUser(user)){
             UserProperties = UserProperties2 + user + ".properties";
             File file = new File(UserProperties);
-            if(file.exists()){
-                return true;
-            }else{
-                return false;
-            }
+            return file.exists();
         }else{
             messageHandler.HandleMessage(-1, "Unable to find User on Userlist.", true);
             return false;
