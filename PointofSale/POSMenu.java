@@ -41,7 +41,14 @@ public class POSMenu {
         }
         System.out.println("[OFF]: Log Off");
         System.out.println("[RETURN]: RETURN to Main Menu");
-        ConsoleHandler.getConsole();
+        try {
+        	ConsoleHandler.getConsole();
+		}catch(IndexOutOfBoundsException e) {
+			messageHandler.HandleMessage(-2, e.toString(), true);
+			System.out.println(e.toString());
+			System.out.println("FAILED TO LOAD CONSOLE");
+		}
+        
         String option = customScanner.nextLine().toLowerCase();
         switch (option) {
             case "sale":

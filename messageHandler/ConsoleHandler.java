@@ -11,14 +11,15 @@ public class ConsoleHandler{
 	public static List<String>Messages = new ArrayList<>();
 	public static List<String>MessagesT = new ArrayList<>();
 	public static List<Integer> indexesToRemove = new ArrayList<>();
-	public static String getConsole() {
+	public static String getConsole() throws IndexOutOfBoundsException{
 		Messages.clear();
 		MessagesT.clear();
 		Messages = AllMessages.AllMessages;
 		MessagesT = AllMessages.AllMessagesT;
 		howManyTimes = 0;
-		checkSettings();
 		int size = Messages.size();
+		checkSettings();
+		size = Messages.size();
 		if(size < showHowMany) {
 			showHowMany = Messages.size();
 		}
@@ -37,7 +38,7 @@ public class ConsoleHandler{
 		return "";
 	}
 	private static Boolean checkSettings() {
-		if(!SettingsController.getSetting("SystemSet").equals("true")) {
+		if(SettingsController.getSetting("SystemSet").equals("false")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[System]:")) {
 					indexesToRemove.add(i);
@@ -45,23 +46,26 @@ public class ConsoleHandler{
 			}
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
+				MessagesT.remove(indexesToRemove.get(i));
 			}
 			indexesToRemove.clear();
 		}
 		
-		if(!SettingsController.getSetting("ErrorSet").equals("true")) {
+		if(SettingsController.getSetting("ErrorSet").equals("false")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[Error]:")) {
 					indexesToRemove.add(i);
+					
 				}
 			}
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
+				MessagesT.remove(indexesToRemove.get(i));
 			}
 			indexesToRemove.clear();
 		}
 		
-		if(!SettingsController.getSetting("WarningSet").equals("true")) {
+		if(SettingsController.getSetting("WarningSet").equals("false")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[Warning]:")) {
 					indexesToRemove.add(i);
@@ -69,11 +73,12 @@ public class ConsoleHandler{
 			}
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
+				MessagesT.remove(indexesToRemove.get(i));
 			}
 			indexesToRemove.clear();
 		}
 		
-		if(!SettingsController.getSetting("UserNotifySet").equals("true")) {
+		if(SettingsController.getSetting("UserNotifySet").equals("false")) {
 			for(int i = 0; i < Messages.size(); i++) {
 				if(Messages.contains("[Notification]:")) {
 					indexesToRemove.add(i);
@@ -81,6 +86,7 @@ public class ConsoleHandler{
 			}
 			for(int i = 0; i < indexesToRemove.size(); i++) {
 				Messages.remove(indexesToRemove.get(i));
+				MessagesT.remove(indexesToRemove.get(i));
 			}
 			indexesToRemove.clear();
 		}
