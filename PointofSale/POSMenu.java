@@ -8,7 +8,7 @@ import Assets.customScanner;
 import Login.SwitchController;
 import MainSystem.MainMenu;
 import UserController.MainSystemUserController;
-import messageHandler.Console;
+
 import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 

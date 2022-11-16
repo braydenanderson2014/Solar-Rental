@@ -81,7 +81,7 @@ public class ViewLogManager{
         System.out.println("[User]: View All User Notification Messages");
         System.out.println("[System]: View All System Messages");
         System.out.println("[Return]: Return");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         if(option.equals("all")){
             ViewAllMessages();

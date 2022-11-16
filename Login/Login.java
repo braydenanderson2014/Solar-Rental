@@ -14,7 +14,7 @@ import MainSystem.SettingsController;
 import UserController.LoginUserController;
 
 import messageHandler.AllMessages;
-import messageHandler.Console;
+
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.messageHandler;
@@ -30,7 +30,9 @@ public class Login{
 
     public static void LoginScreen(){
         Logo.displayLogo();
-        Console.getConsole();
+        System.out.println("LOGIN SCREEN: ");
+        Logo.displayLine();
+        ConsoleHandler.getConsole();
         System.out.println("Username: ");
         Username = customScanner.nextLine();
         if(Username.equals("command") || Username.equals("Command")){
@@ -55,29 +57,31 @@ public class Login{
         }
     }
 
-    public static void LoginScreen(String User){
+    public static void LoginScreen(String user){
         Logo.displayLogo();
-        messageHandler.HandleMessage(1, "AutoFilling Username with " + User, true);
-        Console.getConsole();
-        System.out.println("Username: " + User);
+        System.out.println("LOGIN SCREEN: ");
+        Logo.displayLine();
+        messageHandler.HandleMessage(1, "AutoFilling Username with " + user, true);
+        ConsoleHandler.getConsole();
+        System.out.println("Username: " + user);
         System.out.println("Password: ");
         Password = customScanner.nextLine();
         if(Password.equals("off")){
-            SwitchController.forceLogoff(User);
+            SwitchController.forceLogoff(user);
             LoginScreen();
         }else{
-            if(LoginUserController.checkPassword(User, Password)){
-                SwitchController.updateCurrentUser(User);
+            if(LoginUserController.checkPassword(user, Password)){
+                SwitchController.updateCurrentUser(user);
                 MainMenu.mainMenu();
-            }else if(!LoginUserController.checkPassword(User, Password)){
-                LoginScreen(User);
+            }else if(!LoginUserController.checkPassword(user, Password)){
+                LoginScreen(user);
             }
         }
     }
 
     private static void Command() {
         Logo.displayLogo();
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         System.out.println("Command: ");
         String Command = customScanner.nextLine().toLowerCase();
         if(Command.equals("swi") || Command.equals("switch")){
@@ -101,7 +105,7 @@ public class Login{
             AdministrativeFunctions.AccountRequestNamePool.add(user);
             LoginScreen();
         }else if(Command.equals("_resetadmin")){
-            if(AdministrativeFunctions.enableAdminAccount() == true){
+            if(AdministrativeFunctions.enableAdminAccount()){
                 messageHandler.HandleMessage(2, "Admin Account Re-Enabled", true);
             }else{
                 messageHandler.HandleMessage(-1, "Failed to Re-Enable Admin Account", true);
@@ -178,11 +182,7 @@ public class Login{
         Logo.displayLogo();
         System.out.println("ADMIN PASSWORD: ");
         String password = customScanner.nextLine();
-        if((LoginUserController.checkPassword("Admin", password) == true)){
-            return true;
-        }else{
-            return false;
-        }
+        return (LoginUserController.checkPassword("Admin", password));
     }
 
     public static String getCurrentUser() {

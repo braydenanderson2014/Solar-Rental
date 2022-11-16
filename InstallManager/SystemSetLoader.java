@@ -24,6 +24,7 @@ public class SystemSetLoader {
         ProgramController.SystemRunPath = ProgramController.SystemPathLetter + AutoSetup.SystemWorkingPath + ProgramController.SystemSubPath;
         //#endregion
         //#region UserPath
+        
         return true;
     }
 

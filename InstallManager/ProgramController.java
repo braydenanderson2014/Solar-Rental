@@ -5,7 +5,8 @@ import java.io.IOException;
 import Assets.Logo;
 import Assets.customScanner;
 import Login.Login;
-import messageHandler.Console;
+
+import messageHandler.ConsoleHandler;
 import messageHandler.ErrorMessages;
 import messageHandler.messageHandler;
 
@@ -29,7 +30,7 @@ public class ProgramController {
         System.out.println("[AUTO]: Auto Setup Program");
         System.out.println("[MANUAL]: Manually Setup Program");
         System.out.println("[QUIT]: Quit Program");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         if(option.equals("auto")){
             AutoSetup.startAutoSetup();

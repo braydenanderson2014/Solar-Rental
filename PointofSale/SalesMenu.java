@@ -7,7 +7,7 @@ import Assets.Logo;
 import Assets.customScanner;
 import Login.SwitchController;
 import UserController.MainSystemUserController;
-import messageHandler.Console;
+
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.NotificationMessages;

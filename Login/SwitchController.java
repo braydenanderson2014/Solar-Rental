@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import Assets.Logo;
 import Assets.customScanner;
 import MainSystem.MainMenu;
-import messageHandler.Console;
+
+import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 public class SwitchController {
     private static ArrayList<String>loggedInUsers = new ArrayList<>();
@@ -75,7 +76,7 @@ public class SwitchController {
                 System.out.println("[" + x + "]: " + loggedInUsers.get(i));
                 x++;
             }
-            Console.getConsole();
+            ConsoleHandler.getConsole();
             String person = customScanner.nextLine().toLowerCase();
             if(person.equals("back") || person.equals("0")){
                 if(mode == 1){

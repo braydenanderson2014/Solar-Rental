@@ -174,12 +174,16 @@ public class AutoSetup {
             SettingsController.setSetting("FailedAttempts",  "3");
             messageHandler.HandleMessage(1, "Setting \"FailedAttempts\" was created successfully. Default Value: 7.43%", false);
         }
+        exists = SettingsController.SearchForSet("MaxConsole");
+        if(!exists){
+            SettingsController.setSetting("MaxConsole",  "5");
+            messageHandler.HandleMessage(1, "Setting \"FailedAttempts\" was created successfully. Default Value: 7.43%", false);
+        }
         createAdminAccount();
     }
 
     private static void createAdminAccount() {
         AutoSetupUserController.AutoCreateAdmin();
-        //UserController.createUser("Admin", 8 , 3);
         FirstTimeManager.updateFirstTime();
         Login.LoginScreen();
     }

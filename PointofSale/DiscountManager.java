@@ -2,7 +2,7 @@ package PointofSale;
 
 import Assets.Logo;
 import Assets.customScanner;
-import messageHandler.Console;
+
 import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 

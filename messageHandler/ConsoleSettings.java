@@ -11,8 +11,12 @@ public class ConsoleSettings {
     public static boolean SystemSet = true;
     public static boolean UserNotifySet = true;
     public static boolean timeSet = true;
+    public static byte max = 5;
 
     public static void ConsoleSettingsMenu(){
+    	if(SettingsController.getSetting("FirstTime").equals("false")) {
+    		max = Byte.parseByte(SettingsController.getSetting("MaxConsole"));
+    	}
         Logo.displayLogo();
         System.out.println();
         System.out.println("Console Settings Menu");
@@ -22,6 +26,7 @@ public class ConsoleSettings {
         System.out.println("[SYSTEM]: System Messages; Current Setting: " + SystemSet);
         System.out.println("[USER]: User Notification Messages; Current Setting: " + UserNotifySet);
         System.out.println("[TIME]: Date Time Set: " + timeSet);
+        System.out.println("[MAX]: Maximum Amount of messages displayed [MAX]: " + max);
         System.out.println("[HELP]: Help");
         System.out.println("[RETURN]: Return ");
         ConsoleHandler.getConsole();
@@ -81,10 +86,18 @@ public class ConsoleSettings {
                 messageHandler.HandleMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
                 Settings.SettingsMenu();
             }
-        }else{
+        }else if(setToChange.equals("max")){
+        	if(max < 10) {
+        		max ++;
+        	}else {
+        		max = 1;
+        	}
+        	SettingsController.setSetting("MaxConsole", String.valueOf(max));
+        	ConsoleSettingsMenu();
+        }else {
+       
             messageHandler.HandleMessage(-1, "Invalid option, try again", true);
             ConsoleSettingsMenu();
         }
     }
-
 }

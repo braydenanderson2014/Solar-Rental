@@ -20,7 +20,7 @@ public class LogDump {
     public static int AMT = 0;
     public static boolean DumpLog(String Mode){
 
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String path;
         path = ProgramController.SystemRunPath + "/Logs";
         File file = new File(path);

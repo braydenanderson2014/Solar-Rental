@@ -15,7 +15,7 @@ import UserController.MaintainUserController;
 import UserController.SecondaryUserController;
 import UserController.UserListController;
 import messageHandler.ClearAllMessages;
-import messageHandler.Console;
+
 import messageHandler.ConsoleHandler;
 import messageHandler.messageHandler;
 

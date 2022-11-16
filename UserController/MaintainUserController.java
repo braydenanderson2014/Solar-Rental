@@ -13,7 +13,8 @@ import InstallManager.ProgramController;
 import Login.SwitchController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.Settings;
-import messageHandler.Console;
+
+import messageHandler.ConsoleHandler;
 import messageHandler.UserMessageHandler;
 import messageHandler.messageHandler;
 
@@ -162,7 +163,7 @@ public class MaintainUserController {
             System.out.println("[PERM]: Request Permission Level Change");
         }
         System.out.println("[RETURN]: Return to Settings Menu");
-        Console.getConsole();
+        ConsoleHandler.getConsole();
         String option = customScanner.nextLine().toLowerCase();
         if(option.equals("name")){
             requestAccountChange(User);
@@ -236,7 +237,7 @@ public class MaintainUserController {
             Logo.displayLine();
             System.out.println("Last Account Name: " + GetProperty("AccountName"));
             System.out.println("Requested Account Name: " + AccountName);
-            Console.getConsole();
+            ConsoleHandler.getConsole();
             System.out.println("Do you approve the New Account Name? (y/n)");
             String approve = customScanner.nextLine().toLowerCase();
             if(approve.equals("y") || approve.equals("yes")){

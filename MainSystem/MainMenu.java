@@ -5,7 +5,7 @@ import Assets.customScanner;
 import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
-import messageHandler.Console;
+
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.messageHandler;
