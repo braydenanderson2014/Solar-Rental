@@ -25,7 +25,9 @@ import messageHandler.ViewLogManager;
 import messageHandler.messageHandler;
 public class Settings{
     public static String path = ProgramController.UserRunPath;
-    public static List<String> MyRequests = new ArrayList<>();
+    public static List<String> myRequests = new ArrayList<>();
+    public static List<String> myNotifications = new ArrayList<>();
+    public static int myNotificationsAmount = 0;
     public static String logType = "all";
     public static int requestsMade = 0;
     public static int updateRequestsMade(){
@@ -33,22 +35,25 @@ public class Settings{
         return requestsMade;
     }
     public static boolean checkRequests(){
-        MyRequests.clear();
+        myRequests.clear();
         for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestUser.size(); i++){
             if(AdministrativeFunctions.AdministrativeRequestUser.get(i).equals(SwitchController.focusUser)){
-                MyRequests.add(AdministrativeFunctions.AdministrativeRequestFull.get(i));
+                myRequests.add(AdministrativeFunctions.AdministrativeRequestFull.get(i));
             }
         }
         return true;
+    }
+    public static boolean CheckNotifications(){
+        return false;
     }
 
     public static boolean printRequests(){
         checkRequests();
         int item = 0;
         Logo.displayLogo();
-        for(int i = 0; i < MyRequests.size(); i++){
+        for(int i = 0; i < myRequests.size(); i++){
             item++;
-            System.out.println(item + ": " + MyRequests.get(i));
+            System.out.println(item + ": " + myRequests.get(i));
         }
         try {
             int option;
@@ -60,13 +65,13 @@ public class Settings{
             }else{
                 String temp;
                 Logo.displayLogo();
-                System.out.println("Selected Item: " + MyRequests.get(option));
+                System.out.println("Selected Item: " + myRequests.get(option));
                 System.out.println("Would you like to Revoke your Request? (y/n)");
                 temp = customScanner.nextLine();
                 if(temp.equals("y") || temp.equals("yes")){
                     for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestKeyWord.size(); i++){
-                        if(AdministrativeFunctions.AdministrativeRequestFull.get(i).contains(MyRequests.get(option))){
-                            MyRequests.remove(option);
+                        if(AdministrativeFunctions.AdministrativeRequestFull.get(i).contains(myRequests.get(option))){
+                            myRequests.remove(option);
                             AdministrativeFunctions.AdministrativeRequestFull.remove(i);
                             messageHandler.HandleMessage(1, "Removed From Administrative Request Full", false);
                             AdministrativeFunctions.AdministrativeRequestID.remove(i);
@@ -116,7 +121,10 @@ public class Settings{
         if(parseInt(MainSystemUserController.GetProperty(key)) >= 8) {
         	System.out.println("[REQUESTS]: View User Requests; Current Request Count: [" + requestsMade + "]");
         }else {
-        	System.out.println("[REQUESTS]: My Requests: Current Requests: " + MyRequests.size());
+        	System.out.println("[REQUESTS]: My Requests: Current Requests: " + myRequests.size());
+        }
+        if(parseInt(MainSystemUserController.GetProperty(key)) < 8){
+            System.out.println("[NOTI]: My Notifications Notification Count: [" + myNotifications + "]");
         }
         System.out.println("[RETURN]: Return");
         System.out.println();
@@ -125,6 +133,11 @@ public class Settings{
         if(option.equals("path")){
         	messageHandler.HandleMessage(-1, "Path Controller has not yet been implemented, Check back at a later update", true);
         	SettingsMenu();
+        }else if(option.equals("noti")){
+            messageHandler.HandleMessage(1, "This Option is not yet Available, Check back at a later update", true);
+            CheckNotifications();
+            
+            SettingsMenu();
         }else if(option.equals("update")){
             MaintainUserController.loadUserProperties(SwitchController.focusUser);
             MaintainUserController.updateProfileSettings(MaintainUserController.GetProperty("Username"));  
