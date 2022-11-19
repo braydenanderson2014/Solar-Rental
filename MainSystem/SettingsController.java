@@ -6,16 +6,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 import InstallManager.ProgramController;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class SettingsController{
-    public static Properties prop = new Properties();
-    private static String path = ProgramController.SystemPath + ProgramController.SystemSubPath + ProgramController.SystemInstallPath + ProgramController.SystemConfig;
+    protected static Properties prop = new Properties();
+    private static String path = ProgramController.systemPath + ProgramController.systemSubPath + ProgramController.systemInstallPath + ProgramController.systemConfig;
 
-    public static String getSetting(String SettingType){
-        String Setting = prop.getProperty(SettingType);
-        messageHandler.HandleMessage(1, "Setting: " + SettingType + " " + Setting, false);
-        return Setting;
+    public static String getSetting(String settingType){
+        String setting = prop.getProperty(settingType);
+        MessageProcessor.processMessage(1, "Setting: " + settingType + " " + setting, true);
+        return setting;
     }
 
     public static boolean saveSettings(){
@@ -23,13 +23,13 @@ public class SettingsController{
             prop.store(output, null);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             return false;
         }
     }
 
-    public static boolean SearchForSet(String Setting){
-        return prop.containsKey(Setting);
+    public static boolean searchForSet(String setting){
+        return prop.containsKey(setting);
     }
 
     public static boolean loadSettings(){
@@ -37,15 +37,15 @@ public class SettingsController{
             prop.load(input);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             return false;
         }
     }
 
-    public static String setSetting(String SettingType, String Setting){
+    public static String setSetting(String settingType, String setting){
         loadSettings();
-        prop.setProperty(SettingType, Setting);
+        prop.setProperty(settingType, setting);
         saveSettings();
-        return SettingType + Setting;
+        return settingType + setting;
     }
 }

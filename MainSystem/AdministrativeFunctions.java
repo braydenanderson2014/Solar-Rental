@@ -6,30 +6,35 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
 
-import Assets.Logo;
-import Assets.customScanner;
 import Login.SwitchController;
 import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
 import UserController.SecondaryUserController;
 import UserController.UserListController;
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ClearAllMessages;
-
 import messageHandler.ConsoleHandler;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class AdministrativeFunctions {
-    public static List<String>AdministrativeRequests = new ArrayList<>();
-    public static List<String>AdministrativeRequestKeyWord = new ArrayList<>();
-    public static List<String>AdministrativeRequestUser = new ArrayList<>();
-    public static List<String>AdministrativeRequestedName = new ArrayList<>();
-    public static List<String>AdministrativeRequestFull = new ArrayList<>();
-    public static List<Integer>AdministrativeRequestID = new ArrayList<>();
-    public static List<String>AccountRequestNamePool = new ArrayList<>();
+    private static final String ADMIN = "Admin";
+	private static final String USER = "User: ";
+	private static final String ACCOUNT2 = "Account";
+	private static final String TARGET_ACCOUNT = "Target Account: ";
+	private static final String UNABLE_TO_FIND_USER = "Unable to find user [";
+	private static Random gen = new Random();
+	public static List<String>administrativeRequests = new ArrayList<>();
+    public static List<String>administrativeRequestKeyWord = new ArrayList<>();
+    public static List<String>administrativeRequestUser = new ArrayList<>();
+    public static List<String>administrativeRequestedName = new ArrayList<>();
+    public static List<String>administrativeRequestFull = new ArrayList<>();
+    public static List<Integer>administrativeRequestID = new ArrayList<>();
+    public static List<String>accountRequestNamePool = new ArrayList<>();
     public static int requestsMade = 0;
     public static int updateRequestsMade(){
-        requestsMade = AdministrativeRequests.size();
+        requestsMade = administrativeRequests.size();
         return requestsMade;
     }
 
@@ -49,23 +54,24 @@ public class AdministrativeFunctions {
         System.out.println("[CLS]:     Clear Logs");
         System.out.println("[RETURN]:  Return to Main Menu");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         try{
-            if(option.equals("create") && Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+            String key = "PermissionLevel";
+			if(option.equals("create") && Integer.parseInt(MainSystemUserController.GetProperty(key)) >= 8){
                 MaintainUserController.createNewUser("Blank");
                 AdministrativeMenu();
-            }else if(option.equals("delete") && Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+            }else if(option.equals("delete") && Integer.parseInt(MainSystemUserController.GetProperty(key)) >= 8){
                 System.out.println("User to delete: ");
-                String user = customScanner.nextLine();
-                if(UserListController.SearchForUser(user) == true){
+                String user = CustomScanner.nextLine();
+                if(UserListController.SearchForUser(user)){
                    MaintainUserController.deleteUser(user);
                 }else{
-                    messageHandler.HandleMessage(-1, "Unable to find user [" + user + "]", true);
+                    MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + user + "]", true);
                 }
                 AdministrativeMenu();
-            }else if(option.equals("change") && Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
+            }else if(option.equals("change") && Integer.parseInt(MainSystemUserController.GetProperty(key)) >= 8){
                 System.out.println("Target Account for password change: ");
-                String user = customScanner.nextLine();
+                String user = CustomScanner.nextLine();
                 LoginUserController.adminUpdateUserPass(user);
                 AdministrativeMenu();
             }else if(option.equals("requests")){
@@ -75,11 +81,11 @@ public class AdministrativeFunctions {
                 System.out.println("Current TaxP: " + SettingsController.getSetting("TaxP") + "%");
                 System.out.println("New TaxP: ");
                 try{
-                    Double TaxP = customScanner.nextDouble();
-                    SettingsController.setSetting("TaxP", String.valueOf(TaxP));
+                    Double taxP = CustomScanner.nextDouble();
+                    SettingsController.setSetting("TaxP", String.valueOf(taxP));
                     AdministrativeMenu();
                 }catch(InputMismatchException e){
-                    messageHandler.HandleMessage(-2, e.toString(), true);
+                    MessageProcessor.processMessage(-2, e.toString(), true);
                     AdministrativeMenu();
                 }
             }else if(option.equals("list")){
@@ -89,34 +95,34 @@ public class AdministrativeFunctions {
             	UserListController.loadUserList();
             	Enumeration keys = UserListController.userlist.keys();
             	while (keys.hasMoreElements()) {
-                    String key = (String)keys.nextElement();
-                    String value = (String)UserListController.userlist.get(key);
-                    System.out.println(key + ": " + value);
-                    messageHandler.HandleMessage(1, key + ": " + value, false);
+                    String key1 = (String)keys.nextElement();
+                    String value = (String)UserListController.userlist.get(key1);
+                    System.out.println(key1 + ": " + value);
+                    MessageProcessor.processMessage(1, key1 + ": " + value, false);
                 }
-            	String enter = customScanner.nextLine();
+            	String enter = CustomScanner.nextLine();
             	AdministrativeMenu();
             }else if(option.equals("passflag")){
                 Logo.displayLogo();
-                System.out.println("Target Account: ");
-                String Account = customScanner.nextLine();
-                messageHandler.HandleMessage(1, Account + " was targeted for PassFlag change", false);
+                System.out.println(TARGET_ACCOUNT);
+                String Account = CustomScanner.nextLine();
+                MessageProcessor.processMessage(1, Account + " was targeted for PassFlag change", false);
                 if(UserListController.SearchForUser(Account) == true){
                     LoginUserController.loadUserProperties(Account);
                     LoginUserController.setValue(Account, "PassFlag", "true");
-                    messageHandler.HandleMessage(1, "PassFlag set for user: " + MaintainUserController.GetProperty("Username"), true);
+                    MessageProcessor.processMessage(1, "PassFlag set for user: " + MaintainUserController.GetProperty("Username"), true);
                 }else{
-                    messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
+                    MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + Account + "]", true);
                 }
                 AdministrativeMenu();
             }else if(option.equals("cls")){
                 System.out.println("Are you sure you want to delete the logs?");
-                String choice = customScanner.nextLine().toLowerCase();
+                String choice = CustomScanner.nextLine().toLowerCase();
                 if(choice.equals("y")|| choice.equals("yes")){
                     System.out.println("[WARNING]: This process is not reversible! Would you like to dump Logs into file first?");
-                    String Choice = customScanner.nextLine().toLowerCase();
+                    String Choice = CustomScanner.nextLine().toLowerCase();
                     if(Choice.equals("yes") || Choice.equals("y")){
-                        messageHandler.dumpAll();
+                        MessageProcessor.dumpAll();
                         ClearAllMessages.clearAll();
                         AdministrativeMenu();
                     }else{
@@ -124,7 +130,7 @@ public class AdministrativeFunctions {
                         AdministrativeMenu();
                     }
                 }else{
-                    messageHandler.HandleMessage(-1, "User did not erase logs", true);
+                    MessageProcessor.processMessage(-1, "User did not erase logs", true);
                     AdministrativeMenu();
                 }
             }else if(option.equals("disable")){
@@ -136,79 +142,79 @@ public class AdministrativeFunctions {
             }else if(option.equals("return")){
                 MainMenu.mainMenu();
             }else{
-                if(Integer.parseInt(MaintainUserController.GetProperty("PermissionLevel")) >= 8){
-                    messageHandler.HandleMessage(-1, "Invalid option, try again!", true);
+                if(Integer.parseInt(MaintainUserController.GetProperty(key)) >= 8){
+                    MessageProcessor.processMessage(-1, "Invalid option, try again!", true);
                 }else{
-                    messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions for this function. Please return to Main Menu!", true);
+                    MessageProcessor.processMessage(-1, SwitchController.focusUser + " does not have the proper permissions for this function. Please return to Main Menu!", true);
                 }
                 AdministrativeMenu();
             }
         }catch(NumberFormatException e){
-            messageHandler.HandleMessage(-2, e.toString() + " [E1T0]", true);
-            messageHandler.HandleMessage(-1, "An Error Occured with the Administrative Menu... Reloading Menu", true);
+            MessageProcessor.processMessage(-2, e.toString() + " [E1T0]", true);
+            MessageProcessor.processMessage(-1, "An Error Occured with the Administrative Menu... Reloading Menu", true);
             AdministrativeMenu();
         }
     }
 
     public static boolean resolutionAdvisory() {
         if(updateRequestsMade() == 0){
-            messageHandler.HandleMessage(-1, "No Requests have been made", true);
+            MessageProcessor.processMessage(-1, "No Requests have been made", true);
             return false;
         }
         Logo.displayLogo();
         System.out.println("Resolution Advisory");
         Logo.displayLine();
         int size = updateRequestsMade();
-        messageHandler.HandleMessage(1, "Current Requests: ", false);
-        for(int i = 0; i < AdministrativeRequests.size(); i++){
-            System.out.println(size + ". " + AdministrativeRequests.get(i));
-            messageHandler.HandleMessage(1, size + ". " + AdministrativeRequests.get(i) + "[" + AdministrativeRequestID.get(i) + "]", false);
+        MessageProcessor.processMessage(1, "Current Requests: ", false);
+        for(int i = 0; i < administrativeRequests.size(); i++){
+            System.out.println(size + ". " + administrativeRequests.get(i));
+            MessageProcessor.processMessage(1, size + ". " + administrativeRequests.get(i) + "[" + administrativeRequestID.get(i) + "]", false);
         }
         try{
-            int option = customScanner.nextInt();
+            int option = CustomScanner.nextInt();
             option--;
             Logo.displayLogo();
             System.out.println("Account Name: ");
             Logo.displayLine();
-            System.out.println(size + ". " + AdministrativeRequests.get(option));
-            String user = customScanner.nextLine();
-            if(AdministrativeRequestKeyWord.get(option).contains("Permissions")){
+            System.out.println(size + ". " + administrativeRequests.get(option));
+            String user = CustomScanner.nextLine();
+            if(administrativeRequestKeyWord.get(option).contains("Permissions")){
                 SecondaryUserController.adjPermLev(user);
-                AdministrativeRequests.remove(option);
-                AdministrativeRequestFull.remove(option);
-                AdministrativeRequestID.remove(option);
-                AdministrativeRequestKeyWord.remove(option);
-                AdministrativeRequestUser.remove(option);   
-                AdministrativeRequestedName.remove(option);
-            }else if(AdministrativeRequestKeyWord.get(option).contains("new Account")){
-                MaintainUserController.createNewUser(AdministrativeRequestedName.get(option));
-                AdministrativeRequests.remove(option);
-                AdministrativeRequestFull.remove(option);
-                AdministrativeRequestID.remove(option);
-                AdministrativeRequestKeyWord.remove(option);
-                AdministrativeRequestUser.remove(option); 
-                AdministrativeRequestedName.remove(option);
+                administrativeRequests.remove(option);
+                administrativeRequestFull.remove(option);
+                administrativeRequestID.remove(option);
+                administrativeRequestKeyWord.remove(option);
+                administrativeRequestUser.remove(option);   
+                administrativeRequestedName.remove(option);
+            }else if(administrativeRequestKeyWord.get(option).contains("new Account")){
+                MaintainUserController.createNewUser(administrativeRequestedName.get(option));
+                administrativeRequests.remove(option);
+                administrativeRequestFull.remove(option);
+                administrativeRequestID.remove(option);
+                administrativeRequestKeyWord.remove(option);
+                administrativeRequestUser.remove(option); 
+                administrativeRequestedName.remove(option);
                 AdministrativeMenu();
-            }else if(AdministrativeRequestKeyWord.get(option).contains("Change Account Name")){
+            }else if(administrativeRequestKeyWord.get(option).contains("Change Account Name")){
                 System.out.println("Target Username: ");
-                String User = AdministrativeRequestUser.get(option);
+                String user1 = administrativeRequestUser.get(option);
                 System.out.println(user);
                 System.out.println("New Account Name: ");
-                String AccountName = AdministrativeRequestedName.get(option);
-                System.out.println(AccountName);
-                AdministrativeRequests.remove(option);
-                AdministrativeRequestFull.remove(option);
-                AdministrativeRequestID.remove(option);
-                AdministrativeRequestKeyWord.remove(option);
-                AdministrativeRequestUser.remove(option);
-                AdministrativeRequestedName.remove(option);
-                MaintainUserController.updateAccountName(User, AccountName);
+                String accountName = administrativeRequestedName.get(option);
+                System.out.println(accountName);
+                administrativeRequests.remove(option);
+                administrativeRequestFull.remove(option);
+                administrativeRequestID.remove(option);
+                administrativeRequestKeyWord.remove(option);
+                administrativeRequestUser.remove(option);
+                administrativeRequestedName.remove(option);
+                MaintainUserController.updateAccountName(user1, accountName);
             }else {
-                messageHandler.HandleMessage(-1, "No Resolutions Available", true);
+                MessageProcessor.processMessage(-1, "No Resolutions Available", true);
                 AdministrativeMenu();
             }
         }catch(InputMismatchException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             return false;
         }
 
@@ -219,25 +225,25 @@ public class AdministrativeFunctions {
     }
 
     private static boolean viewAccountList() {
-        if(AccountRequestNamePool.size() <= 0){
-            messageHandler.HandleMessage(-1, "No Account Requests have been made", true);
+        if(accountRequestNamePool.isEmpty()){
+            MessageProcessor.processMessage(-1, "No Account Requests have been made", true);
             return false;
         }else{
             int selection = 0;
             Logo.displayLogo();
             System.out.println("Account creation requests");
             Logo.displayLine();
-            for(int i = 0; i > AccountRequestNamePool.size(); i++){
+            for(int i = 0; i < accountRequestNamePool.size(); i++){
                 selection++;
-                System.out.println(selection + ". " + AccountRequestNamePool.get(i));
+                System.out.println(selection + ". " + accountRequestNamePool.get(i));
             }
             try{
-                int choice = customScanner.nextInt();
+                int choice = CustomScanner.nextInt();
                 choice -- ;
-                MaintainUserController.createNewUser(AccountRequestNamePool.get(choice));
+                MaintainUserController.createNewUser(accountRequestNamePool.get(choice));
                 return true;
             }catch(InputMismatchException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-2, e.toString(), true);
                 viewAccountList();
             }
             return true;
@@ -248,28 +254,28 @@ public class AdministrativeFunctions {
         Logo.displayLogo();
         System.out.println("Enable An Account");
         Logo.displayLine();
-        System.out.println("Target Account: ");
-        String Account = customScanner.nextLine();
-        messageHandler.HandleMessage(1, Account + " was enabled", false);
-        if(UserListController.SearchForUser(Account) == true){
-            LoginUserController.setValue(Account, "Account", "Enabled");
-            messageHandler.HandleMessage(1, "User: " + SecondaryUserController.getUserProp("Username") + " Account was Enabled", true);
-            LoginUserController.setValue(Account, "PassFlag", "true");
+        System.out.println(TARGET_ACCOUNT);
+        String account = CustomScanner.nextLine();
+        MessageProcessor.processMessage(1, account + " was enabled", false);
+        if(UserListController.SearchForUser(account)){
+            LoginUserController.setValue(account, ACCOUNT2, "Enabled");
+            MessageProcessor.processMessage(1, USER + SecondaryUserController.getUserProp("Username") + " Account was Enabled", true);
+            LoginUserController.setValue(account, "PassFlag", "true");
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
+            MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + account + "]", true);
         }
         AdministrativeMenu();
         return true;
     }
 
     public static boolean enableAdminAccount() {
-        if(UserListController.SearchForUser("Admin")){
-            LoginUserController.setValue("Admin", "Account", "Enabled");
-            messageHandler.HandleMessage(1, "User: " + "Admin" + " Account was Enabled", true);
-            LoginUserController.setValue("Admin", "PassFlag", "true");
+        if(UserListController.SearchForUser(ADMIN)){
+            LoginUserController.setValue(ADMIN, ACCOUNT2, "Enabled");
+            MessageProcessor.processMessage(1, USER + ADMIN + " Account was Enabled", true);
+            LoginUserController.setValue(ADMIN, "PassFlag", "true");
             return true;
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find user [" + "Admin" + "]", true);
+            MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + ADMIN + "]", true);
             return false;
         }
     }
@@ -278,38 +284,38 @@ public class AdministrativeFunctions {
         Logo.displayLogo();
         System.out.println("Disable An Account");
         Logo.displayLine();
-        System.out.println("Target Account: ");
-        String Account = customScanner.nextLine();
-        messageHandler.HandleMessage(1, Account + " was disabled", false);
-        if(UserListController.SearchForUser(Account)){
-            if(!Account.equals("Admin")){
-                LoginUserController.setValue(Account, "Account", "Disabled");
-                messageHandler.HandleMessage(1, "User: " + LoginUserController.getProperty(Account, "Username") + " Account was Disabled", true);
+        System.out.println(TARGET_ACCOUNT);
+        String account = CustomScanner.nextLine();
+        MessageProcessor.processMessage(1, account + " was disabled", false);
+        if(UserListController.SearchForUser(account)){
+            if(!account.equals(ADMIN)){
+                LoginUserController.setValue(account, ACCOUNT2, "Disabled");
+                MessageProcessor.processMessage(1, USER + LoginUserController.getProperty(account, "Username") + " Account was Disabled", true);
                 return true;
             }else {
-            	messageHandler.HandleMessage(-1, "CANNOT Disable Admin Account", true);
+            	MessageProcessor.processMessage(-1, "CANNOT Disable Admin Account", true);
             	return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find user [" + Account + "]", true);
+            MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + account + "]", true);
             return false;
         }
     }
 
-    public static boolean newRequest(String focusUser, String request, String Description, String NewAccountName){
-        int RequestID = RequestIDGenerator();
-        AdministrativeRequestedName.add(NewAccountName);
-        AdministrativeRequestID.add(RequestID);
-        AdministrativeRequestUser.add(focusUser);
-        AdministrativeRequestKeyWord.add(request);
-        AdministrativeRequests.add(Description);
-        AdministrativeRequestFull.add("[" + focusUser + "] is requesting [" + request + "]...Full Description: " + Description + "[Request ID: " + RequestID + "]");
-        messageHandler.HandleMessage(1, "Request saved successfully, an Administrator will review the request as soon as possible. [Request ID: " + RequestID + "]", true);
+    public static boolean newRequest(String focusUser, String request, String description, String newAccountName){
+        int requestID = requestIDGenerator();
+        administrativeRequestedName.add(newAccountName);
+        administrativeRequestID.add(requestID);
+        administrativeRequestUser.add(focusUser);
+        administrativeRequestKeyWord.add(request);
+        administrativeRequests.add(description);
+        administrativeRequestFull.add("[" + focusUser + "] is requesting [" + request + "]...Full Description: " + description + "[Request ID: " + requestID + "]");
+        MessageProcessor.processMessage(1, "Request saved successfully, an Administrator will review the request as soon as possible. [Request ID: " + requestID + "]", true);
         return true;
     }
 
-    private static int RequestIDGenerator() {
-        Random gen = new Random();
+    private static int requestIDGenerator() {
+        
         return gen.nextInt(99999);
     }
 

@@ -1,27 +1,27 @@
 package InstallManager;
 
 import MainSystem.SettingsController;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class SystemSetLoader {
 
     public static boolean loadSystems() {
         SettingsController.loadSettings();
         //#region SystemPath
-        if(SettingsController.SearchForSet("SystemPathLetter")){
-            ProgramController.SystemPathLetter = SettingsController.getSetting("SystemPathLetter");
+        if(SettingsController.searchForSet("SystemPathLetter")){
+            ProgramController.systemPathLetter = SettingsController.getSetting("SystemPathLetter");
         }else{
-            messageHandler.HandleMessage(-2, "Failed to load SystemPathLetter", false);
-            messageHandler.HandleMessage(1, "Applying default SystemPathLetter", false);
+            MessageProcessor.processMessage(-2, "Failed to load SystemPathLetter", false);
+            MessageProcessor.processMessage(1, "Applying default SystemPathLetter", false);
         }
-        if(SettingsController.SearchForSet("SystemPath")){
-            ProgramController.SystemPath = SettingsController.getSetting("SystemPath");
+        if(SettingsController.searchForSet("SystemPath")){
+            ProgramController.systemPath = SettingsController.getSetting("SystemPath");
         }else {
-            messageHandler.HandleMessage(-2, "Failed to load SystemPath", false);
-            messageHandler.HandleMessage(1, "Applying default SystemPath", false);
+            MessageProcessor.processMessage(-2, "Failed to load SystemPath", false);
+            MessageProcessor.processMessage(1, "Applying default SystemPath", false);
 
         }
-        ProgramController.SystemRunPath = ProgramController.SystemPathLetter + AutoSetup.SystemWorkingPath + ProgramController.SystemSubPath;
+        ProgramController.systemRunPath = ProgramController.systemPathLetter + AutoSetup.systemWorkingPath + ProgramController.systemSubPath;
         //#endregion
         //#region UserPath
         

@@ -6,48 +6,49 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import Assets.Logo;
-import Assets.VersionController;
-import Assets.customScanner;
+
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;
 import Login.SwitchController;
 import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
+import assets.CustomScanner;
+import assets.Logo;
+import assets.VersionController;
 import messageHandler.AllMessages;
-
 import messageHandler.ConsoleHandler;
 import messageHandler.ConsoleSettings;
 import messageHandler.LogDump;
+import messageHandler.MessageProcessor;
 import messageHandler.SystemMessages;
 import messageHandler.ViewLogManager;
-import messageHandler.messageHandler;
 public class Settings{
-    public static String path = ProgramController.UserRunPath;
+    private static final String LOG_TYPE = "LogType";
+	public static String path = ProgramController.userRunPath;
     public static List<String> myRequests = new ArrayList<>();
     public static List<String> myNotifications = new ArrayList<>();
     public static int myNotificationsAmount = 0;
     public static String logType = "all";
     public static int requestsMade = 0;
-    public static int updateRequestsMade(){
-        requestsMade = AdministrativeFunctions.AdministrativeRequests.size();
+    public static int updateRequestsMade(){ // Check admin requests
+        requestsMade = AdministrativeFunctions.administrativeRequests.size();
         return requestsMade;
     }
-    public static boolean checkRequests(){
+    public static boolean checkRequests(){ //Check User Requests to admin
         myRequests.clear();
-        for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestUser.size(); i++){
-            if(AdministrativeFunctions.AdministrativeRequestUser.get(i).equals(SwitchController.focusUser)){
-                myRequests.add(AdministrativeFunctions.AdministrativeRequestFull.get(i));
+        for(int i = 0; i < AdministrativeFunctions.administrativeRequestUser.size(); i++){
+            if(AdministrativeFunctions.administrativeRequestUser.get(i).equals(SwitchController.focusUser)){
+                myRequests.add(AdministrativeFunctions.administrativeRequestFull.get(i));
             }
         }
         return true;
     }
-    public static boolean CheckNotifications(){
+    public static boolean checkNotifications(){// Checking notifications from admin or other users
         return false;
     }
 
-    public static boolean printRequests(){
+    public static boolean printRequests(){//Print User Requests. (submitted requests to admin)
         checkRequests();
         int item = 0;
         Logo.displayLogo();
@@ -58,49 +59,49 @@ public class Settings{
         try {
             int option;
             System.out.println("Select An Item: (Type \"0\" to go back to the main menu)");
-            option = customScanner.nextInt();
+            option = CustomScanner.nextInt();
             option--;
             if(option == -1){
-                SettingsMenu();
+                settingsMenu();
             }else{
                 String temp;
                 Logo.displayLogo();
                 System.out.println("Selected Item: " + myRequests.get(option));
                 System.out.println("Would you like to Revoke your Request? (y/n)");
-                temp = customScanner.nextLine();
+                temp = CustomScanner.nextLine();
                 if(temp.equals("y") || temp.equals("yes")){
-                    for(int i = 0; i < AdministrativeFunctions.AdministrativeRequestKeyWord.size(); i++){
-                        if(AdministrativeFunctions.AdministrativeRequestFull.get(i).contains(myRequests.get(option))){
+                    for(int i = 0; i < AdministrativeFunctions.administrativeRequestKeyWord.size(); i++){
+                        if(AdministrativeFunctions.administrativeRequestFull.get(i).contains(myRequests.get(option))){
                             myRequests.remove(option);
-                            AdministrativeFunctions.AdministrativeRequestFull.remove(i);
-                            messageHandler.HandleMessage(1, "Removed From Administrative Request Full", false);
-                            AdministrativeFunctions.AdministrativeRequestID.remove(i);
-                            messageHandler.HandleMessage(1, "Removed From Request ID", false);
-                            AdministrativeFunctions.AdministrativeRequestKeyWord.remove(i);
-                            messageHandler.HandleMessage(1, "Removed From Request Keyword", false);
-                            AdministrativeFunctions.AdministrativeRequestUser.remove(i);
-                            messageHandler.HandleMessage(1, "Removed From Request User", false);
-                            AdministrativeFunctions.AdministrativeRequestedName.remove(i);
-                            messageHandler.HandleMessage(1, "Removed From Requested Name", false);
-                            AdministrativeFunctions.AdministrativeRequests.remove(i);
-                            messageHandler.HandleMessage(1, "Removed From Administrative Requests", false);
-                            messageHandler.HandleMessage(1, "Successfully Removed Requests", true);
+                            AdministrativeFunctions.administrativeRequestFull.remove(i);
+                            MessageProcessor.processMessage(1, "Removed From Administrative Request Full", false);
+                            AdministrativeFunctions.administrativeRequestID.remove(i);
+                            MessageProcessor.processMessage(1, "Removed From Request ID", false);
+                            AdministrativeFunctions.administrativeRequestKeyWord.remove(i);
+                            MessageProcessor.processMessage(1, "Removed From Request Keyword", false);
+                            AdministrativeFunctions.administrativeRequestUser.remove(i);
+                            MessageProcessor.processMessage(1, "Removed From Request User", false);
+                            AdministrativeFunctions.administrativeRequestedName.remove(i);
+                            MessageProcessor.processMessage(1, "Removed From Requested Name", false);
+                            AdministrativeFunctions.administrativeRequests.remove(i);
+                            MessageProcessor.processMessage(1, "Removed From Administrative Requests", false);
+                            MessageProcessor.processMessage(1, "Successfully Removed Requests", true);
                         }else{
-                            messageHandler.HandleMessage(-1, "Unable to find requests in the main Request queue", true);
+                            MessageProcessor.processMessage(-1, "Unable to find requests in the main Request queue", true);
                         }
                     }
                 }else{
-                    messageHandler.HandleMessage(-1, "Invalid option, Try again.", true);
+                    MessageProcessor.processMessage(-1, "Invalid option, Try again.", true);
                     printRequests();
                 }
             }
         } catch (InputMismatchException|IndexOutOfBoundsException e) {
-            messageHandler.HandleMessage(-2,e.toString(), true);
+            MessageProcessor.processMessage(-2,e.toString(), true);
         }
         return true;
     }
 
-    public static void SettingsMenu() throws NumberFormatException{
+    public static void settingsMenu() throws NumberFormatException{
         checkRequests();
         Logo.displayLogo();
         System.out.println();
@@ -129,15 +130,15 @@ public class Settings{
         System.out.println("[RETURN]: Return");
         System.out.println();
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         if(option.equals("path")){
-        	messageHandler.HandleMessage(-1, "Path Controller has not yet been implemented, Check back at a later update", true);
-        	SettingsMenu();
+        	MessageProcessor.processMessage(-1, "Path Controller has not yet been implemented, Check back at a later update", true);
+        	settingsMenu();
         }else if(option.equals("noti")){
-            messageHandler.HandleMessage(1, "This Option is not yet Available, Check back at a later update", true);
-            CheckNotifications();
+            MessageProcessor.processMessage(1, "This Option is not yet Available, Check back at a later update", true);
+            checkNotifications();
             
-            SettingsMenu();
+            settingsMenu();
         }else if(option.equals("update")){
             MaintainUserController.loadUserProperties(SwitchController.focusUser);
             MaintainUserController.updateProfileSettings(MaintainUserController.GetProperty("Username"));  
@@ -145,20 +146,20 @@ public class Settings{
             try {
                 URI uri= new URI(SettingsController.getSetting("debugSite"));
                 java.awt.Desktop.getDesktop().browse(uri);
-                messageHandler.HandleMessage(1, "Webpage opened in your default Browser...", true);
-                messageHandler.HandleMessage(2, SettingsController.getSetting("debugSite"), true);
+                MessageProcessor.processMessage(1, "Webpage opened in your default Browser...", true);
+                MessageProcessor.processMessage(2, SettingsController.getSetting("debugSite"), true);
             } catch (Exception e) {
-                messageHandler.HandleMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
+                MessageProcessor.processMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
             }
-            SettingsMenu();
+            settingsMenu();
         }else if(option.equals("force")){
-            messageHandler.HandleMessage(-1, "Force (Update) has not been implemented yet. Check back at a later update", false);
-            SettingsMenu();
+        	MaintainUserController.forceProfileUpdate(SwitchController.focusUser);
+            settingsMenu();
         }else if(option.equals("viewlogs")){
             ViewLogManager.ViewMenu(1);
         }else if(option.equals("dump")){
             LogDump.DumpLog(logType);
-            SettingsMenu();   
+            settingsMenu();   
         }else if(option.equals("console")){
             ConsoleSettings.ConsoleSettingsMenu();
         }else if(option.equals("requests")){
@@ -167,7 +168,7 @@ public class Settings{
         	}else {
         		printRequests();
         	}
-            SettingsMenu();
+            settingsMenu();
         }else if(option.equals("log")){
             if(logType.equals("all")){
                 logType = "system";
@@ -180,70 +181,70 @@ public class Settings{
             }else if(logType.equals("error")){
                 logType = "all";
             }
-            String settingType = "LogType";
+            String settingType = LOG_TYPE;
 			SettingsController.setSetting(settingType, logType);
-            messageHandler.HandleMessage(1, "Log Type: " + logType, true);
-            SettingsMenu();
+            MessageProcessor.processMessage(1, "Log Type: " + logType, true);
+            settingsMenu();
         }else if(option.equals("first")){
             if(parseInt(MainSystemUserController.GetProperty(key)) >= 6){
                 if(FirstTimeManager.checkFirstTime()){
                     SettingsController.setSetting("FirstTime", "false");
-                    FirstTimeManager.FirstTime = false;
+                    FirstTimeManager.firstTime = false;
                 }else if(!FirstTimeManager.checkFirstTime()){
-                    FirstTimeManager.FirstTime = true;
+                    FirstTimeManager.firstTime = true;
                     SettingsController.setSetting("FirstTime", "true");
                 }
-                messageHandler.HandleMessage(1, "IsFirstTime: " + FirstTimeManager.checkFirstTime(), true);
-                SettingsMenu();
+                MessageProcessor.processMessage(1, "IsFirstTime: " + FirstTimeManager.checkFirstTime(), true);
+                settingsMenu();
             }else{
-                messageHandler.HandleMessage(-1, "User Does not have permission to use this function", true);
-                SettingsMenu();
+                MessageProcessor.processMessage(-1, "User Does not have permission to use this function", true);
+                settingsMenu();
             }
         }else if(option.equals("return")){
             //MainSystem
             MainMenu.mainMenu();
         }else {
-            messageHandler.HandleMessage(-1, "Invalid option, Try again", true);
-            SettingsMenu();
+            MessageProcessor.processMessage(-1, "Invalid option, Try again", true);
+            settingsMenu();
         }
     }
 
-    public static boolean loadSettings(){
-        messageHandler.HandleMessage(1, "Loading Settings file from config.properties", false);
+    public static boolean loadSettings(){ //Loads main Settings for the program to launch
+        MessageProcessor.processMessage(1, "Loading Settings file from config.properties", false);
         System.out.println(SystemMessages.getLastMessage());
         SettingsController.loadSettings();
-        messageHandler.HandleMessage(1, "Settings File Loaded... Now reading from Settings", false);
+        MessageProcessor.processMessage(1, "Settings File Loaded... Now reading from Settings", false);
         System.out.println(SystemMessages.getLastMessage());
 
-        messageHandler.HandleMessage(1, "FirstTime Setting: False", false);
+        MessageProcessor.processMessage(1, "FirstTime Setting: False", false);
         System.out.println(SystemMessages.getLastMessage());
-        messageHandler.HandleMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: " + SettingsController.getSetting("Path"), false);
+        MessageProcessor.processMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: " + SettingsController.getSetting("Path"), false);
         System.out.println(SystemMessages.getLastMessage());
         VersionController.setVersion(SettingsController.getSetting("Version"));
-        messageHandler.HandleMessage(1, "Version: " + SettingsController.getSetting("Version"), false);
+        MessageProcessor.processMessage(1, "Version: " + SettingsController.getSetting("Version"), false);
         System.out.println(SystemMessages.getLastMessage());
-        Settings.logType = SettingsController.getSetting("LogType");
-        messageHandler.HandleMessage(1, "LogType: " + SettingsController.getSetting("LogType"), false);
+        Settings.logType = SettingsController.getSetting(LOG_TYPE);
+        MessageProcessor.processMessage(1, "LogType: " + SettingsController.getSetting(LOG_TYPE), false);
         System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.ErrorSet = Boolean.parseBoolean(SettingsController.getSetting("ErrorSet"));
-        messageHandler.HandleMessage(1, "ErrorSet: " + Boolean.parseBoolean(SettingsController.getSetting("ErrorSet")), false);
+        MessageProcessor.processMessage(1, "ErrorSet: " + Boolean.parseBoolean(SettingsController.getSetting("ErrorSet")), false);
         System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.WarningSet = Boolean.parseBoolean(SettingsController.getSetting("WarningSet"));
-        messageHandler.HandleMessage(1, "WarningSet: " + Boolean.parseBoolean(SettingsController.getSetting("WarningSet")), false);
+        MessageProcessor.processMessage(1, "WarningSet: " + Boolean.parseBoolean(SettingsController.getSetting("WarningSet")), false);
         System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.SystemSet = Boolean.parseBoolean(SettingsController.getSetting("SystemSet"));
-        messageHandler.HandleMessage(1, "SystemSet: " + Boolean.parseBoolean(SettingsController.getSetting("SystemSet")), false);
+        MessageProcessor.processMessage(1, "SystemSet: " + Boolean.parseBoolean(SettingsController.getSetting("SystemSet")), false);
         System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.UserNotifySet = Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet"));
-        messageHandler.HandleMessage(1, "UserNotifySet: " + Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet")), false);
+        MessageProcessor.processMessage(1, "UserNotifySet: " + Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet")), false);
         System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.timeSet = Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet"));
-        messageHandler.HandleMessage(1, "Time Set: " + Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet")), false);
+        MessageProcessor.processMessage(1, "Time Set: " + Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet")), false);
         System.out.println(SystemMessages.getLastMessage());
         LoginUserController.passFlag = Boolean.parseBoolean(SettingsController.getSetting("PassFlag"));
-        messageHandler.HandleMessage(1, "PassFlag: " + Boolean.parseBoolean(SettingsController.getSetting("PassFlag")), false);
+        MessageProcessor.processMessage(1, "PassFlag: " + Boolean.parseBoolean(SettingsController.getSetting("PassFlag")), false);
         System.out.println(SystemMessages.getLastMessage());
-        messageHandler.HandleMessage(1, "All Settings Loaded", false);
+        MessageProcessor.processMessage(1, "All Settings Loaded", false);
         System.out.println(SystemMessages.getLastMessage());
         return true;
     }

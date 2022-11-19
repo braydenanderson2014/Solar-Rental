@@ -3,15 +3,14 @@ package PointofSale;
 import java.util.ArrayList;
 import java.util.List;
 
-import Assets.Logo;
-import Assets.customScanner;
 import Login.SwitchController;
 import UserController.MainSystemUserController;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
+import messageHandler.MessageProcessor;
 import messageHandler.NotificationMessages;
-import messageHandler.messageHandler;
 
 public class SalesMenu {
     public static List<String> ItemsOnInvoice = new ArrayList<>();
@@ -42,7 +41,7 @@ public class SalesMenu {
         System.out.println("[OFF]: Log Off");
         System.out.println("[EXIT]: Exit");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         switch(option){
             case "add":
                 addItem();
@@ -52,11 +51,11 @@ public class SalesMenu {
                     SalesProcessor.ProcessSale();
                 }else if(TotalAmount == 0 && !ItemsOnInvoice.isEmpty()){
                     System.out.println("Total Amount is \"0\" Are you sure you want to Process Payment?");
-                    String options = customScanner.nextLine().toLowerCase();
+                    String options = CustomScanner.nextLine().toLowerCase();
                     if(options.equals("y") || options.equals("yes")){
                         SalesProcessor.ProcessSale();
                     }else{
-                        messageHandler.HandleMessage(1, "User chose not to proceed with transaction", true);
+                        MessageProcessor.processMessage(1, "User chose not to proceed with transaction", true);
                         TheSalesMenu();
                     }
                 }
@@ -67,19 +66,19 @@ public class SalesMenu {
             case "cat":
                 boolean success = CategoriesManager.ListAllCat();
                 if(!success){
-                    messageHandler.HandleMessage(2, "No Categories to list at this time", success);
+                    MessageProcessor.processMessage(2, "No Categories to list at this time", success);
                     System.out.println(NotificationMessages.getLastMessage());
                 }
-                String Enter = customScanner.nextLine();
-                messageHandler.HandleMessage(1, "[Enter]", false);
+                String Enter = CustomScanner.nextLine();
+                MessageProcessor.processMessage(1, "[Enter]", false);
                 TheSalesMenu();
                 break;
             case "addc":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category Name?");
-                    String Cat = customScanner.nextLine();
+                    String Cat = CustomScanner.nextLine();
                     System.out.println("Category ID?");
-                    String CatID = customScanner.nextLine();
+                    String CatID = CustomScanner.nextLine();
                     CategoriesManager.AddCat(Cat, CatID);
                     TheSalesMenu();
                 }
@@ -87,9 +86,9 @@ public class SalesMenu {
             case "adds":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Sub-Category Name?");
-                    String SubCat = customScanner.nextLine();
+                    String SubCat = CustomScanner.nextLine();
                     System.out.println("Sub-Category ID's?");
-                    String SubCatID = customScanner.nextLine();
+                    String SubCatID = CustomScanner.nextLine();
                     SubCategoriesManager.addSubCat(SubCat, SubCatID);
                     TheSalesMenu();
 
@@ -98,14 +97,14 @@ public class SalesMenu {
             case "del":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category ID?: ");
-                    String id = customScanner.nextLine().toLowerCase();
+                    String id = CustomScanner.nextLine().toLowerCase();
                     boolean idExists = CategoriesManager.checkID(id);
                     if(idExists){
                         boolean successful = CategoriesManager.removeCategoryByID(id);
                         if(successful){
-                            messageHandler.HandleMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
                         }else{
-                            messageHandler.HandleMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
                         }
                     }
                 }
@@ -128,7 +127,7 @@ public class SalesMenu {
                 System.exit(1);
                 break;
             default:
-                messageHandler.HandleMessage(-1, "Invalid option, try again", true);
+                MessageProcessor.processMessage(-1, "Invalid option, try again", true);
                 TheSalesMenu();
                 break;
         }
@@ -153,7 +152,7 @@ public class SalesMenu {
             }
         }
         System.out.println("[PRESS ENTER TO CONTINUE]: ");
-        String enter = customScanner.nextLine();
+        String enter = CustomScanner.nextLine();
         TheSalesMenu();
     }
 
@@ -169,7 +168,7 @@ public class SalesMenu {
             }
         }
         System.out.println("ITEM TO REMOVE: ");
-        int yourChoice = customScanner.nextInt();
+        int yourChoice = CustomScanner.nextInt();
         yourChoice--;
         ItemsOnInvoice.remove(yourChoice);
         OrigPricesOnInvoice.remove(yourChoice);
@@ -183,9 +182,9 @@ public class SalesMenu {
         System.out.println("Add Item:");
         Logo.displayLine();
         System.out.println("ITEM: ");
-        String item = customScanner.nextLine();
+        String item = CustomScanner.nextLine();
         System.out.println("Price: $");
-        double price = customScanner.nextDouble();
+        double price = CustomScanner.nextDouble();
         ItemsOnInvoice.add(item);
         CurrentPricesOnInvoice.add(price);
         OrigPricesOnInvoice.add(price);

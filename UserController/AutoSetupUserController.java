@@ -7,10 +7,10 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 import InstallManager.ProgramController;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class AutoSetupUserController {
-    public static String UserProperties = ProgramController.UserRunPath + "\\Users/Admin.properties";
+    public static String UserProperties = ProgramController.userRunPath + "\\Users/Admin.properties";
     public static Properties userprop = new Properties();
     public static Boolean AutoCreateAdmin(){
         boolean success = checkFile("Admin");
@@ -24,7 +24,7 @@ public class AutoSetupUserController {
                     success = PopulateUserProperties();
                     UserListController.addUserToList("Admin", 8);
                 } catch (Exception e) {
-                    messageHandler.HandleMessage(-2, e.toString(), true);
+                    MessageProcessor.processMessage(-2, e.toString(), true);
                     return false;
                 }
             }
@@ -45,16 +45,19 @@ public class AutoSetupUserController {
         userprop.setProperty("PermissionLevel", "8");
         userprop.setProperty("SuccessfulLogins", "0");
         userprop.setProperty("Username", "Admin");
+        userprop.setProperty("NotifyPath", "NULL");
+        userprop.setProperty("UserNotification", "Disabled");
+        userprop.setProperty("NotepadPath", "NULL");
         saveUserProp();
         return false;
     }
     public static boolean saveUserProp(){
         try (OutputStream output = new FileOutputStream(UserProperties)){
             userprop.store(output, null);
-            messageHandler.HandleMessage(1, "UserProperties Saved!", false);
+            MessageProcessor.processMessage(1, "UserProperties Saved!", false);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             return false;
         }
     }

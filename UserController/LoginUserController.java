@@ -2,16 +2,15 @@ package UserController;
 import java.io.*;
 import java.util.Properties;
 
-//Custom Import
-import Assets.Logo;
-import Assets.customScanner;
 import InstallManager.ProgramController;
 import MainSystem.SettingsController;
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.AllMessages;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 public class LoginUserController {
-    static String UserProperties = ProgramController.UserRunPath + "\\Users/";
-    static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
+    static String UserProperties = ProgramController.userRunPath + "\\Users/";
+    static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
     static int FailedAttemptsLOMG = 0;
     static byte passChangeAttempts = 0;
     public static boolean passFlag = false;
@@ -26,15 +25,15 @@ public class LoginUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
-                messageHandler.HandleMessage(1, "User Profile Loaded, Ready for Login Functions", true);
+                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Login Functions", true);
                 return true;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
-                messageHandler.HandleMessage(-1, "Unable to load User Profile", false);
+                MessageProcessor.processMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-1, "Unable to load User Profile", false);
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find User on Userlist.", true);
+            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
             return false;
         }
     }
@@ -46,14 +45,14 @@ public class LoginUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (OutputStream output = new FileOutputStream(UserProperties)){
                 userprop.store(output, null);
-                messageHandler.HandleMessage(1, "User Profile Saved! LoginUserController", false);
+                MessageProcessor.processMessage(1, "User Profile Saved! LoginUserController", false);
                 return true;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
+            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
     }
@@ -79,15 +78,15 @@ public class LoginUserController {
                                     return true;
                                 }
                             }else if(getProperty("Account").equals("Disabled")){
-                                messageHandler.HandleMessage(-1, "Account is Disabled", true);
+                                MessageProcessor.processMessage(-1, "Account is Disabled", true);
                                 return false;
                             }
                         }else if(!SearchForKey("Account")){
-                            messageHandler.HandleMessage(-1, "Unable to locate Account Property, Repair needed for profile, Auto Account Disable Activating...", true);
+                            MessageProcessor.processMessage(-1, "Unable to locate Account Property, Repair needed for profile, Auto Account Disable Activating...", true);
                             return false;
                         }
                     }else{
-                        messageHandler.HandleMessage(-1, "Invalid Username or Password.",true);
+                        MessageProcessor.processMessage(-1, "Invalid Username or Password.",true);
                         FailedAttemptsLOMG = Integer.parseInt(getProperty("FailedLoginAttempts"));
                         FailedAttemptsLOMG= FailedAttemptsLOMG ++;
                         setValue(User, "FailedLoginAttempts", String.valueOf(FailedAttemptsLOMG));
@@ -99,38 +98,38 @@ public class LoginUserController {
                         return false;
                     }
                 }else if(!SearchForKey("Password")){
-                    messageHandler.HandleMessage(-1, "Unable to locate Password Property, Repair needed for profile... Auto Account Disable Activating...", true);
+                    MessageProcessor.processMessage(-1, "Unable to locate Password Property, Repair needed for profile... Auto Account Disable Activating...", true);
                     return false;
                     //Auto Disable.
                 }
             }else if(!checkUserProfileFile(User)){
-                messageHandler.HandleMessage(-1, "Unable to locate User Profile.", true);
-                messageHandler.HandleMessage(-2, "User is on Userlist, But the Profile is not able to found.", true);
+                MessageProcessor.processMessage(-1, "Unable to locate User Profile.", true);
+                MessageProcessor.processMessage(-2, "User is on Userlist, But the Profile is not able to found.", true);
                 return false;
             }
         }else if(!UserListController.SearchForUser(User)){
-            messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: CheckPassword", true);
+            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: CheckPassword", true);
             return false;
         }
         return true;
     }
 
     public static boolean ChangePass(String User) {
-        messageHandler.HandleMessage(1, "Password Change Initiated: ChangePass", false);
+        MessageProcessor.processMessage(1, "Password Change Initiated: ChangePass", false);
         loadUserProperties(User);
         Logo.displayLogo();
         System.out.println("Old Password: ");
-        String oldPass = customScanner.nextLine();
+        String oldPass = CustomScanner.nextLine();
         if(oldPass.equals("back") || oldPass.equals("Back")){
             return false;
         }else {
             System.out.println("New Password: ");
-            String newPass = customScanner.nextLine();
+            String newPass = CustomScanner.nextLine();
             if(newPass.equals("back") || newPass.equals("Back")){
                 return false;
             }else{
                 System.out.println("Confirm New Password: ");
-                String cNewPass = customScanner.nextLine();
+                String cNewPass = CustomScanner.nextLine();
                 if(cNewPass.equals("back") || cNewPass.equals("Back")){
                     return false;
                 }else{
@@ -139,20 +138,20 @@ public class LoginUserController {
                             setValue(User, "Password", newPass);
                             setValue(User, "PassFlag", "false");
                             setValue(User, "LastPassChange", AllMessages.getTime());
-                            messageHandler.HandleMessage(1, "Password Changed Sucessfully: ChangePass", true);
+                            MessageProcessor.processMessage(1, "Password Changed Sucessfully: ChangePass", true);
                             return true;
                         }else{
-                            messageHandler.HandleMessage(-1, "Passwords do not match, Try Again. Type \"Back\" to cancel", true);
+                            MessageProcessor.processMessage(-1, "Passwords do not match, Try Again. Type \"Back\" to cancel", true);
                             ChangePass(User);
                         }
                     }else {
                         passChangeAttempts++;
                         if(passChangeAttempts >=3){
                             setValue(User, "Account", "Disabled");
-                            messageHandler.HandleMessage(-1, "Account was Disabled due to too many Attempts", true);
+                            MessageProcessor.processMessage(-1, "Account was Disabled due to too many Attempts", true);
                             return false;
                         }else{
-                            messageHandler.HandleMessage(-1, "Old Password was incorrect, Password Change Failed", true);
+                            MessageProcessor.processMessage(-1, "Old Password was incorrect, Password Change Failed", true);
                             return false;
                         }
                     }
@@ -165,7 +164,7 @@ public class LoginUserController {
     public static boolean adminUpdateUserPass(String user){
     	setValue(user, "Password", "Solar");
     	setValue(user, "PassFlag", "true");
-    	messageHandler.HandleMessage(1, "Password Update for User: " + user + "; Password: Solar", true);
+    	MessageProcessor.processMessage(1, "Password Update for User: " + user + "; Password: Solar", true);
         return true;
     }
 

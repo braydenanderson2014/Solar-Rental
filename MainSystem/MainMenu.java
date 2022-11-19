@@ -1,14 +1,13 @@
 package MainSystem;
 
-import Assets.Logo;
-import Assets.customScanner;
 import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class MainMenu{
     public static void mainMenu(){
@@ -29,7 +28,7 @@ public class MainMenu{
         System.out.println("[OFF]:  Log Off");
         System.out.println("[EXIT]: Exit the Program");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         switch(option){
             case "pos":
                 POSMenu.PointofSaleMenu();
@@ -38,12 +37,12 @@ public class MainMenu{
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     AdministrativeFunctions.AdministrativeMenu();
                 }else{
-                    messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
+                    MessageProcessor.processMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
                     mainMenu();
                 }
                 break;
             case "note":
-                messageHandler.HandleMessage(-1, "This function [NOTE] has not yet been implemented.. Check back in a later update", true);
+                MessageProcessor.processMessage(-1, "This function [NOTE] has not yet been implemented.. Check back in a later update", true);
                 mainMenu();
                 break;
             case "swi": 
@@ -51,26 +50,26 @@ public class MainMenu{
                 break;
             case "set":
                 try{
-                    Settings.SettingsMenu();
+                    Settings.settingsMenu();
                 }catch(NumberFormatException e){
-                    messageHandler.HandleMessage(-2, "Failed to access Settings Menu", true);
+                    MessageProcessor.processMessage(-2, "Failed to access Settings Menu", true);
                     mainMenu();
                 }
                 break;
             case "help":
-                messageHandler.HandleMessage(-2, "This option is not yet available! Check back on the next update!", true);
+                MessageProcessor.processMessage(-2, "This option is not yet available! Check back on the next update!", true);
                 mainMenu();
                 break;
             case "off":
                 SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"));
-                Login.Login.LoginScreen();
+                Login.Login.loginScreen();
                 break;
             case "exit":
                 LogDump.DumpLog("all");
                 System.exit(1);
                 break;
             default:
-                messageHandler.HandleMessage(-1, "Invalid Option, try again!", true);
+                MessageProcessor.processMessage(-1, "Invalid Option, try again!", true);
                 mainMenu();
                 break;
         }

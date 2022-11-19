@@ -9,34 +9,27 @@ public class ConsoleHandler{
 	public static int showHowMany = ConsoleSettings.max;
 	public static int howManyTimes = 0;
 	public static int size;
-	public static List<String>Messages = new ArrayList<>();
-	public static List<String>MessagesT = new ArrayList<>();
+	public static List<String>messages = new ArrayList<>();
+	public static List<String>messagesT = new ArrayList<>();
 	public static List<Integer> indexesToRemove = new ArrayList<>();
 	public static String getConsole() throws IndexOutOfBoundsException{
-		Messages.clear();
-		MessagesT.clear();
-		for(int i = 0; i < AllMessages.AllMessages.size(); i++) {
-			Messages.add(AllMessages.AllMessages.get(i));
-			MessagesT.add(AllMessages.AllMessagesT.get(i));
-		}
-		howManyTimes = 0;
-		checkSettings();
-		size = Messages.size();
-		if(size < showHowMany) {
-			showHowMany = Messages.size();
+		MessageProcessor.gatherVisible();
+		size = MessageProcessor.gatheredMessages.size();
+		if(size == 0) {
+			System.out.println("NO MESSAGES ON THE CONSOLE, CHECK YOUR SETTINGS");
+			return "";
+		}else if(size < showHowMany) {
+			showHowMany = MessageProcessor.gatheredMessages.size();
+			showHowMany --;
 		}
 		size --;
 		size = size - showHowMany;
 		System.out.println("CONSOLE: ");
 		while(howManyTimes < showHowMany) {
 			if(SettingsController.getSetting("Date/TimeSet").equals("true")) {
-				if(Boolean.TRUE.equals(AllMessages.visibleToConsole.get(size))) {
-					System.out.println(MessagesT.get(size));
-				}
+				System.out.println(MessageProcessor.gatheredMessagesT.get(size));
 			}else {
-				if(Boolean.TRUE.equals(AllMessages.visibleToConsole.get(size))) {
-					System.out.println(Messages.get(size));
-				}
+				System.out.println(MessageProcessor.gatheredMessages.get(size));
 			}
 			howManyTimes++;
 			size++;
@@ -45,79 +38,92 @@ public class ConsoleHandler{
 	}
 	private static Boolean checkSettings() {
 		SettingsController.loadSettings();
-		messageHandler.HandleMessage(1, "Checking Console Settings", true);
+		MessageProcessor.processMessage(1, "Checking Console Settings", true);
 		String anObject = "false";
 		if(SettingsController.getSetting("SystemSet").equals(anObject) || !ConsoleSettings.SystemSet) {
-			for(int i = 0; i < Messages.size(); i++) {
-				if(Messages.contains("[System]: ")) {
+			MessageProcessor.processMessage(1, "Removing System Messages", true);
+			for(int i = 0; i < MessageProcessor.gatheredMessages.size(); i++) {
+				if(MessageProcessor.gatheredMessages.get(i).contains("[System]: ")) {
+					MessageProcessor.processMessage(1, "Found System messages, Removing now", true);
 					indexesToRemove.add(i);
-					messageHandler.HandleMessage(1, String.valueOf(i), true);
+					MessageProcessor.processMessage(1, String.valueOf(i), true);
 				}
 			}
+			int temp = 0;
 			for(int i = 0; i < indexesToRemove.size(); i++) {
-				messageHandler.HandleMessage(1, String.valueOf(i), true);
-				messageHandler.HandleMessage(1, Messages.get(indexesToRemove.get(i)), true);
-				Messages.remove(indexesToRemove.get(i));
-				MessagesT.remove(indexesToRemove.get(i));
+				MessageProcessor.processMessage(1, String.valueOf(i), true);
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
+				temp = indexesToRemove.get(i);
+				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessages.remove(temp);
 				
 			}
 			indexesToRemove.clear();
 		}else {
-			messageHandler.HandleMessage(1, "System Messages Enabled", false);
+			MessageProcessor.processMessage(1, "System Messages Enabled", false);
 		}
 		
 		if(SettingsController.getSetting("ErrorSet").equals(anObject) || !ConsoleSettings.ErrorSet) {
-			for(int i = 0; i < Messages.size(); i++) {
-				if(Messages.contains("[Error]:")) {
+			for(int i = 0; i < MessageProcessor.gatheredMessages.size(); i++) {
+				if(MessageProcessor.gatheredMessages.get(i).contains("[Error]:")) {
 					indexesToRemove.add(i);
-					messageHandler.HandleMessage(1, String.valueOf(i), true);
+					MessageProcessor.processMessage(1, String.valueOf(i), true);
 				}
 			}
+			int temp = 0;
 			for(int i = 0; i < indexesToRemove.size(); i++) {
-				messageHandler.HandleMessage(1, String.valueOf(i), true);
-				messageHandler.HandleMessage(1, Messages.get(indexesToRemove.get(i)), true);
-				Messages.remove(indexesToRemove.get(i));
-				MessagesT.remove(indexesToRemove.get(i));
+				MessageProcessor.processMessage(1, String.valueOf(i), true);
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
+				temp = indexesToRemove.get(i);
+				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessages.remove(temp);
+				
 			}
 			indexesToRemove.clear();
 		}else {
-			messageHandler.HandleMessage(1, "Error Messages Enabled", false);
+			MessageProcessor.processMessage(1, "Error Messages Enabled", false);
 		}
 		
 		if(SettingsController.getSetting("WarningSet").equals(anObject) || !ConsoleSettings.WarningSet) {
-			for(int i = 0; i < Messages.size(); i++) {
-				if(Messages.contains("[Warning]:")) {
+			for(int i = 0; i < MessageProcessor.gatheredMessages.size(); i++) {
+				if(MessageProcessor.gatheredMessages.get(i).contains("[Warning]:")) {
 					indexesToRemove.add(i);
-					messageHandler.HandleMessage(1, String.valueOf(i), true);
+					MessageProcessor.processMessage(1, String.valueOf(i), true);
 				}
 			}
+			int temp = 0;
 			for(int i = 0; i < indexesToRemove.size(); i++) {
-				messageHandler.HandleMessage(1, String.valueOf(i), true);
-				messageHandler.HandleMessage(1, Messages.get(indexesToRemove.get(i)), true);
-				Messages.remove(indexesToRemove.get(i));
-				MessagesT.remove(indexesToRemove.get(i));
+				MessageProcessor.processMessage(1, String.valueOf(i), true);
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
+				temp = indexesToRemove.get(i);
+				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessages.remove(temp);
+				
 			}
 			indexesToRemove.clear();
 		}else {
-			messageHandler.HandleMessage(1, "Warning Messages Enabled", false);
+			MessageProcessor.processMessage(1, "Warning Messages Enabled", false);
 		}
 		
 		if(SettingsController.getSetting("UserNotifySet").equals(anObject) || !ConsoleSettings.UserNotifySet) {
-			for(int i = 0; i < Messages.size(); i++) {
-				if(Messages.contains("[Notification]:")) {
+			for(int i = 0; i < MessageProcessor.gatheredMessages.size(); i++) {
+				if(MessageProcessor.gatheredMessages.get(i).contains("[Notification]:")) {
 					indexesToRemove.add(i);
-					messageHandler.HandleMessage(1, String.valueOf(i), true);
+					MessageProcessor.processMessage(1, String.valueOf(i), true);
 				}
 			}
+			int temp = 0;
 			for(int i = 0; i < indexesToRemove.size(); i++) {
-				messageHandler.HandleMessage(1, String.valueOf(i), true);
-				messageHandler.HandleMessage(1, Messages.get(indexesToRemove.get(i)), true);
-				Messages.remove(indexesToRemove.get(i));
-				MessagesT.remove(indexesToRemove.get(i));
+				MessageProcessor.processMessage(1, String.valueOf(i), true);
+				MessageProcessor.processMessage(1,MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
+				temp = indexesToRemove.get(i);
+				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessages.remove(temp);
+				
 			}
 			indexesToRemove.clear();
 		}else {
-			messageHandler.HandleMessage(1, "User Notificatoin Messages Enabled", false);
+			MessageProcessor.processMessage(1, "User Notification Messages Enabled", false);
 		}
 		
 		return true;

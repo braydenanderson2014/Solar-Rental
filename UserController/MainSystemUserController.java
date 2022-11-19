@@ -9,11 +9,11 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 import InstallManager.ProgramController;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class MainSystemUserController {
-    static String UserProperties = ProgramController.UserRunPath + "\\Users/";
-    static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
+    static String UserProperties = ProgramController.userRunPath + "\\Users/";
+    static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
     public static Properties userprop = new Properties();
     private static boolean loadUserlist(){
         return UserListController.loadUserList();
@@ -25,15 +25,15 @@ public class MainSystemUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
-                messageHandler.HandleMessage(1, "User Profile Loaded, Ready for Login Functions", true);
+                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Login Functions", true);
                 return true;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
-                messageHandler.HandleMessage(-1, "Unable to load User Profile", false);
+                MessageProcessor.processMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-1, "Unable to load User Profile", false);
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find User on Userlist.", true);
+            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
             return false;
         }
     }
@@ -45,14 +45,14 @@ public class MainSystemUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (OutputStream output = new FileOutputStream(UserProperties)){
                 userprop.store(output, null);
-                messageHandler.HandleMessage(1, "User Profile Saved! LoginUserController", false);
+                MessageProcessor.processMessage(1, "User Profile Saved! LoginUserController", false);
                 return true;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
+            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
 

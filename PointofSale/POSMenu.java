@@ -3,14 +3,13 @@ package PointofSale;
 import java.util.ArrayList;
 import java.util.List;
 
-import Assets.Logo;
-import Assets.customScanner;
 import Login.SwitchController;
 import MainSystem.MainMenu;
 import UserController.MainSystemUserController;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ConsoleHandler;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class POSMenu {
     public static List<String> ItemsOnInvoice = new ArrayList<>();
@@ -44,12 +43,12 @@ public class POSMenu {
         try {
         	ConsoleHandler.getConsole();
 		}catch(IndexOutOfBoundsException e) {
-			messageHandler.HandleMessage(-2, e.toString(), true);
+			MessageProcessor.processMessage(-2, e.toString(), true);
 			System.out.println(e.toString());
 			System.out.println("FAILED TO LOAD CONSOLE");
 		}
         
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         switch (option) {
             case "sale":
                 SalesMenu.TheSalesMenu();
@@ -58,16 +57,16 @@ public class POSMenu {
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >=8){
                     ReturnsMenu.TheReturnsMenu();
                 }else{
-                    messageHandler.HandleMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
+                    MessageProcessor.processMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
                     PointofSaleMenu();
                 }
                 break;
             case "addc":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category Name?");
-                    String Cat = customScanner.nextLine();
+                    String Cat = CustomScanner.nextLine();
                     System.out.println("Category ID?");
-                    String CatID = customScanner.nextLine();
+                    String CatID = CustomScanner.nextLine();
                     CategoriesManager.AddCat(Cat, CatID);
                     PointofSaleMenu();
                 }
@@ -75,9 +74,9 @@ public class POSMenu {
             case "adds":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Sub-Category Name?");
-                    String SubCat = customScanner.nextLine();
+                    String SubCat = CustomScanner.nextLine();
                     System.out.println("Sub-Category ID's?");
-                    String SubCatID = customScanner.nextLine();
+                    String SubCatID = CustomScanner.nextLine();
                     SubCategoriesManager.addSubCat(SubCat, SubCatID);
                     PointofSaleMenu();
 
@@ -86,14 +85,14 @@ public class POSMenu {
             case "del":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category ID?: ");
-                    String id = customScanner.nextLine().toLowerCase();
+                    String id = CustomScanner.nextLine().toLowerCase();
                     boolean idExists = CategoriesManager.checkID(id);
                     if(idExists){
                         boolean successful = CategoriesManager.removeCategoryByID(id);
                         if(successful){
-                            messageHandler.HandleMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
                         }else{
-                            messageHandler.HandleMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
                         }
                     }
                 }
@@ -106,21 +105,21 @@ public class POSMenu {
                 //Categories.SalesCatalogue();
                 boolean success = CategoriesManager.ListAllCat();
                 if(!success){
-                    messageHandler.HandleMessage(2, "No Categories to list at this time", success);
+                    MessageProcessor.processMessage(2, "No Categories to list at this time", success);
                 }
                 System.out.println("Press Enter To Continue");
-                String Enter = customScanner.nextLine();
+                String Enter = CustomScanner.nextLine();
                 POSMenu.PointofSaleMenu();
                 break;
             case "off":
                 SwitchController.removeCurrentUser(SwitchController.focusUser);
-                Login.Login.LoginScreen();
+                Login.Login.loginScreen();
                 break;
             case "return":
                 MainMenu.mainMenu();
                 break;
             default:
-                messageHandler.HandleMessage(-1, "Invalid Option, Try again!" ,true);
+                MessageProcessor.processMessage(-1, "Invalid Option, Try again!" ,true);
                 PointofSaleMenu();
                 break;
         }

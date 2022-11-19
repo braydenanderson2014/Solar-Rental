@@ -20,10 +20,10 @@ public class NotificationMessages{
         NotificationMessagesT.add("[" + dTime + "][Notification]: " + message);
         visibleToConsole.add(VisibleToConsole);
         AllMessages.addMessage("[Notification]: " + message, VisibleToConsole);
-        messageHandler.HandleMessage(1, "Notification Message Size: " + size(), false);
-        messageHandler.HandleMessage(1, "Visible to Console Size: " + visibleToConsole.size(), false);
-        messageHandler.HandleMessage(1, "Last Message: " + message , false);
-        messageHandler.HandleMessage(1, "Last Visible Set: " + getLastVisibleSet(), false);
+        MessageProcessor.processMessage(1, "Notification Message Size: " + size(), false);
+        MessageProcessor.processMessage(1, "Visible to Console Size: " + visibleToConsole.size(), false);
+        MessageProcessor.processMessage(1, "Last Message: " + message , false);
+        MessageProcessor.processMessage(1, "Last Visible Set: " + getLastVisibleSet(), false);
         return message;
     }
 
@@ -52,7 +52,7 @@ public class NotificationMessages{
                 }else if(!ConsoleSettings.timeSet){
                     return NotificationMessages.get(size);
                 }else {
-                    messageHandler.HandleMessage(-2, "An Error Occured While Getting Time Setting (E)", true);
+                    MessageProcessor.processMessage(-2, "An Error Occured While Getting Time Setting (E)", true);
                     return "";
                 }
             }else {

@@ -8,12 +8,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
-import Assets.customScanner;
 import InstallManager.ProgramController;
-
-import messageHandler.messageHandler;
+import assets.CustomScanner;
+import messageHandler.MessageProcessor;
 public class SecondaryUserController{
-    static String UserList = ProgramController.UserRunPath + "\\Users/Userlist.properties";
+    static String UserList = ProgramController.userRunPath + "\\Users/Userlist.properties";
     public static String TargetedAccount;
     public static Properties userprop = new Properties();
     public static Properties userlist = new Properties();
@@ -25,7 +24,7 @@ public class SecondaryUserController{
 
     public static boolean TargetAccount(){//Target an account from within the class.
         System.out.println("Target Account: ");
-        TargetedAccount = customScanner.nextLine();
+        TargetedAccount = CustomScanner.nextLine();
         return true;
     }
 
@@ -36,24 +35,24 @@ public class SecondaryUserController{
     }
 
     public static boolean loadTargetedAccount(){ //Load the Users Properties.
-        try (InputStream input = new FileInputStream(ProgramController.UserRunPath + "\\Users/" + TargetedAccount + ".properties")){
+        try (InputStream input = new FileInputStream(ProgramController.userRunPath + "\\Users/" + TargetedAccount + ".properties")){
             userprop.load(input);
-            messageHandler.HandleMessage(1, "UserProperties Loaded for User: " + TargetedAccount, true);
-            messageHandler.HandleMessage(1, ProgramController.UserRunPath, false);
+            MessageProcessor.processMessage(1, "UserProperties Loaded for User: " + TargetedAccount, true);
+            MessageProcessor.processMessage(1, ProgramController.userRunPath, false);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2,e.toString(), true);
+            MessageProcessor.processMessage(-2,e.toString(), true);
             return false;
         }    
      }
 
     public static boolean saveTargetUserProps(){ //Save The properties to the users properties file.
-        try (OutputStream output = new FileOutputStream(ProgramController.UserRunPath + "\\Users/" + TargetedAccount + ".properties")){
+        try (OutputStream output = new FileOutputStream(ProgramController.userRunPath + "\\Users/" + TargetedAccount + ".properties")){
             userprop.store(output, null);
-            messageHandler.HandleMessage(1, "UserProperties Saved!", false);
+            MessageProcessor.processMessage(1, "UserProperties Saved!", false);
             return true;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             return false;
         }
     }
@@ -68,7 +67,7 @@ public class SecondaryUserController{
 
     public static boolean setUserProp(String key, String prop){//sets a key value pair into the properties list.
         userprop.setProperty(key, prop);
-        messageHandler.HandleMessage(1, key + ": " + prop + " was set to users properties. User: " + TargetedAccount, false);
+        MessageProcessor.processMessage(1, key + ": " + prop + " was set to users properties. User: " + TargetedAccount, false);
         saveTargetUserProps();
         return true;
     }

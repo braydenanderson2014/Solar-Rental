@@ -1,22 +1,22 @@
-package Assets;
+package assets;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 /**
  * Write a description of class customScanner here.
  *
  * @author (Brayden Anderson)
  * @version (Base Version: Beta 1.0.1, Snapshot 3xWav-7)
  */
-public class customScanner
+public class CustomScanner
 {
     public static Scanner scan;
 
-    public customScanner(){
+    public CustomScanner(){
         scan = new Scanner(System.in);
-        messageHandler.HandleMessage(1, "Created Scanner Object for user input", false);
+        MessageProcessor.processMessage(1, "Created Scanner Object for user input", false);
     }
 
     public static Scanner getScanner(){
@@ -52,7 +52,7 @@ public class customScanner
         try{
             b = System.in.available();
         }catch(Exception e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             e.printStackTrace();
             b = 0;
         }

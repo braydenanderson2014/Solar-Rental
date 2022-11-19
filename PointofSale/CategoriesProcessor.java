@@ -1,7 +1,8 @@
 package PointofSale;
 import java.io.*;
+
 import json.simple.JSONObject;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 public class CategoriesProcessor{
     public static JSONObject obj;
     public static boolean CreateNewJSONOBJECT(){
@@ -23,10 +24,10 @@ public class CategoriesProcessor{
         try{
             obj.writeJSONString(out);
             String jsonText = out.toString();
-            messageHandler.HandleMessage(1, jsonText, true);
+            MessageProcessor.processMessage(1, jsonText, true);
             return jsonText;
         }catch(IOException e){
-            messageHandler.HandleMessage(-2, e.toString(), true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
             return "";
         }
     }   

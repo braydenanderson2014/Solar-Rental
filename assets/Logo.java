@@ -1,10 +1,21 @@
-package Assets;
+package assets;
+
+import java.io.IOException;
 
 import InstallManager.ProgramController;
+import messageHandler.MessageProcessor;
 public class Logo{
-    public static String displayLogo(){
-        ProgramController.clearScreen();
-        String Logo = "SOLAR";
+    private static final String SOLAR_RENTALS = "SOLAR RENTALS";
+
+	public static String displayLogo(){
+        try {
+			ProgramController.clearScreen();
+		} catch (IOException e) {
+			MessageProcessor.processMessage(-2, e.toString(), true);
+		} catch (InterruptedException e) {
+			MessageProcessor.processMessage(-2, e.toString(), true);
+		}
+        String logo = "SOLAR";
         System.out.println(" #####  ####### #          #    ######    ");
         System.out.println("#     # #     # #         # #   #     #   "); 
         System.out.println("#       #     # #        #   #  #     #   ");
@@ -14,11 +25,11 @@ public class Logo{
         System.out.println(" #####  ####### ####### #     # #     #   ");   
         System.out.println("==========================================");
         System.out.println("Copyright 2022");    
-        return Logo;
+        return logo;
     }
 
     public static String displayLogo2(){
-        return "SOLAR RENTALS";
+        return SOLAR_RENTALS;
     }
 
     public static String displayLine(){

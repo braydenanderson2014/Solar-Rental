@@ -1,10 +1,9 @@
 package PointofSale;
 
-import Assets.Logo;
-import Assets.customScanner;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ConsoleHandler;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class DiscountManager {
     static double itemDiscountTotal;
@@ -20,7 +19,7 @@ public class DiscountManager {
         System.out.println("[REMI]: Remove Discount from invoice");
         System.out.println("[RET]: Return to POS Menu");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         if(option.equals("app")){
             appDis();
         }else if(option.equals("rem")){
@@ -32,7 +31,7 @@ public class DiscountManager {
         }else if(option.equals("ret")){
             POSMenu.PointofSaleMenu();
         }else{
-            messageHandler.HandleMessage(-1, "Invalid option, Try again.", true);
+            MessageProcessor.processMessage(-1, "Invalid option, Try again.", true);
             DiscountMenu();
         }
     }

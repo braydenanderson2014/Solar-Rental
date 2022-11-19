@@ -1,6 +1,6 @@
 package messageHandler;
-public class messageHandler{
-    public static String HandleMessage(int mode, String message, boolean visibleToConsole){
+public class MessageHandler{
+    public static String handleMessage(int mode, String message, boolean visibleToConsole){
         if(!message.equals("")){
             if(mode == -2){
                 return ErrorMessages.addMessage(message, visibleToConsole);
@@ -15,11 +15,11 @@ public class messageHandler{
                 return NotificationMessages.addMessage(message, visibleToConsole);
                
             }else{
-                HandleMessage(-1, "Invalid Message Route... [" + mode + "]", visibleToConsole);
+                handleMessage(-1, "Invalid Message Route... [" + mode + "]", visibleToConsole);
                 return WarningMessages.getLastMessage();
             }
         }else{
-            HandleMessage(-2, "Received Improper message on mode channel " + mode, visibleToConsole);
+            handleMessage(-2, "Received Improper message on mode channel " + mode, visibleToConsole);
             return ErrorMessages.getLastMessage();
         } 
     }
@@ -41,7 +41,7 @@ public class messageHandler{
             NotificationMessages.clearMessages();
             return true;
         }else{
-            HandleMessage(-1, "Invalid Message Clear Route... [" + mode + "]", visibleToConsole);
+            handleMessage(-1, "Invalid Message Clear Route... [" + mode + "]", visibleToConsole);
             return false;
         }
     }

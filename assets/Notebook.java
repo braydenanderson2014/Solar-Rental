@@ -1,14 +1,15 @@
-package Assets;
+package assets;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import InstallManager.ProgramController;
 import Login.Login;
 public class Notebook {
-    private static ArrayList<String>userNotes = new ArrayList<String>();
+    private static final String NOTES = "Notes";
+	private static ArrayList<String>userNotes = new ArrayList<>();
     private static Scanner scan = new Scanner(System.in);
     private static String user = Login.getCurrentUser();
-    private static String path = ProgramController.UserRunPath;
+    private static String path = ProgramController.userRunPath;
     private static String FullPath;
     public static boolean newNote(){
         String note = "Null";
@@ -34,14 +35,14 @@ public class Notebook {
     }
 
     public static String viewNotes(){
-        return "Notes";
+        return NOTES;
     }
 
     public static String resetNotes(){
-        return "Notes";
+        return NOTES;
     }
 
     public static String loadUserNotes(){
-        return "Notes";
+        return NOTES;
     }
 }

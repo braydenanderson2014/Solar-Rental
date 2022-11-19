@@ -4,42 +4,43 @@ import java.io.File;
 import java.io.IOException;
 
 import MainSystem.SettingsController;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class FirstTimeManager {
-    public static boolean FirstTime = false;
+    public static boolean firstTime = false;
     public static String path;
     public static boolean checkFirstTime() {
         SettingsController.loadSettings();
-        path = ProgramController.SystemPath + ProgramController.SystemSubPath + ProgramController.SystemInstallPath;
+        path = ProgramController.systemPath + ProgramController.systemSubPath + ProgramController.systemInstallPath;
         File file = new File(path);
         if(!file.exists()){
             file.mkdirs();
         }
-        path = path + ProgramController.SystemConfig;
+        path = path + ProgramController.systemConfig;
         file = new File(path);
-        if(file.exists()){
-            messageHandler.HandleMessage(1, "FirstTime Configuration Found", false);
-            boolean exists = SettingsController.SearchForSet("FirstTime");
+        String setting = "FirstTime";
+		if(file.exists()){
+            MessageProcessor.processMessage(1, "FirstTime Configuration Found", false);
+            boolean exists = SettingsController.searchForSet(setting);
             if(exists){
-                FirstTime = Boolean.parseBoolean(SettingsController.getSetting("FirstTime"));
-                messageHandler.HandleMessage(1, "FirstTime: " + FirstTime, false);
-                return FirstTime;
+                firstTime = Boolean.parseBoolean(SettingsController.getSetting(setting));
+                MessageProcessor.processMessage(1, "FirstTime: " + firstTime, false);
+                return firstTime;
             }else{
-                messageHandler.HandleMessage(1, "Unable to Find Setting \"FirstTime\" ", true);
-                SettingsController.setSetting("FirstTime", "false");
-                FirstTime = true;
-                return FirstTime;
+                MessageProcessor.processMessage(1, "Unable to Find Setting \"FirstTime\" ", true);
+                SettingsController.setSetting(setting, "false");
+                firstTime = true;
+                return firstTime;
             }
         }else{
             try{
                 file.createNewFile();
-                SettingsController.setSetting("FirstTime", "false");
-                FirstTime = true;
-                return FirstTime;
+                SettingsController.setSetting(setting, "false");
+                firstTime = true;
+                return firstTime;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, "Unable to create Configuration File", true);
-                messageHandler.dumpAll();
+                MessageProcessor.processMessage(-2, "Unable to create Configuration File", true);
+                MessageProcessor.dumpAll();
                 System.exit(1);
                 return true;
             }
@@ -48,13 +49,13 @@ public class FirstTimeManager {
 
     public static boolean updateFirstTime(){
         SettingsController.loadSettings();
-        if(FirstTime){
-            FirstTime=  !FirstTime;
-        }else if(!FirstTime){
-            FirstTime=true;
+        if(firstTime){
+            firstTime=  !firstTime;
+        }else if(!firstTime){
+            firstTime=true;
         }
-        SettingsController.setSetting("FirstTime", String.valueOf(FirstTime));
+        SettingsController.setSetting("FirstTime", String.valueOf(firstTime));
 
-        return FirstTime;
+        return firstTime;
     }
 }

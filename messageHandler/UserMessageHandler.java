@@ -7,18 +7,18 @@ import MainSystem.AdministrativeFunctions;
 import UserController.UserListController;
 
 public class UserMessageHandler {
-    static String UserProperties = ProgramController.UserRunPath + "\\Users/";
-    static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
+    static String UserProperties = ProgramController.userRunPath + "\\Users/";
+    static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
     public static boolean sendMessageToUser(String user, String message) {
         if(UserListController.SearchForUser(user)){
             if(CheckUserAccount(user)){
 
             }else{
-                messageHandler.HandleMessage(-1, "User Account Notifications cannot be found, Sending Request to admin for a new Account", true);
+                MessageProcessor.processMessage(-1, "User Account Notifications cannot be found, Sending Request to admin for a new Account", true);
                 AdministrativeFunctions.newRequest(user, "Notifications File", "User requesting Notifications Enabled", "NA");
             }
         }else{
-            messageHandler.HandleMessage(-1, "Failed to find Target User: " + user, true);
+            MessageProcessor.processMessage(-1, "Failed to find Target User: " + user, true);
             return false;
         }
         return true;
@@ -31,7 +31,7 @@ public class UserMessageHandler {
             File file = new File(UserProperties);
             return file.exists();
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find User on Userlist.", true);
+            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
             return false;
         }
     }

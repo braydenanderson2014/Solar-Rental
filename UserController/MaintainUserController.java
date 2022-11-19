@@ -7,30 +7,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import Assets.Logo;
-import Assets.customScanner;
+
 import InstallManager.ProgramController;
 import Login.SwitchController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.Settings;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ConsoleHandler;
+import messageHandler.MessageProcessor;
 import messageHandler.UserMessageHandler;
-import messageHandler.messageHandler;
 
 public class MaintainUserController {
-    static String UserProperties = ProgramController.UserRunPath + "\\Users/";
-    static String UserProperties2 = ProgramController.UserRunPath + "\\Users/";
+    static String UserProperties = ProgramController.userRunPath + "\\Users/";
+    static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
     public static Properties userprop = new Properties();
     public static String status = "Disabled";
     private static boolean loadUserlist(){
         return UserListController.loadUserList();
     }
 
-    public static boolean setValue(String User, String key, String value){
-        loadUserProperties(User);
+    public static boolean setValue(String user, String key, String value){
+        loadUserProperties(user);
         userprop.setProperty(key, value);
-        saveUserProperties(User);
+        saveUserProperties(user);
         return true;
     }
 
@@ -40,25 +40,25 @@ public class MaintainUserController {
             System.out.println("Please Create a new Username For the User: ");
             String UserName = UserToCreate;
             if(UserToCreate.equals("Blank")){
-                UserName = customScanner.nextLine();
+                UserName = CustomScanner.nextLine();
             }
             if(createNewFile(UserName) == true){
                 System.out.println("Please Type An Account Name for the New User:");
-                String AccountName = customScanner.nextLine();
+                String AccountName = CustomScanner.nextLine();
                 setValue(UserName, "Username", UserName);
                 setValue(UserName, "AccountName", AccountName);
                 System.out.println("Please Set a Permission Level for the User (0<10)");
                 try {
-                    int PLevel = customScanner.nextInt();
+                    int PLevel = CustomScanner.nextInt();
                     setValue(UserName, "PermissionLevel", String.valueOf(PLevel));
                     UserListController.addUserToList(UserName, PLevel);
                 } catch (Exception e) {
-                    messageHandler.HandleMessage(-2, e.toString(), true);
-                    messageHandler.HandleMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
+                    MessageProcessor.processMessage(-2, e.toString(), true);
+                    MessageProcessor.processMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
                     setValue(UserName, "PermissionLevel", "0");
                     UserListController.addUserToList(UserName, 0);
                 }
-                messageHandler.HandleMessage(2, "All Manual Input Complete, System Now Completing Profile Setup", true);
+                MessageProcessor.processMessage(2, "All Manual Input Complete, System Now Completing Profile Setup", true);
                 setValue(UserName, "SuccessfulLogins", "0");
                 setValue(UserName, "Account", "Disabled");
                 setValue(UserName, "FailedLoginAttempts", "0");
@@ -69,25 +69,28 @@ public class MaintainUserController {
                 setValue(UserName, "PassExpires", "true");
                 setValue(UserName, "isPassExpired", "true");
                 setValue(UserName, "LastLogin", "Never");
+                setValue(UserName, "NotifyPath", "NULL");
+                setValue(UserName, "NotepadPath", "NULL");
                 if(Integer.parseInt(GetProperty("PermissionLevel")) >=6){
-                    setValue(UserName, "Notification", "Enabled");
+                    setValue(UserName, "UserNotification", "Enabled");
                 }else{
-                    setValue(UserName, "Notification", "Disabled");
+                    setValue(UserName, "UserNotification", "Disabled");
                 }
+                saveUserProperties(UserName);
                 return true;
             }else {
-                messageHandler.HandleMessage(-1, "Failed to create User File", true);
+                MessageProcessor.processMessage(-1, "Failed to create User File", true);
                 return false;
             } 
         }else{
-            messageHandler.HandleMessage(-1, "User Does NOT have Permission to Use this tool", true);
+            MessageProcessor.processMessage(-1, "User Does NOT have Permission to Use this tool", true);
             return false;
         }
     }
 
     public static boolean createNewFile(String User){
         if(UserListController.SearchForUser(User)){
-            messageHandler.HandleMessage(-1, "This User Already Exists: " + User, true);
+            MessageProcessor.processMessage(-1, "This User Already Exists: " + User, true);
             return false;
         }else{
             UserProperties = UserProperties2 + User + ".properties";
@@ -95,10 +98,10 @@ public class MaintainUserController {
             if(!file.exists()){
                 try {
                     file.createNewFile();
-                    messageHandler.HandleMessage(1, "Successfully Created User File", false);
+                    MessageProcessor.processMessage(1, "Successfully Created User File", false);
                     return true;
                 } catch (Exception e) {
-                    messageHandler.HandleMessage(-1, "Failed to create new File", true);
+                    MessageProcessor.processMessage(-1, "Failed to create new File", true);
                     return false;
                 }
             } 
@@ -112,15 +115,15 @@ public class MaintainUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
-                messageHandler.HandleMessage(1, "User Profile Loaded, Ready for Control Functions", false);
+                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Control Functions", false);
                 return true;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
-                messageHandler.HandleMessage(-1, "Unable to load User Profile", false);
+                MessageProcessor.processMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-1, "Unable to load User Profile", false);
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "Unable to find User on Userlist.", true);
+            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
             return false;
         }
     }
@@ -132,14 +135,14 @@ public class MaintainUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (OutputStream output = new FileOutputStream(UserProperties)){
                 userprop.store(output, null);
-                messageHandler.HandleMessage(1, "User Profile Saved! MaintainUserController", false);
+                MessageProcessor.processMessage(1, "User Profile Saved! MaintainUserController", false);
                 return true;
             }catch(IOException e){
-                messageHandler.HandleMessage(-2, e.toString(), true);
+                MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
+            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
     }
@@ -164,7 +167,7 @@ public class MaintainUserController {
         }
         System.out.println("[RETURN]: Return to Settings Menu");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         if(option.equals("name")){
             requestAccountChange(User);
             updateProfileSettings(User);
@@ -179,36 +182,49 @@ public class MaintainUserController {
                 AdministrativeFunctions.newRequest(SwitchController.focusUser, "Permissions", "User Requesting permissions change", "NA");
                 updateProfileSettings(User);
             }else{
-                messageHandler.HandleMessage(-1, "Admin is not allowed to update this account setting", true);
+                MessageProcessor.processMessage(-1, "Admin is not allowed to update this account setting", true);
                 updateProfileSettings(User);
             }
         }else if(option.equals("return")){
             try {
-                Settings.SettingsMenu();
+                Settings.settingsMenu();
             } catch (Exception e) {
-                messageHandler.HandleMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
-                Settings.SettingsMenu();
+                MessageProcessor.processMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
+                Settings.settingsMenu();
             }
         }else{
-            messageHandler.HandleMessage(-1, "Invalid option, Try again!", true);
+            MessageProcessor.processMessage(-1, "Invalid option, Try again!", true);
             updateProfileSettings(User);
         }
     }
 
-    public static boolean forceProfileUpdate(String User){
+    public static boolean forceProfileUpdate(String user){
         UserListController.loadUserList();
-        if(UserListController.SearchForUser(User)){
-            MaintainUserController.loadUserProperties(User);
-            if(!SearchForKey("Notification")){
-                setValue(User, "Notification", "true"); 
-                messageHandler.HandleMessage(1, "Successfully added new Value to profile.", true);
-                return true;
+        if(UserListController.SearchForUser(user)){
+            MaintainUserController.loadUserProperties(user);
+            String message = "Successfully added new Value to profile.";
+			if(!SearchForKey("UserNotification")){
+                setValue(user, "UserNotification", "true"); 
+                MessageProcessor.processMessage(1, message, true);
             }else {
-                messageHandler.HandleMessage(-1, "User Already had \"Notification\"", true);
-                return false;
+                MessageProcessor.processMessage(-1, "User Already had \"Notification\"", true);
             }
+            if(!SearchForKey("NotifyPath")) {
+            	setValue(user, "NotifyPath", "NULL");
+            	MessageProcessor.processMessage(1, message, true);
+            }else {
+            	MessageProcessor.processMessage(-1, "User Already had \"NotifyPath\"", true);
+            }
+            if(!SearchForKey("NotepadPath")) {
+            	setValue(user, "NotepadPath", "NULL");
+            	MessageProcessor.processMessage(1, message, true);
+            }else {
+            	MessageProcessor.processMessage(-1, "User Already had \"NotepadPath\"", true);
+            }
+            saveUserProperties(user);
+            return true;
         }else{
-            messageHandler.HandleMessage(-1, "Failed to find user to update", true);
+            MessageProcessor.processMessage(-1, "Failed to find user to update", true);
             return false;
         }
     }
@@ -222,7 +238,7 @@ public class MaintainUserController {
             Logo.displayLine();
             System.out.println("Last Account Name: " + GetProperty("AccountName"));
             System.out.println("Account Name:");
-            String requestAccountName = customScanner.nextLine();
+            String requestAccountName = CustomScanner.nextLine();
             AdministrativeFunctions.newRequest(User, "Change Account Name", "Change Account Name to: " + requestAccountName, requestAccountName);
         }
         return true;
@@ -239,7 +255,7 @@ public class MaintainUserController {
             System.out.println("Requested Account Name: " + AccountName);
             ConsoleHandler.getConsole();
             System.out.println("Do you approve the New Account Name? (y/n)");
-            String approve = customScanner.nextLine().toLowerCase();
+            String approve = CustomScanner.nextLine().toLowerCase();
             if(approve.equals("y") || approve.equals("yes")){
                 AdministrativeFunctions.removeRequest();
                 setValue(User, "AccountName", AccountName);
@@ -247,15 +263,15 @@ public class MaintainUserController {
                 return true;
             }else {
                 if(approve.equals("n") || approve.equals("no")){
-                    messageHandler.HandleMessage(-1, "Admin Denied Request", true);
+                    MessageProcessor.processMessage(-1, "Admin Denied Request", true);
                     UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change");
                 }else{
-                    messageHandler.HandleMessage(-1, "Invalid Option, Try Again", true);
+                    MessageProcessor.processMessage(-1, "Invalid Option, Try Again", true);
                 }
                 return false;
             }
         }else{
-            messageHandler.HandleMessage(-1, "Failed to find the User Properties.", true);
+            MessageProcessor.processMessage(-1, "Failed to find the User Properties.", true);
             return false;
         }
 

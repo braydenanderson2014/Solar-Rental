@@ -3,8 +3,6 @@ package Login;
 import java.io.File;
 import java.net.URI;
 
-import Assets.Logo;
-import Assets.customScanner;
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;
 import MainSystem.AdministrativeFunctions;
@@ -12,119 +10,119 @@ import MainSystem.MainMenu;
 import MainSystem.Settings;
 import MainSystem.SettingsController;
 import UserController.LoginUserController;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.AllMessages;
-
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class Login{
-    private static String CurrentUser = "Null";
-    static String Username;
-    protected static String Password;
+    private static String currentUser = "Null";
+    static String username;
+    protected static String password;
     private static int failedLoginAttempts = 0;
-    public Login(){
-        System.out.println(CurrentUser);
+    private Login(){
+        System.out.println(currentUser);
     }
 
-    public static void LoginScreen(){
+    public static void loginScreen(){
         Logo.displayLogo();
         System.out.println("LOGIN SCREEN: ");
         Logo.displayLine();
         ConsoleHandler.getConsole();
         System.out.println("Username: ");
-        Username = customScanner.nextLine();
-        if(Username.equals("command") || Username.equals("Command")){
-            Command();
-        }else if (Username.equals("alloff")){
+        username = CustomScanner.nextLine();
+        if(username.equals("command") || username.equals("Command")){
+            command();
+        }else if (username.equals("alloff")){
             SwitchController.forceAllLogoff();
-            LoginScreen();   
+            loginScreen();   
         }else{
             System.out.println("Password: ");
-            Password = customScanner.nextLine();
-            if(Password.equals("off")){
-                SwitchController.forceLogoff(Username);
-                LoginScreen();
+            password = CustomScanner.nextLine();
+            if(password.equals("off")){
+                SwitchController.forceLogoff(username);
+                loginScreen();
             }else{
-                if(LoginUserController.checkPassword(Username, Password) == true){
-                    SwitchController.updateCurrentUser(Username);
+                if(LoginUserController.checkPassword(username, password)){
+                    SwitchController.updateCurrentUser(username);
                     MainMenu.mainMenu();
-                }else if(LoginUserController.checkPassword(Username, Password) == false){
-                    LoginScreen();
+                }else if(!LoginUserController.checkPassword(username, password)){
+                    loginScreen();
                 }
             }
         }
     }
 
-    public static void LoginScreen(String user){
+    public static void loginScreen(String user){
         Logo.displayLogo();
         System.out.println("LOGIN SCREEN: ");
         Logo.displayLine();
-        messageHandler.HandleMessage(1, "AutoFilling Username with " + user, true);
+        MessageProcessor.processMessage(1, "AutoFilling Username with " + user, true);
         ConsoleHandler.getConsole();
         System.out.println("Username: " + user);
         System.out.println("Password: ");
-        Password = customScanner.nextLine();
-        if(Password.equals("off")){
+        password = CustomScanner.nextLine();
+        if(password.equals("off")){
             SwitchController.forceLogoff(user);
-            LoginScreen();
+            loginScreen();
         }else{
-            if(LoginUserController.checkPassword(user, Password)){
+            if(LoginUserController.checkPassword(user, password)){
                 SwitchController.updateCurrentUser(user);
                 MainMenu.mainMenu();
-            }else if(!LoginUserController.checkPassword(user, Password)){
-                LoginScreen(user);
+            }else if(!LoginUserController.checkPassword(user, password)){
+                loginScreen(user);
             }
         }
     }
 
-    private static void Command() {
+    private static void command() {
         Logo.displayLogo();
         ConsoleHandler.getConsole();
         System.out.println("Command: ");
-        String Command = customScanner.nextLine().toLowerCase();
-        if(Command.equals("swi") || Command.equals("switch")){
+        String command = CustomScanner.nextLine().toLowerCase();
+        if(command.equals("swi") || command.equals("switch")){
             SwitchController.switchMenu(1);
-        }else if(Command.equals("forceoff")){
+        }else if(command.equals("forceoff")){
             SwitchController.forceAllLogoff();
-            Command();
-        }else if(Command.equals("help") || Command.equals("list")){
+            command();
+        }else if(command.equals("help") || command.equals("list")){
             listCommands();
-        }else if(Command.equals("restart")){
+        }else if(command.equals("restart")){
             ProgramController.Start();
-        }else if(Command.equals("first time on")){
+        }else if(command.equals("first time on")){
             FirstTimeManager.updateFirstTime();
             ProgramController.Start();
-        }else if(Command.equals("back")){
-            LoginScreen();
-        }else if(Command.equals("create")){
+        }else if(command.equals("back")){
+            loginScreen();
+        }else if(command.equals("create")){
             System.out.println("New Username: ");
-            String user = customScanner.nextLine();
+            String user = CustomScanner.nextLine();
             AdministrativeFunctions.newRequest("Guest", "new Account", "Blank Account", user);
-            AdministrativeFunctions.AccountRequestNamePool.add(user);
-            LoginScreen();
-        }else if(Command.equals("_resetadmin")){
+            AdministrativeFunctions.accountRequestNamePool.add(user);
+            loginScreen();
+        }else if(command.equals("_resetadmin")){
             if(AdministrativeFunctions.enableAdminAccount()){
-                messageHandler.HandleMessage(2, "Admin Account Re-Enabled", true);
+                MessageProcessor.processMessage(2, "Admin Account Re-Enabled", true);
             }else{
-                messageHandler.HandleMessage(-1, "Failed to Re-Enable Admin Account", true);
+                MessageProcessor.processMessage(-1, "Failed to Re-Enable Admin Account", true);
             }
-            LoginScreen();
-        }else if(Command.equals("rab")){
+            loginScreen();
+        }else if(command.equals("rab")){
             try {
                 URI uri= new URI(SettingsController.getSetting("debugSite"));
                 java.awt.Desktop.getDesktop().browse(uri);
-                messageHandler.HandleMessage(1, "Webpage opened in your default Browser...", true);
-                messageHandler.HandleMessage(2, "WebPage: " + SettingsController.getSetting("debugSite"), true);
+                MessageProcessor.processMessage(1, "Webpage opened in your default Browser...", true);
+                MessageProcessor.processMessage(2, "WebPage: " + SettingsController.getSetting("debugSite"), true);
             } catch (Exception e) {
-                messageHandler.HandleMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
+                MessageProcessor.processMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
             }
-            LoginScreen();
-        }else if(Command.equals("_exit")){
+            loginScreen();
+        }else if(command.equals("_exit")){
             System.exit(1);
         }else{
-            Command();
+            command();
         }
     }
 
@@ -144,44 +142,44 @@ public class Login{
         System.out.println("[_EXIT]: \"_Exit\" Quits the program.");
         ConsoleHandler.getConsole();
         System.out.println("Command: ");
-        String Command = customScanner.nextLine().toLowerCase();
-        if(Command.equals("swi") || Command.equals("switch")){
+        String command = CustomScanner.nextLine().toLowerCase();
+        if(command.equals("swi") || command.equals("switch")){
             SwitchController.switchMenu(1);
-        }else if(Command.equals("forceoff")){
+        }else if(command.equals("forceoff")){
             SwitchController.forceAllLogoff();
             listCommands();
-        }else if(Command.equals("help") || Command.equals("list")){
+        }else if(command.equals("help") || command.equals("list")){
             listCommands();
-        }else if(Command.equals("dump")){
+        }else if(command.equals("dump")){
             LogDump.DumpLog("all");
-            Command();
-        }else if(Command.equals("restart")){
+            command();
+        }else if(command.equals("restart")){
             ProgramController.Start();
-        }else if(Command.equals("first time on")){
+        }else if(command.equals("first time on")){
             FirstTimeManager.updateFirstTime();
             ProgramController.Start();
-        }else if(Command.equals("back")){
-            LoginScreen();
-        }else if(Command.equals("create")){
+        }else if(command.equals("back")){
+            loginScreen();
+        }else if(command.equals("create")){
             System.out.println("New Username: ");
-            String user = customScanner.nextLine();
+            String user = CustomScanner.nextLine();
             AdministrativeFunctions.newRequest("Guest", "new Account", "Admin Created Blank Account" , user);
-            AdministrativeFunctions.AccountRequestNamePool.add(user);
-            LoginScreen();
-        }else if(Command.equals("_resetadmin")){
+            AdministrativeFunctions.accountRequestNamePool.add(user);
+            loginScreen();
+        }else if(command.equals("_resetadmin")){
             AdministrativeFunctions.enableAdminAccount();
-            LoginScreen();
-        }else if(Command.equals("_exit")){
+            loginScreen();
+        }else if(command.equals("_exit")){
             System.exit(1);
         }else{
-            Command();
+            command();
         }
     }
 
     public static boolean validateAdmin(){
         Logo.displayLogo();
         System.out.println("ADMIN PASSWORD: ");
-        String password = customScanner.nextLine();
+        String password = CustomScanner.nextLine();
         return (LoginUserController.checkPassword("Admin", password));
     }
 

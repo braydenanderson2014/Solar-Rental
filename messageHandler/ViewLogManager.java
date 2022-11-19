@@ -1,7 +1,7 @@
 package messageHandler;
-import Assets.Logo;
-import Assets.customScanner;
 import MainSystem.Settings;
+import assets.CustomScanner;
+import assets.Logo;
 public class ViewLogManager{
     public static String ViewWarnings(){
         for(int i = 0; i < WarningMessages.size(); i++){
@@ -11,9 +11,9 @@ public class ViewLogManager{
                 System.out.println(WarningMessages.WarningMessages.get(i));
             }
         }
-        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        MessageProcessor.processMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
-        String enter = customScanner.nextLine();
+        String enter = CustomScanner.nextLine();
         return "";
     }
 
@@ -25,9 +25,9 @@ public class ViewLogManager{
                 System.out.println(SystemMessages.SystemMessages.get(i));
             }
         }
-        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        MessageProcessor.processMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
-        String enter = customScanner.nextLine();
+        String enter = CustomScanner.nextLine();
         return "";
     }
 
@@ -39,9 +39,9 @@ public class ViewLogManager{
                 System.out.println(ErrorMessages.ErrorMessages.get(i));
             }
         }
-        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        MessageProcessor.processMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
-        String enter = customScanner.nextLine();
+        String enter = CustomScanner.nextLine();
         return "";
     }
 
@@ -53,23 +53,23 @@ public class ViewLogManager{
                 System.out.println(NotificationMessages.NotificationMessages.get(i));
             }
         }
-        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        MessageProcessor.processMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
-        String enter = customScanner.nextLine();
+        String enter = CustomScanner.nextLine();
         return "";
     }
 
     public static String ViewAllMessages(){
         for(int i = 0; i < AllMessages.size(); i++){
             if(ConsoleSettings.timeSet){
-                System.out.println(AllMessages.AllMessagesT.get(i));
+                System.out.println(AllMessages.allMessagesT.get(i));
             }else {
-                System.out.println(AllMessages.AllMessages.get(i));
+                System.out.println(AllMessages.allMessages.get(i));
             }
         }
-        messageHandler.HandleMessage(1, "Press Enter to continue", true);
+        MessageProcessor.processMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
-        String enter = customScanner.nextLine();
+        String enter = CustomScanner.nextLine();
         return "";
     }
 
@@ -82,7 +82,7 @@ public class ViewLogManager{
         System.out.println("[System]: View All System Messages");
         System.out.println("[Return]: Return");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         if(option.equals("all")){
             ViewAllMessages();
             ViewMenu(Mode);
@@ -100,13 +100,13 @@ public class ViewLogManager{
             ViewMenu(Mode);
         }else if(option.equals("return")){
             try {
-                Settings.SettingsMenu();
+                Settings.settingsMenu();
             } catch (Exception e) {
-                messageHandler.HandleMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
-                Settings.SettingsMenu();
+                MessageProcessor.processMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
+                Settings.settingsMenu();
             }
         }else{
-            messageHandler.HandleMessage(-1, "Invalid option, try again", true);
+            MessageProcessor.processMessage(-1, "Invalid option, try again", true);
             ViewMenu(Mode);
         }
     }

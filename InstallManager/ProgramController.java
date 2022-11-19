@@ -2,26 +2,25 @@ package InstallManager;
 
 import java.io.IOException;
 
-import Assets.Logo;
-import Assets.customScanner;
 import Login.Login;
-
+import assets.CustomScanner;
+import assets.Logo;
 import messageHandler.ConsoleHandler;
 import messageHandler.ErrorMessages;
-import messageHandler.messageHandler;
+import messageHandler.MessageProcessor;
 
 public class ProgramController {
-    public static String UserPathLetter = "C:";
-    public static String UserDefaultPath = "\\Users\\Public\\Documents\\Solar\\ProgramFiles/";
-    public static String SystemPathLetter = "C:";
-    public static String SystemDefaultPath = "\\Users\\Public\\Documents";
-    public static String SystemPath = "C:\\Users\\Public\\Documents";
-    public static String SystemSubPath = "\\Solar";
-    public static String SystemInstallPath = "\\InstallationFiles";
-    public static String SystemDefaultRunPath = "\\ProgramFiles";
-    public static String SystemConfig = "\\config.properties";
-    public static String SystemRunPath = "BLANK";
-    public static String UserRunPath = "C:\\Users\\Public\\Documents\\Solar\\ProgramFiles";
+    public static String userPathLetter = "C:";
+    public static String userDefaultPath = "\\Users\\Public\\Documents\\Solar\\ProgramFiles/";
+    public static String systemPathLetter = "C:";
+    public static String systemDefaultPath = "\\Users\\Public\\Documents";
+    public static String systemPath = "C:\\Users\\Public\\Documents";
+    public static String systemSubPath = "\\Solar";
+    public static String systemInstallPath = "\\InstallationFiles";
+    public static String systemDefaultRunPath = "\\ProgramFiles";
+    public static String systemConfig = "\\config.properties";
+    public static String systemRunPath = "BLANK";
+    public static String userRunPath = "C:\\Users\\Public\\Documents\\Solar\\ProgramFiles";
     public static void SetupMenu(){
         Logo.displayLogo();
         System.out.println();
@@ -31,7 +30,7 @@ public class ProgramController {
         System.out.println("[MANUAL]: Manually Setup Program");
         System.out.println("[QUIT]: Quit Program");
         ConsoleHandler.getConsole();
-        String option = customScanner.nextLine().toLowerCase();
+        String option = CustomScanner.nextLine().toLowerCase();
         if(option.equals("auto")){
             AutoSetup.startAutoSetup();
         }else if(option.equals("manual")){
@@ -39,7 +38,7 @@ public class ProgramController {
         }else if(option.equals("quit")){
             System.exit(1);
         }else{
-            messageHandler.HandleMessage(-1, "Invalid Option, Try again", true);
+            MessageProcessor.processMessage(-1, "Invalid Option, Try again", true);
             SetupMenu();
         }
     }
@@ -49,30 +48,25 @@ public class ProgramController {
     }
 
     public static void Start() {
-        new customScanner();
+        new CustomScanner();
         boolean firstTime = FirstTimeManager.checkFirstTime();
         if(firstTime){
             SetupMenu();
-        }else if(!firstTime){
-            messageHandler.HandleMessage(1, "FirstTime: False", true);
+        }else{
+            MessageProcessor.processMessage(1, "FirstTime: False", true);
             SystemSetLoader.loadSystems();
-            Login.LoginScreen();
+            Login.loginScreen();
         }
     }
 
-    public static boolean clearScreen(){
-        try {
-            if (System.getProperty("os.name").contains("Windows")){
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                System.out.flush();
-            }else{
-                Runtime.getRuntime().exec("clear");
-            }
-            return true;
-        } catch (IOException | InterruptedException e) {
-            messageHandler.HandleMessage(-2, e.toString(), true);
-            System.out.println(ErrorMessages.getLastMessage());
-        }
-        return true;
+    public static boolean clearScreen() throws IOException, InterruptedException{
+        if (System.getProperty("os.name").contains("Windows")){
+		    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+		    System.out.flush();
+		}else{
+		    Runtime.getRuntime().exec("clear");
+		}
+        System.out.print("\u000C");
+		return true;
     }
 }

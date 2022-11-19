@@ -48,7 +48,7 @@ public class WarningMessages{
                 }else if(!ConsoleSettings.timeSet){
                     return WarningMessages.get(size);
                 }else {
-                    messageHandler.HandleMessage(-2, "An Error Occured While Getting Time Setting (E)", true);
+                    MessageProcessor.processMessage(-2, "An Error Occured While Getting Time Setting (E)", true);
                     return "";
                 }
             }else {
