@@ -15,6 +15,8 @@ public class ConsoleHandler{
 	public static String getConsole() throws IndexOutOfBoundsException{
 		MessageProcessor.gatherVisible();
 		size = MessageProcessor.gatheredMessages.size();
+		howManyTimes = 0;
+		showHowMany = Integer.parseInt(SettingsController.getSetting("MaxConsole"));
 		if(size == 0) {
 			System.out.println("NO MESSAGES ON THE CONSOLE, CHECK YOUR SETTINGS");
 			return "";
@@ -28,12 +30,16 @@ public class ConsoleHandler{
 		while(howManyTimes < showHowMany) {
 			if(SettingsController.getSetting("Date/TimeSet").equals("true")) {
 				System.out.println(MessageProcessor.gatheredMessagesT.get(size));
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessagesT.get(size), false);
 			}else {
 				System.out.println(MessageProcessor.gatheredMessages.get(size));
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(size), false);
 			}
 			howManyTimes++;
 			size++;
 		}
+		MessageProcessor.gatheredMessages.clear();
+		MessageProcessor.gatheredMessagesT.clear();
 		return "";
 	}
 	private static Boolean checkSettings() {

@@ -14,7 +14,7 @@ public class SettingsController{
 
     public static String getSetting(String settingType){
         String setting = prop.getProperty(settingType);
-        MessageProcessor.processMessage(1, "Setting: " + settingType + " " + setting, true);
+        MessageProcessor.processMessage(1, "Setting: " + settingType + " " + setting, false);
         return setting;
     }
 
