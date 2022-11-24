@@ -26,6 +26,9 @@ public class ConsoleHandler{
 		}
 		size --;
 		size = size - showHowMany;
+		if(size < 1) {
+			return "";//Helps avoid an Index out of Bounds
+		}
 		System.out.println("CONSOLE: ");
 		while(howManyTimes < showHowMany) {
 			if(SettingsController.getSetting("Date/TimeSet").equals("true")) {
