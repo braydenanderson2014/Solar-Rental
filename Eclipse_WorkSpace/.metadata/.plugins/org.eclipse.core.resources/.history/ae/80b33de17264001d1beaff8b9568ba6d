@@ -1,0 +1,6 @@
+package messageHandler;
+public class ConsoleHandler{
+	public static String getConsole() {
+		return "";
+	}
+}

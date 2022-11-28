@@ -1,0 +1,25 @@
+package messageHandler;
+
+import MainSystem.SettingsController;
+
+public class ConsoleHandler{
+	public static int showHowMany = 5;
+	public static int howManyTimes = 0;
+	
+	public static String getConsole() {
+		int size = AllMessages.size();
+		size --;
+		size = size - showHowMany;
+		System.out.println("CONSOLE: ");
+		while(howManyTimes < showHowMany) {
+			if(SettingsController.getSetting("Date/TimeSet").equals("true")) {
+				System.out.println(AllMessages.AllMessagesT.get(size));
+			}else {
+				System.out.println(AllMessages.AllMessages.get(size));
+			}
+			howManyTimes++;
+			size++;
+		}
+		return "";
+	}
+}
