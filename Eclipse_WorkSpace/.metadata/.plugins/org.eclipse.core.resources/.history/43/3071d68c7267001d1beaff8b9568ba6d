@@ -1,0 +1,31 @@
+package InstallManager;
+
+import MainSystem.SettingsController;
+import messageHandler.MessageHandler;
+
+public class SystemSetLoader {
+
+    public static boolean loadSystems() {
+        SettingsController.loadSettings();
+        //#region SystemPath
+        if(SettingsController.SearchForSet("SystemPathLetter")){
+            ProgramController.systemPathLetter = SettingsController.getSetting("SystemPathLetter");
+        }else{
+            MessageHandler.handleMessage(-2, "Failed to load SystemPathLetter", false);
+            MessageHandler.handleMessage(1, "Applying default SystemPathLetter", false);
+        }
+        if(SettingsController.SearchForSet("SystemPath")){
+            ProgramController.systemPath = SettingsController.getSetting("SystemPath");
+        }else {
+            MessageHandler.handleMessage(-2, "Failed to load SystemPath", false);
+            MessageHandler.handleMessage(1, "Applying default SystemPath", false);
+
+        }
+        ProgramController.SystemRunPath = ProgramController.systemPathLetter + AutoSetup.systemWorkingPath + ProgramController.systemSubPath;
+        //#endregion
+        //#region UserPath
+        
+        return true;
+    }
+
+}

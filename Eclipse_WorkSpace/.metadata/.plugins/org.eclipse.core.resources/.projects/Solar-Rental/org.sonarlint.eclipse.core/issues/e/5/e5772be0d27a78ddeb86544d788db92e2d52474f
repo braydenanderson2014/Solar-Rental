@@ -1,0 +1,228 @@
+
+p
+java:S1444"?Make this "public static AdministrativeRequestUser" field final(İÔı°ùÿÿÿÿH™RMINORZ
+CODE_SMELL
+v
+java:S1192ø"FDefine a constant instead of duplicating this literal "Admin" 6 times.(ó´ßÀHÛRCRITICALZ
+CODE_SMELL
+…
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ÿá•ÑH¼RMINORZ
+CODE_SMELL
+Š
+java:S1192;"VDefine a constant instead of duplicating this literal "Unable to find user [" 5 times.(ºŞÜ¬ıÿÿÿÿHÕRCRITICALZ
+CODE_SMELL
+	java:S117J"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õÛµğøÿÿÿÿHRMINORZ
+CODE_SMELL
+•
+java:S3008"dRename this field "AdministrativeRequestFull" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ò¿ß°øÿÿÿÿH¥RMINORZ
+CODE_SMELL
+‚	java:S117™"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸©º´ıÿÿÿÿH‰RMINORZ
+CODE_SMELL
+…	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Û¬´°HŸRMINORZ
+CODE_SMELL
+i
+java:S1444"=Make this "public static AdministrativeRequestID" field final(Ü‰â¤HœRMINORZ
+CODE_SMELL
+N
+java:S2386"Make this member "protected".(ÂìªøÿÿÿÿH©RMINORZ
+CODE_SMELL
+I
+java:S2386"Make this member "protected".(Ü‰â¤H­RMINORZ
+CODE_SMELL
+T
+java:S1125ì"'Remove the unnecessary boolean literal.(©•ç¼HÙRMINORZ
+CODE_SMELL
+G
+java:S2119¦"Save and re-use this "Random".(™ì´HàRCRITICALZBUG
+­
+java:S1319"|The type of "AdministrativeRequestKeyWord" should be an interface such as "List" rather than the implementation "ArrayList".(ÂìªøÿÿÿÿHíRMINORZ
+CODE_SMELL
+c
+java:S1135å"2Complete the task associated to this TODO comment.(€³»—ûÿÿÿÿHØRINFOZ
+CODE_SMELL
+m	java:S125Ç"<This block of commented-out lines of code should be removed.(éØ»ÚûÿÿÿÿHÔRMAJORZ
+CODE_SMELL
+…
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ùïÅ’H¶RMINORZ
+CODE_SMELL
+
+java:S3008"bRename this field "AdministrativeRequestID" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ü‰â¤H¦RMINORZ
+CODE_SMELL
+m	java:S125Å"<This block of commented-out lines of code should be removed.(”íüƒıÿÿÿÿHÓRMAJORZ
+CODE_SMELL
+}	java:S117³"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÒØŞóH…RMINORZ
+CODE_SMELL
+	java:S117c"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÛÍ­ÿÿÿÿÿHƒRMINORZ
+CODE_SMELL
+™
+java:S1104"hMake AdministrativeRequestKeyWord a static final constant or non-public and provide accessors if needed.(ÂìªøÿÿÿÿHRMINORZ
+CODE_SMELL
+“
+java:S1104"bMake AccountRequestNamePool a static final constant or non-public and provide accessors if needed.(ó³˜üûÿÿÿÿH•RMINORZ
+CODE_SMELL
+N
+java:S2386"Make this member "protected".(ò¿ß°øÿÿÿÿH¬RMINORZ
+CODE_SMELL
+|
+java:S1192î"GDefine a constant instead of duplicating this literal "User: " 3 times.(§…ÆµüÿÿÿÿHÑRCRITICALZ
+CODE_SMELL
+
+java:S1104"cMake AdministrativeRequestID a static final constant or non-public and provide accessors if needed.(Ü‰â¤H”RMINORZ
+CODE_SMELL
+€
+java:S1192S"QDefine a constant instead of duplicating this literal "Target Account: " 3 times.(¤˜‹øHÍRCRITICALZ
+CODE_SMELL
+§
+java:S1319"{The type of "AdministrativeRequestedName" should be an interface such as "List" rather than the implementation "ArrayList".(Ÿá•ÑHóRMINORZ
+CODE_SMELL
+
+java:S3008"aRename this field "AdministrativeRequests" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ùïÅ’H¡RMINORZ
+CODE_SMELL
+	java:S100¥"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(óÒàıÿÿÿÿHßRMINORZ
+CODE_SMELL
+’
+java:S3008"fRename this field "AdministrativeRequestedName" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ÿá•ÑH¤RMINORZ
+CODE_SMELL
+ª
+java:S1319"yThe type of "AdministrativeRequestUser" should be an interface such as "List" rather than the implementation "ArrayList".(İÔı°ùÿÿÿÿHğRMINORZ
+CODE_SMELL
+£
+java:S1319"wThe type of "AdministrativeRequestID" should be an interface such as "List" rather than the implementation "ArrayList".(Ü‰â¤HùRMINORZ
+CODE_SMELL
+}	java:S117°"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(àÒÏÌH„RMINORZ
+CODE_SMELL
+m
+java:S1444"<Make this "public static AccountRequestNamePool" field final(ó³˜üûÿÿÿÿHRMINORZ
+CODE_SMELL
+	java:S117T"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•ï±ÿÿÿÿÿH‚RMINORZ
+CODE_SMELL
+Š
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ó³˜üûÿÿÿÿHÂRMINORZ
+CODE_SMELL
+T
+java:S1125ø"'Remove the unnecessary boolean literal.(ó´ßÀHÛRMINORZ
+CODE_SMELL
+„
+java:S1104"XMake requestsMade a static final constant or non-public and provide accessors if needed.(üÂÚ‰H–RMINORZ
+CODE_SMELL
+“
+java:S1104"gMake AdministrativeRequestedName a static final constant or non-public and provide accessors if needed.(Ÿá•ÑH’RMINORZ
+CODE_SMELL
+‚	java:S117š"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(å…†½ûÿÿÿÿHŠRMINORZ
+CODE_SMELL
+}
+java:S1192í"HDefine a constant instead of duplicating this literal "Account" 3 times.(²Š§ÒúÿÿÿÿHÄRCRITICALZ
+CODE_SMELL
+•
+java:S3008"dRename this field "AdministrativeRequestUser" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(İÔı°ùÿÿÿÿH£RMINORZ
+CODE_SMELL
+I
+java:S2386"Make this member "protected".(ùïÅ’H¨RMINORZ
+CODE_SMELL
+˜
+java:S3008"gRename this field "AdministrativeRequestKeyWord" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÂìªøÿÿÿÿH¢RMINORZ
+CODE_SMELL
+h
+java:S1444"<Make this "public static AdministrativeRequests" field final(ùïÅ’H—RMINORZ
+CODE_SMELL
+¢
+java:S1319"vThe type of "AdministrativeRequests" should be an interface such as "List" rather than the implementation "ArrayList".(ùïÅ’HêRMINORZ
+CODE_SMELL
+§
+java:S1319"vThe type of "AccountRequestNamePool" should be an interface such as "List" rather than the implementation "ArrayList".(ó³˜üûÿÿÿÿHüRMINORZ
+CODE_SMELL
+
+java:S1104"bMake AdministrativeRequests a static final constant or non-public and provide accessors if needed.(ùïÅ’HRMINORZ
+CODE_SMELL
+–
+java:S1104"eMake AdministrativeRequestUser a static final constant or non-public and provide accessors if needed.(İÔı°ùÿÿÿÿH‘RMINORZ
+CODE_SMELL
+N
+java:S2386"Make this member "protected".(İÔı°ùÿÿÿÿHªRMINORZ
+CODE_SMELL
+S
+java:S11258"'Remove the unnecessary boolean literal.(¬Œ­ÀHÎRMINORZ
+CODE_SMELL
+Š
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(İÔı°ùÿÿÿÿHºRMINORZ
+CODE_SMELL
+‚	java:S117ê"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•ï±ÿÿÿÿÿH†RMINORZ
+CODE_SMELL
+œ
+java:S1488§"jImmediately return this expression instead of assigning it to the temporary variable "RequestIDGenerator".(„ÇÎıÿÿÿÿHŒRMINORZ
+CODE_SMELL
+p
+java:S1444"?Make this "public static AdministrativeRequestFull" field final(ò¿ß°øÿÿÿÿH›RMINORZ
+CODE_SMELL
+~	java:S100!"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÛˆÌ«øÿÿÿÿH°RMINORZ
+CODE_SMELL
+m
+java:S1444"AMake this "public static AdministrativeRequestedName" field final(Ÿá•ÑHšRMINORZ
+CODE_SMELL
+^
+java:S1444"2Make this "public static requestsMade" field final(üÂÚ‰HRMINORZ
+CODE_SMELL
+f
+java:S1141I"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿHÿRMAJORZ
+CODE_SMELL
+T
+java:S1125Š"'Remove the unnecessary boolean literal.(©•ç¼HİRMINORZ
+CODE_SMELL
+…
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ü‰â¤HÀRMINORZ
+CODE_SMELL
+‚	java:S117™"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¸©º´ıÿÿÿÿHˆRMINORZ
+CODE_SMELL
+k
+java:S1118":Add a private constructor to hide the implicit public one.(¾Ş‰¨øÿÿÿÿH¯RMAJORZ
+CODE_SMELL
+Š
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ò¿ß°øÿÿÿÿH¾RMINORZ
+CODE_SMELL
+S
+java:S1125V"'Remove the unnecessary boolean literal.(©•ç¼HĞRMINORZ
+CODE_SMELL
+s
+java:S1444"BMake this "public static AdministrativeRequestKeyWord" field final(ÂìªøÿÿÿÿH˜RMINORZ
+CODE_SMELL
+‚	java:S117ˆ"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•ï±ÿÿÿÿÿH‡RMINORZ
+CODE_SMELL
+’
+java:S3008"aRename this field "AccountRequestNamePool" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ó³˜üûÿÿÿÿH§RMINORZ
+CODE_SMELL
+Š
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÂìªøÿÿÿÿH¸RMINORZ
+CODE_SMELL
+‚	java:S117§"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„ÇÎıÿÿÿÿH‹RMINORZ
+CODE_SMELL
+}
+java:S1192X"IDefine a constant instead of duplicating this literal "PassFlag" 3 times.(ˆ³¦ÃûÿÿÿÿHâRCRITICALZ
+CODE_SMELL
+–
+java:S1104"eMake AdministrativeRequestFull a static final constant or non-public and provide accessors if needed.(ò¿ß°øÿÿÿÿH“RMINORZ
+CODE_SMELL
+†
+java:S3776!"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(ÛˆÌ«øÿÿÿÿH±RCRITICALZ
+CODE_SMELL
+N
+java:S2386"Make this member "protected".(ó³˜üûÿÿÿÿH®RMINORZ
+CODE_SMELL
+x
+java:S1192Y"IDefine a constant instead of duplicating this literal "Username" 3 times.(‚ÁÒšHæRCRITICALZ
+CODE_SMELL
+J
+java:S2189Ô""Correct this loop's end condition.(å¥½²H RBLOCKERZBUG
+„
+java:S11922"PDefine a constant instead of duplicating this literal "PermissionLevel" 4 times.(ñí¬ıÿÿÿÿHÈRCRITICALZ
+CODE_SMELL
+k
+java:S1155Ì">Use isEmpty() to check whether the collection is empty or not.(Ÿ€HÕRMINORZ
+CODE_SMELL
+_
+java:S2251Ô"9"i" is incremented and will never reach "stop condition".(å¥½²H×RMAJORZBUG
+ª
+java:S1319"yThe type of "AdministrativeRequestFull" should be an interface such as "List" rather than the implementation "ArrayList".(ò¿ß°øÿÿÿÿHöRMINORZ
+CODE_SMELL
+I
+java:S2386"Make this member "protected".(Ÿá•ÑH«RMINORZ
+CODE_SMELL

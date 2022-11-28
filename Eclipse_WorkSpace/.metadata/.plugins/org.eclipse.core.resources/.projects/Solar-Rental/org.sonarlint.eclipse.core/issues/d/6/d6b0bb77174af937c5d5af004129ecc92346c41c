@@ -1,0 +1,56 @@
+
+†
+java:S3776,"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(ç¸–íşÿÿÿÿH¨RCRITICALZ
+CODE_SMELL
+‡
+java:S1104"VMake MyRequests a static final constant or non-public and provide accessors if needed.(‹úø¦øÿÿÿÿH³RMINORZ
+CODE_SMELL
+
+java:S1104"PMake path a static final constant or non-public and provide accessors if needed.(¢“»ùÿÿÿÿH´RMINORZ
+CODE_SMELL
+}
+java:S1192©"HDefine a constant instead of duplicating this literal "LogType" 3 times.(şÇß§ùÿÿÿÿHµRCRITICALZ
+CODE_SMELL
+…	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Û¬´°H¹RMINORZ
+CODE_SMELL
+c
+java:S1128"7Remove this unused import 'messageHandler.AllMessages'.(„“Ê€HºRMINORZ
+CODE_SMELL
+e
+java:S1444"2Make this "public static requestsMade" field final(üÂÚ‰8Ï¤âÊÆ0H¼RMINORZ
+CODE_SMELL
+[
+java:S1444"*Make this "public static path" field final(¢“»ùÿÿÿÿH½RMINORZ
+CODE_SMELL
+\
+java:S5413D")Verify that "remove()" is used correctly.(ùÔçû8Ï¤âÊÆ0H¾RMAJORZ
+CODE_SMELL
+W
+java:S1444"-Make this "public static logType" field final(®÷H¿RMINORZ
+CODE_SMELL
+†
+java:S3008"URename this field "MyRequests" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‹úø¦øÿÿÿÿHÀRMINORZ
+CODE_SMELL
+}
+java:S1104"SMake logType a static final constant or non-public and provide accessors if needed.(®÷HÁRMINORZ
+CODE_SMELL
+k
+java:S1118":Add a private constructor to hide the implicit public one.(ì½ğÿÿÿÿÿHÂRMAJORZ
+CODE_SMELL
+~	java:S100a"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŒíŸ“øÿÿÿÿHÃRMINORZ
+CODE_SMELL
+†
+java:S3776a"RRefactor this method to reduce its Cognitive Complexity from 33 to the 15 allowed.(ŒíŸ“øÿÿÿÿHÄRCRITICALZ
+CODE_SMELL
+‹
+java:S1104"XMake requestsMade a static final constant or non-public and provide accessors if needed.(üÂÚ‰8Ï¤âÊÆ0HàRMINORZ
+CODE_SMELL
+f
+java:S1128".Remove this unused import 'java.util.Scanner'.(ÒÜÅ¸úÿÿÿÿ8ë­øÊÆ0HáRMINORZ
+CODE_SMELL
+N
+java:S2386"Make this member "protected".(‹úø¦øÿÿÿÿHãRMINORZ
+CODE_SMELL
+a
+java:S1444"0Make this "public static MyRequests" field final(‹úø¦øÿÿÿÿHäRMINORZ
+CODE_SMELL

@@ -1,0 +1,193 @@
+package InstallManager;
+
+import java.io.File;
+import java.io.IOException;
+
+import Login.Login;
+import MainSystem.SettingsController;
+import UserController.AutoSetupUserController;
+import messageHandler.MessageHandler;
+import messageHandler.SystemMessages;
+
+public class AutoSetup {
+    public static String systemPathLetter = ProgramController.SystemPathLetter;
+    public static String systemWorkingPath = ProgramController.SystemDefaultPath;
+    public static String userPathLetter = ProgramController.userPathLetter;
+    public static String userWorkingPath = ProgramController.userDefaultPath;
+    public static void startAutoSetup() {
+        //#region Folder/File Install
+        //#region SystemPathLetter
+        MessageHandler.handleMessage(1, "Searching for System PathLetter in Configuration...", false);
+        String setting = "SystemPathLetter";
+		boolean exists = SettingsController.SearchForSet(setting);
+        System.out.println(SystemMessages.getLastMessage());
+        if(exists){
+            MessageHandler.handleMessage(1, "Found SystemPathLetter in Configuration... Now Assigning SystemPathLetter to variable", false);
+            System.out.println(SystemMessages.getLastMessage());
+            systemPathLetter = SettingsController.getSetting(setting);
+        }else{
+            SettingsController.setSetting(setting, systemPathLetter);
+        }
+        //#endregion
+        //#region Debug
+        setting = "debugSite";
+        exists = SettingsController.SearchForSet(setting);
+        if(exists) {
+        	MessageHandler.handleMessage(1, "Found debugSite in Configureation... ", false);
+        	System.out.println(SystemMessages.getLastMessage());
+        }else {
+        	SettingsController.setSetting(setting,"https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
+        }
+        //#endregion
+        //#region SystemPath
+        String setting2 = "SystemPath";
+		exists = SettingsController.SearchForSet(setting2);
+        if(exists){
+            systemWorkingPath = SettingsController.getSetting(setting2);
+        }else{
+            SettingsController.setSetting(setting2, systemWorkingPath);
+
+        }
+        //#endregion
+        //#region SystemPathCheck/Creation
+        ProgramController.SystemRunPath = systemPathLetter + systemWorkingPath + ProgramController.SystemSubPath;
+        File file = new File(ProgramController.SystemRunPath);
+        if(!file.exists()){
+            file.mkdirs();
+            MessageHandler.handleMessage(1, "Successfully created Directory at: " + ProgramController.SystemRunPath, false);
+        }
+        //#endregion
+        //#region UserPathLetter
+        MessageHandler.handleMessage(1, "Searching for User PathLetter in Configuration...", false);
+        String setting21 = "UserPathLetter";
+		exists = SettingsController.SearchForSet(setting21);
+        System.out.println(SystemMessages.getLastMessage());
+        if(exists){
+            MessageHandler.handleMessage(1, "Found UserPathLetter in Configuration... Now Assigning UserPathLetter to variable", false);
+            System.out.println(SystemMessages.getLastMessage());
+            userPathLetter = SettingsController.getSetting(setting21);
+        }else{
+            SettingsController.setSetting(setting21, userPathLetter);
+        }
+        //#endregion
+        //#region UserPath
+        String setting3 = "UserPath";
+		exists = SettingsController.SearchForSet(setting3);
+        if(exists){
+            userWorkingPath = SettingsController.getSetting(setting3);
+        }else{
+            SettingsController.setSetting(setting3, userWorkingPath);
+
+        }
+        //#endregion
+        //#region UserSystemPathCheck/Creation
+        ProgramController.UserRunPath = userPathLetter + userWorkingPath;
+        file = new File(ProgramController.UserRunPath);
+        if(!file.exists()){
+            file.mkdirs();
+            MessageHandler.handleMessage(1, "Successfully created Directory at: " + ProgramController.UserRunPath, false);
+        }
+        //#endregion
+        //#region UserFolders
+        String userFolder = ProgramController.UserRunPath + "\\Users\\Notebooks";
+        file = new File(userFolder);
+        if(!file.exists()){
+            file.mkdirs();
+            MessageHandler.handleMessage(1, "Successfully created Directories at: " + userFolder, false);
+        }
+        //#endregion
+        //#region UserList.properties
+        String userDir = ProgramController.UserRunPath + "\\Users/Userlist.properties";
+        file = new File(userDir);
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+                MessageHandler.handleMessage(1, "Created Userlist.properties at: " + userDir, false);
+            } catch (IOException e) {
+                MessageHandler.handleMessage(-2, "Failed to create Userlist.properties at: " + userDir, true);
+                MessageHandler.handleMessage(-1, "Unable to complete Setup", true);
+                ProgramController.SetupMenu();
+            }
+        }
+        //#endregion
+        //#region Categories
+        String categories = ProgramController.UserRunPath + "\\Categories/";
+        file = new File(categories);
+        if(!file.exists()){
+            try {
+                file.mkdirs();
+                MessageHandler.handleMessage(1, "Created Categories at: " + categories, false);
+                categories = categories + "Categories.properties";
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+            } catch (IOException e) {
+                MessageHandler.handleMessage(-2, "Failed to create Directory at: " + categories, true);
+                MessageHandler.handleMessage(-1, "Unable to complete Setup", true);
+                ProgramController.SetupMenu();
+            }
+        }
+        //#endregion
+        createDefaultSysSet();
+    }//end function
+    private static void createDefaultSysSet() {
+        boolean exists = SettingsController.SearchForSet("FirstTime");
+        if(!exists){
+            SettingsController.setSetting("FirstTime", "false");
+            MessageHandler.handleMessage(1, "Setting \"FirstTime\" was created successfully. Default Value: false", false);
+        }
+        exists = SettingsController.SearchForSet("LogType");
+        if(!exists){
+            SettingsController.setSetting("LogType", "all");
+            MessageHandler.handleMessage(1, "Setting \"LogType\" was created successfully. Default Value: all", false);
+        }
+        exists = SettingsController.SearchForSet("ErrorSet");
+        if(!exists){
+            SettingsController.setSetting("ErrorSet", "true");
+            MessageHandler.handleMessage(1, "Console Setting \"ErrorSet\" was created successfully. Default Value: true", false);
+        }
+        exists = SettingsController.SearchForSet("WarningSet");
+        if(!exists){
+            SettingsController.setSetting("WarningSet", "true");
+            MessageHandler.handleMessage(1, "Console Setting \"WarningSet\" was created successfully. Default Value: true", false);
+        }
+        exists = SettingsController.SearchForSet("SystemSet");
+        if(!exists){
+            SettingsController.setSetting("SystemSet", "true");
+            MessageHandler.handleMessage(1, "Console Setting \"SystemSet\" was created successfully. Default Value: true", false);
+        }
+        exists = SettingsController.SearchForSet("UserNotifySet");
+        if(!exists){
+            SettingsController.setSetting("UserNotifySet", "true");
+            MessageHandler.handleMessage(1, "Console Setting \"UserNotifySet\" was created successfully. Default Value: true", false);
+        }
+        exists = SettingsController.SearchForSet("Date/TimeSet");
+        if(!exists){
+            SettingsController.setSetting("Date/TimeSet", "true");
+            MessageHandler.handleMessage(1, "Console Setting \"Date/TimeSet\" was created successfully. Default Value: true", false);
+        }
+        exists = SettingsController.SearchForSet("TaxP");
+        if(!exists){
+            SettingsController.setSetting("TaxP", "7.43");
+            MessageHandler.handleMessage(1, "Setting \"TaxP\" was created successfully. Default Value: 7.43%", false);
+        }
+        exists = SettingsController.SearchForSet("FailedAttempts");
+        if(!exists){
+            SettingsController.setSetting("FailedAttempts",  "3");
+            MessageHandler.handleMessage(1, "Setting \"FailedAttempts\" was created successfully. Default Value: 7.43%", false);
+        }
+        exists = SettingsController.SearchForSet("MaxConsole");
+        if(!exists){
+            SettingsController.setSetting("MaxConsole",  "5");
+            MessageHandler.handleMessage(1, "Setting \"FailedAttempts\" was created successfully. Default Value: 7.43%", false);
+        }
+        createAdminAccount();
+    }
+
+    private static void createAdminAccount() {
+        AutoSetupUserController.AutoCreateAdmin();
+        FirstTimeManager.updateFirstTime();
+        Login.LoginScreen();
+    }
+
+}

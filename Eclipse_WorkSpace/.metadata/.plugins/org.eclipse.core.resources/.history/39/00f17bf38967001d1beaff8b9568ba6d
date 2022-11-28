@@ -1,0 +1,23 @@
+/**
+ * 
+ */
+package messageHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Brayden Anderson
+ *
+ */
+public class MessageProcessor {
+	public static List<String> allMessages = new ArrayList<>();
+	public static List<String> allMessagesT = new ArrayList<>();
+	public static List<String> visibleToConsoles = new ArrayList<>();
+	public static String addMessage(String message, String visibleToConsole) {
+		allMessages.add(message);
+		allMessagesT.add(message);
+		visibleToConsoles.add(visibleToConsole);
+		return "";
+	}
+}
