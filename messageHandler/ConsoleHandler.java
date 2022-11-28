@@ -15,6 +15,7 @@ public class ConsoleHandler{
 	public static String getConsole() throws IndexOutOfBoundsException{
 		MessageProcessor.gatherVisible();
 		size = MessageProcessor.gatheredMessages.size();
+		//checkSettings();
 		howManyTimes = 0;
 		showHowMany = Integer.parseInt(SettingsController.getSetting("MaxConsole"));
 		if(size == 0) {
@@ -52,7 +53,7 @@ public class ConsoleHandler{
 		if(SettingsController.getSetting("SystemSet").equals(anObject) || !ConsoleSettings.SystemSet) {
 			MessageProcessor.processMessage(1, "Removing System Messages", true);
 			for(int i = 0; i < MessageProcessor.gatheredMessages.size(); i++) {
-				if(MessageProcessor.gatheredMessages.get(i).contains("[System]: ")) {
+				if(MessageProcessor.gatheredMessages.get(i).contains("System ")) {
 					MessageProcessor.processMessage(1, "Found System messages, Removing now", true);
 					indexesToRemove.add(i);
 					MessageProcessor.processMessage(1, String.valueOf(i), true);
@@ -64,7 +65,7 @@ public class ConsoleHandler{
 				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
 				temp = indexesToRemove.get(i);
 				MessageProcessor.gatheredMessages.remove(temp);
-				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessagesT.remove(temp);
 				
 			}
 			indexesToRemove.clear();
@@ -85,7 +86,7 @@ public class ConsoleHandler{
 				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
 				temp = indexesToRemove.get(i);
 				MessageProcessor.gatheredMessages.remove(temp);
-				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessagesT.remove(temp);
 				
 			}
 			indexesToRemove.clear();
@@ -106,7 +107,7 @@ public class ConsoleHandler{
 				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
 				temp = indexesToRemove.get(i);
 				MessageProcessor.gatheredMessages.remove(temp);
-				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessagesT.remove(temp);
 				
 			}
 			indexesToRemove.clear();
@@ -127,7 +128,7 @@ public class ConsoleHandler{
 				MessageProcessor.processMessage(1,MessageProcessor.gatheredMessages.get(indexesToRemove.get(i)), true);
 				temp = indexesToRemove.get(i);
 				MessageProcessor.gatheredMessages.remove(temp);
-				MessageProcessor.gatheredMessages.remove(temp);
+				MessageProcessor.gatheredMessagesT.remove(temp);
 				
 			}
 			indexesToRemove.clear();
