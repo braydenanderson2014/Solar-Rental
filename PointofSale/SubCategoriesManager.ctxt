@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=SubCategoriesManager
+comment1.params=subCat\ subCatID
+comment1.target=boolean\ addSubCat(java.lang.String,\ java.lang.String)
+numComments=2

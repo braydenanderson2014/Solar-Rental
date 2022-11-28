@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=SalesProcessor
+comment1.params=
+comment1.target=void\ ProcessSale()
+comment2.params=
+comment2.target=boolean\ updateArrays()
+numComments=3

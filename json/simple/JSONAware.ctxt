@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=JSONAware
+comment0.text=\r\n\ Beans\ that\ support\ customized\ output\ of\ JSON\ text\ shall\ implement\ this\ interface.\ \ \r\n\ @author\ FangYidong<fangyidong@yahoo.com.cn>\r\n
+comment1.params=
+comment1.target=java.lang.String\ toJSONString()
+comment1.text=\r\n\ @return\ JSON\ text\r\n
+numComments=2

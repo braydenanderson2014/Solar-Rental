@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=SecondaryUserController
+comment1.params=
+comment1.target=boolean\ TargetAccount()
+comment2.params=AccountToTarget
+comment2.target=boolean\ TargetAccount(java.lang.String)
+comment3.params=
+comment3.target=boolean\ loadTargetedAccount()
+comment4.params=
+comment4.target=boolean\ saveTargetUserProps()
+comment5.params=key
+comment5.target=boolean\ doesUserPropExist(java.lang.String)
+comment6.params=key
+comment6.target=java.lang.String\ getUserProp(java.lang.String)
+comment7.params=key\ prop
+comment7.target=boolean\ setUserProp(java.lang.String,\ java.lang.String)
+numComments=8

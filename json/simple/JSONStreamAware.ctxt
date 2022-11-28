@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=JSONStreamAware
+comment0.text=\r\n\ Beans\ that\ support\ customized\ output\ of\ JSON\ text\ to\ a\ writer\ shall\ implement\ this\ interface.\ \ \r\n\ @author\ FangYidong<fangyidong@yahoo.com.cn>\r\n
+comment1.params=out
+comment1.target=void\ writeJSONString(java.io.Writer)
+comment1.text=\r\n\ write\ JSON\ string\ to\ out.\r\n
+numComments=2

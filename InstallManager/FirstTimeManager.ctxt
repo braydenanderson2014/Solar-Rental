@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=FirstTimeManager
+comment1.params=
+comment1.target=boolean\ checkFirstTime()
+comment2.params=
+comment2.target=boolean\ updateFirstTime()
+numComments=3

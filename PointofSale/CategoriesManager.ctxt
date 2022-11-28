@@ -1,0 +1,27 @@
+#BlueJ class context
+comment0.target=CategoriesManager
+comment1.params=cat
+comment1.target=java.lang.Boolean\ SearchForCat(java.lang.String)
+comment10.params=id
+comment10.target=java.lang.String\ RetrieveCatbyID(java.lang.String)
+comment11.params=id
+comment11.target=java.lang.String\ RetrieveLastCatbyID(java.lang.String)
+comment12.params=id
+comment12.target=boolean\ removeCategoryByID(java.lang.String)
+comment2.params=
+comment2.target=java.lang.Boolean\ LoadCatProperties()
+comment3.params=
+comment3.target=java.lang.Boolean\ SaveCatProperties()
+comment4.params=
+comment4.target=java.lang.Boolean\ RetrieveCat()
+comment5.params=
+comment5.target=java.lang.Boolean\ ListAllCat()
+comment6.params=Category\ CatID
+comment6.target=java.lang.Boolean\ AddCat(java.lang.String,\ java.lang.String)
+comment7.params=item\ Category\ price\ description\ itemID
+comment7.target=CategoriesManager(java.lang.String,\ java.lang.String,\ double,\ java.lang.String,\ int)
+comment8.params=
+comment8.target=void\ serializeToXML()
+comment9.params=id
+comment9.target=boolean\ checkID(java.lang.String)
+numComments=13

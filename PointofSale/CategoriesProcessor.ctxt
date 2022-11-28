@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=CategoriesProcessor
+comment1.params=
+comment1.target=boolean\ CreateNewJSONOBJECT()
+comment2.params=Name\ ItemNumber\ CurrentPrice\ originalPrice\ canBeDiscounted\ CategoryName\ CategoryID\ SubCategoryID\ SubCategory
+comment2.target=java.lang.String\ EncodeJson(java.lang.String,\ int,\ double,\ double,\ boolean,\ java.lang.String,\ int,\ int,\ java.lang.String)
+comment3.params=
+comment3.target=java.lang.String\ DecodeJSON()
+numComments=4
