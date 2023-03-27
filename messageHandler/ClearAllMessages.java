@@ -7,6 +7,7 @@ public class ClearAllMessages {
         WarningMessages.clearMessages();
         NotificationMessages.clearMessages();
         SystemMessages.clearMessages();
+        DebugMessages.clearMessages();
         return true;
     }
 }

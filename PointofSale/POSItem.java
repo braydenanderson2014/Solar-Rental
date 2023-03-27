@@ -1,16 +1,13 @@
 package PointofSale;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
+
+import assets.Logo;
+import messageHandler.MessageProcessor;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 public class POSItem {
     private int itemNum;
     private String itemName;
@@ -26,8 +23,7 @@ public class POSItem {
     private int itemQty;
     private int categoryID;
     private String category;
-    private List<POSItem> Items = new ArrayList<POSItem>();
-    
+    public List<JSONObject> itemObjects = new ArrayList<>();
 
     public POSItem(int itemNum, String itemName, String itemDescription, double originalPrice, double currentPrice, 
                    boolean isDiscounted, boolean canBeDiscounted, double discountPercent, boolean isItemReturnable, 
@@ -46,11 +42,13 @@ public class POSItem {
         this.itemQty = itemQty;
         this.categoryID = categoryID;
         this.category = category;
-        Items.add(this);
+        MessageProcessor.processMessage(1, "New Item being Defined", true);
+        toJSON();
     }
 
     public static POSItem fromJSON(String jsonString) {
         JSONObject jsonObject = new JSONObject(jsonString);
+
         int itemNum = jsonObject.getInt("itemNum");
         String itemName = jsonObject.getString("itemName");
         String itemDescription = jsonObject.getString("itemDescription");
@@ -65,7 +63,7 @@ public class POSItem {
         int itemQty = jsonObject.getInt("itemQty");
         int categoryID = jsonObject.getInt("categoryID");
         String category = jsonObject.getString("category");
-
+        
         return new POSItem(itemNum, itemName, itemDescription, originalPrice, currentPrice, isDiscounted, canBeDiscounted, 
                            discountPercent, isItemReturnable, isTaxExempt, isItemSellable, itemQty, categoryID, category);
     }
@@ -87,7 +85,9 @@ public class POSItem {
         jsonObject.put("itemQty", this.itemQty);
         jsonObject.put("categoryID", this.categoryID);
         jsonObject.put("category", this.category);
-
+        MessageProcessor.processMessage(1, "New Item Created, Assigning to MasterList!", true);
+        itemObjects.add(jsonObject);
+        MessageProcessor.processMessage(1, "Added NEW Item to MasterList!", true);
         return jsonObject;
     }
 
@@ -106,7 +106,7 @@ public class POSItem {
                 String.valueOf(item.originalPrice).contains(query) ||
                 String.valueOf(item.currentPrice).contains(query) ||
                 String.valueOf(item.discountPercent).contains(query) ||
-                String.valueOf(item.itemQty).contains(query) || String.valueOf(item.categoryID).contains(query) || 
+                String.valueOf(item.itemQty).contains(query) || String.valueOf(item.categoryID).contains(query) ||
                 item.category.toLowerCase().contains(query)) {
                 matchingItems.add(itemJson);
             }
@@ -114,44 +114,7 @@ public class POSItem {
 
         return matchingItems;
     }
-    public static void saveJSONObjectsToFile(List<JSONObject> jsonObjects, String filename) {
-        Path path = Paths.get(filename);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
-            writer.write("[");
-            for (int i = 0; i < jsonObjects.size(); i++) {
-                writer.write(jsonObjects.get(i).toString(4)); // Indentation of 4 spaces
-                if (i < jsonObjects.size() - 1) {
-                    writer.write(",");
-                }
-            }
-            writer.write("]");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static List<POSItem> loadPOSItemsFromFile(String filename) {
-        List<POSItem> items = new ArrayList<>();
-        Path path = Paths.get(filename);
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line);
-            }
 
-            JSONArray jsonArray = new JSONArray(content.toString());
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                POSItem item = POSItem.fromJSON(jsonObject.toString());
-                items.add(item);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return items;
-    }
+	
 }
-
 

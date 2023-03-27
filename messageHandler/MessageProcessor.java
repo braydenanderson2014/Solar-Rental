@@ -24,7 +24,7 @@ public class MessageProcessor {
 	private static DateTimeFormatter myFormatOBJ1 = myFormatObj;
     public static String dTime  = myDateObj.format(myFormatOBJ1);
 	public static String processMessage(int messageType, String message, boolean visibleToConsole) {
-		String messageTypeProcessed;
+		String messageTypeProcessed = "";
 		if(messageType == -2) {
 			messageTypeProcessed = "Error";
 			ErrorMessages.addMessage("[" + messageTypeProcessed + "]" + message, visibleToConsole);
@@ -36,6 +36,9 @@ public class MessageProcessor {
 			SystemMessages.addMessage("[" + messageTypeProcessed + "]" + message, visibleToConsole);
 		}else if(messageType == 2) {
 			messageTypeProcessed = "Notification";
+			NotificationMessages.addMessage("[" + messageTypeProcessed + "]" + message, visibleToConsole);
+		}else if(messageType == -3) {
+			messageTypeProcessed = "Debug";
 			NotificationMessages.addMessage("[" + messageTypeProcessed + "]" + message, visibleToConsole);
 		}else {
 			messageTypeProcessed = "Invalid Message Type";
@@ -55,15 +58,17 @@ public class MessageProcessor {
         return dTime;
     }
 	public static String gatherVisible() {
-		gatheredMessages.clear();
-		for(int i = 0; i < allMessages.size(); i++) {
-			if(Boolean.TRUE.equals(visibleToConsoles.get(i))) {
-				gatheredMessages.add(allMessages.get(i));
-				gatheredMessagesT.add(allMessagesT.get(i));
-			}
-		}
-		return "";
+	    gatheredMessages.clear();
+	    gatheredMessagesT.clear();
+	    for (int i = 0; i < allMessages.size(); i++) {
+	        if (visibleToConsoles.get(i) == true) {
+	            gatheredMessages.add(allMessages.get(i));
+	            gatheredMessagesT.add(allMessagesT.get(i));
+	        }
+	    }
+	    return "";
 	}
+
 	public static boolean dumpAll(){
         LogDump.DumpLog("all");
         return true;

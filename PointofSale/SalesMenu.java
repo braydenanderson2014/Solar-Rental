@@ -28,9 +28,10 @@ public class SalesMenu {
         System.out.println("[Search] Search for item or Category by id");
         System.out.println("[CAT]: Sales Catalogue");
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-            System.out.println("[ADDC]: Add Category");
-            System.out.println("[ADDS]: Add Sub-Category");
-            System.out.println("[DEL] Remove a category");
+        	System.out.println("[ADD] Add Item to MasterList");
+            System.out.println("[ADDC] Add Category");
+            System.out.println("[DEL]: Delete an Item from the MasterList");
+            System.out.println("[DELC]: Remove a Category");
         }
         System.out.println("[APP]: Apply Discount");
         System.out.println("[REM]: Remove Item from Current Invoice");

@@ -1,27 +1,27 @@
 package Login;
 
-import java.io.File;
+
 import java.net.URI;
 
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.MainMenu;
-import MainSystem.Settings;
+
 import MainSystem.SettingsController;
 import UserController.LoginUserController;
 import assets.CustomScanner;
 import assets.Logo;
-import messageHandler.AllMessages;
+
 import messageHandler.ConsoleHandler;
-import messageHandler.LogDump;
+
 import messageHandler.MessageProcessor;
 
 public class Login{
     private static String currentUser = "Null";
     static String username;
     protected static String password;
-    private static int failedLoginAttempts = 0;
+    
     private Login(){
         System.out.println(currentUser);
     }
@@ -34,7 +34,7 @@ public class Login{
         System.out.println("Username: ");
         username = CustomScanner.nextLine();
         if(username.equals("command") || username.equals("Command")){
-            command();
+            command(0);
         }else if (username.equals("alloff")){
             SwitchController.forceAllLogoff();
             loginScreen();   
@@ -77,18 +77,30 @@ public class Login{
         }
     }
 
-    private static void command() {
+    private static void command(int mode) {
         Logo.displayLogo();
         ConsoleHandler.getConsole();
+        if(mode == 1) {
+        	System.out.println("[SWI,SWITCH]: \"Swi\" or \"Switch\" will bring you to the Switch Control Menu if 2 or more users are logged in.");
+            System.out.println("[HELP, LIST]: \"HELP\" or \"LIST\" Lists all the possible commands in the Login screen. You should know this command as you typed it to show this statement anyway");
+            System.out.println("[RESTART]: \"Restart\" Restarts the program...(Thought that might be obvious)");
+            System.out.println("[FIRST TIME ON]: \"First Time On\" Activates the First Time Setup... Program will restart into First Time Mode");
+            System.out.println("[BACK]: \"Back\" takes you back to the Login Screen");
+            System.out.println("[CREATE]: \"Create\" puts in a request for an account... The Admin has to follow up on the request");
+            System.out.println("[_RESETADMIN]: \"_ResetAdmin\" re-enables the admin account after it is disabled. Automatically sets the passflag so you will have to change your password.");
+            System.out.println("[FORCEOFF]: \"ForceOff\" Forces all users to logoff");
+            System.out.println("[DUMP]: Dump Logs To File [ALL]");
+            System.out.println("[_EXIT]: \"_Exit\" Quits the program.");
+        }
         System.out.println("Command: ");
         String command = CustomScanner.nextLine().toLowerCase();
         if(command.equals("swi") || command.equals("switch")){
             SwitchController.switchMenu(1);
         }else if(command.equals("forceoff")){
             SwitchController.forceAllLogoff();
-            command();
+            command(0);
         }else if(command.equals("help") || command.equals("list")){
-            listCommands();
+            command(1);
         }else if(command.equals("restart")){
             ProgramController.Start();
         }else if(command.equals("first time on")){
@@ -122,59 +134,11 @@ public class Login{
         }else if(command.equals("_exit")){
             System.exit(1);
         }else{
-            command();
+            command(0);
         }
     }
 
-    private static void listCommands() {
-        Logo.displayLogo();
-        System.out.println("Commands:");
-        Logo.displayLine();
-        System.out.println("[SWI,SWITCH]: \"Swi\" or \"Switch\" will bring you to the Switch Control Menu if 2 or more users are logged in.");
-        System.out.println("[HELP, LIST]: \"HELP\" or \"LIST\" Lists all the possible commands in the Login screen. You should know this command as you typed it to show this statement anyway");
-        System.out.println("[RESTART]: \"Restart\" Restarts the program...(Thought that might be obvious)");
-        System.out.println("[FIRST TIME ON]: \"First Time On\" Activates the First Time Setup... Program will restart into First Time Mode");
-        System.out.println("[BACK]: \"Back\" takes you back to the Login Screen");
-        System.out.println("[CREATE]: \"Create\" puts in a request for an account... The Admin has to follow up on the request");
-        System.out.println("[_RESETADMIN]: \"_ResetAdmin\" re-enables the admin account after it is disabled. Automatically sets the passflag so you will have to change your password.");
-        System.out.println("[FORCEOFF]: \"ForceOff\" Forces all users to logoff");
-        System.out.println("[DUMP]: Dump Logs To File [ALL]");
-        System.out.println("[_EXIT]: \"_Exit\" Quits the program.");
-        ConsoleHandler.getConsole();
-        System.out.println("Command: ");
-        String command = CustomScanner.nextLine().toLowerCase();
-        if(command.equals("swi") || command.equals("switch")){
-            SwitchController.switchMenu(1);
-        }else if(command.equals("forceoff")){
-            SwitchController.forceAllLogoff();
-            listCommands();
-        }else if(command.equals("help") || command.equals("list")){
-            listCommands();
-        }else if(command.equals("dump")){
-            LogDump.DumpLog("all");
-            command();
-        }else if(command.equals("restart")){
-            ProgramController.Start();
-        }else if(command.equals("first time on")){
-            FirstTimeManager.updateFirstTime();
-            ProgramController.Start();
-        }else if(command.equals("back")){
-            loginScreen();
-        }else if(command.equals("create")){
-            System.out.println("New Username: ");
-            String user = CustomScanner.nextLine();
-            AdministrativeFunctions.newRequest("Guest", "new Account", "Admin Created Blank Account" , user);
-            AdministrativeFunctions.accountRequestNamePool.add(user);
-            loginScreen();
-        }else if(command.equals("_resetadmin")){
-            AdministrativeFunctions.enableAdminAccount();
-            loginScreen();
-        }else if(command.equals("_exit")){
-            System.exit(1);
-        }else{
-            command();
-        }
-    }
+   
 
     public static boolean validateAdmin(){
         Logo.displayLogo();

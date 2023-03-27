@@ -6,7 +6,6 @@ import Login.Login;
 import assets.CustomScanner;
 import assets.Logo;
 import messageHandler.ConsoleHandler;
-import messageHandler.ErrorMessages;
 import messageHandler.MessageProcessor;
 
 public class ProgramController {
@@ -19,7 +18,7 @@ public class ProgramController {
     public static String systemInstallPath = "\\InstallationFiles";
     public static String systemDefaultRunPath = "\\ProgramFiles";
     public static String systemConfig = "\\config.properties";
-    public static String systemRunPath = "BLANK";
+    public static String systemRunPath = systemPath + "\\Solar\\ProgramFiles";
     public static String userRunPath = "C:\\Users\\Public\\Documents\\Solar\\ProgramFiles";
     public static void SetupMenu(){
         Logo.displayLogo();

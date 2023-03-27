@@ -110,7 +110,11 @@ public class Settings{
         System.out.println("[PATH]: Program's Working Directory: \"" + path + "\"");
         System.out.println("[CONSOLE]: Console Settings");
         System.out.println("[RAB]: Report a Bug");
-        System.out.println("[LOG]: Log Dump Type: " + logType.toUpperCase());
+        if(logType.equals("debugmt")){
+            System.out.println("[LOG]: Log Dump Type: DEBUG");
+        }else{
+            System.out.println("[LOG]: Log Dump Type: " + logType.toUpperCase());
+        }
         System.out.println("[VIEWLOGS]: View logs Menu");
         System.out.println("[DUMP]: Dump Logs to File");
         System.out.println("[UPDATE]: Manually Update User Profile");
@@ -156,7 +160,7 @@ public class Settings{
         	MaintainUserController.forceProfileUpdate(SwitchController.focusUser);
             settingsMenu();
         }else if(option.equals("viewlogs")){
-            ViewLogManager.ViewMenu(1);
+            ViewLogManager.viewMenu(1);
         }else if(option.equals("dump")){
             LogDump.DumpLog(logType);
             settingsMenu();   
@@ -179,7 +183,9 @@ public class Settings{
             }else if(logType.equals("warning")){
                 logType = "error";
             }else if(logType.equals("error")){
-                logType = "all";
+                logType = "debugmt";
+            }else if(logType.equals("debugmt")) {
+            	logType = "all";
             }
             String settingType = LOG_TYPE;
 			SettingsController.setSetting(settingType, logType);
@@ -235,6 +241,11 @@ public class Settings{
         ConsoleSettings.SystemSet = Boolean.parseBoolean(SettingsController.getSetting("SystemSet"));
         MessageProcessor.processMessage(1, "SystemSet: " + Boolean.parseBoolean(SettingsController.getSetting("SystemSet")), false);
         System.out.println(SystemMessages.getLastMessage());
+        
+        ConsoleSettings.DebugSet = Boolean.parseBoolean(SettingsController.getSetting("DebugSet"));
+        MessageProcessor.processMessage(1, "DebugSet: " + Boolean.parseBoolean(SettingsController.getSetting("DebugSet")), false);
+        System.out.println(SystemMessages.getLastMessage());
+        
         ConsoleSettings.UserNotifySet = Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet"));
         MessageProcessor.processMessage(1, "UserNotifySet: " + Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet")), false);
         System.out.println(SystemMessages.getLastMessage());

@@ -1,7 +1,10 @@
 package PointofSale;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
+
+
 
 import Login.SwitchController;
 import MainSystem.MainMenu;
@@ -28,16 +31,16 @@ public class POSMenu {
         Logo.displayLogo();
         System.out.println("Welcome to the Solar Point of Sale Menu; User: " + SwitchController.focusUser);
         System.out.println("[SALE]: Sales Menu");
-        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-            System.out.println("[RET]: Returns Menu");
-        }
         System.out.println("[APP]: Apply Discount Menu");
         System.out.println("[CAT]: Sales Catalogue");
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-            System.out.println("[ADDC]: Add Category");
-            System.out.println("[ADDS]: Add Sub-Category");
-            System.out.println("[DEL]: Remove a Category");
+            System.out.println("[ADD] Add Item to MasterList");
+            System.out.println("[ADDC] Add Category");
+            System.out.println("[DEL]: Delete an Item from the MasterList");
+            System.out.println("[DELC]: Remove a Category");
+            System.out.println("[RET]: Returns Menu");
         }
+        System.out.println("[VIEW]: View Items on MasterList");
         System.out.println("[OFF]: Log Off");
         System.out.println("[RETURN]: RETURN to Main Menu");
         try {
@@ -61,28 +64,18 @@ public class POSMenu {
                     PointofSaleMenu();
                 }
                 break;
-            case "addc":
+            case "add":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-                    System.out.println("Category Name?");
-                    String Cat = CustomScanner.nextLine();
-                    System.out.println("Category ID?");
-                    String CatID = CustomScanner.nextLine();
-                    CategoriesManager.AddCat(Cat, CatID);
-                    PointofSaleMenu();
+                	createNewItem();
                 }
                 break;
-            case "adds":
-                if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-                    System.out.println("Sub-Category Name?");
-                    String SubCat = CustomScanner.nextLine();
-                    System.out.println("Sub-Category ID's?");
-                    String SubCatID = CustomScanner.nextLine();
-                    SubCategoriesManager.addSubCat(SubCat, SubCatID);
-                    PointofSaleMenu();
-
-                }
+            case "view":
+                
                 break;
             case "del":
+            	
+            	break;
+            case "delc":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category ID?: ");
                     String id = CustomScanner.nextLine().toLowerCase();
@@ -124,4 +117,39 @@ public class POSMenu {
                 break;
         }
     }
+    public static void createNewItem() {
+        Logo.displayLogo();
+        try {
+            System.out.println("New Item Number: ");
+            int itemNum = CustomScanner.nextInt();
+            CustomScanner.nextLine(); // Add this line to consume the newline character
+
+            System.out.println("New Item Name: ");
+            String itemName = CustomScanner.nextLine();
+
+            System.out.println("New Item Description: ");
+            String itemDescription = CustomScanner.nextLine();
+
+            System.out.println("New Original Price: ");
+            Double origPrice = CustomScanner.nextDouble();
+            Double currentPrice = origPrice;
+            Double discountPercentage = 0.0;
+
+            System.out.println("New Item Qty: ");
+            int itemQty = CustomScanner.nextInt();
+            CustomScanner.nextLine(); // Add this line to consume the newline character
+
+            System.out.println("New Category ID: ");
+            int categoryID = CustomScanner.nextInt();
+            CustomScanner.nextLine(); // Add this line to consume the newline character
+            String category = CategoriesManager.RetrieveCatbyID(String.valueOf(categoryID));
+            POSItem item = new POSItem(itemNum, itemName, itemDescription, origPrice, currentPrice, false, true, 0, true, false, true, itemQty, categoryID, category);
+        //int itemNum, String itemName, String itemDescription, double originalPrice, double currentPrice, boolean isDiscounted, boolean canBeDiscounted, double discountPercent, boolean isItemReturnable, boolean isTaxExempt, boolean isItemSellable, int itemQty, int categoryID, String category
+            PointofSaleMenu();
+        } catch (InputMismatchException e) {
+        	MessageProcessor.processMessage(-2, e.toString(), true);
+        	createNewItem();
+        }
+    }
+
 }
