@@ -16,10 +16,9 @@ public class DebugMessages{
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
         dTime  = myDateObj.format(myFormatObj);
-        DebugMessages.add("[Debug]: " + message);
-        DebugMessagesT.add("[" + dTime + "][Warning]: " + message);
+        DebugMessages.add(message);
+        DebugMessagesT.add("[" + dTime + "]" + message);
         visibleToConsole.add(VisibleToConsole);
-        AllMessages.addMessage("[Debug]: " + message, VisibleToConsole);
         return message;
     }
 

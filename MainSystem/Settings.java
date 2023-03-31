@@ -1,6 +1,8 @@
 package MainSystem;
 import static java.lang.Integer.parseInt;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -45,7 +47,34 @@ public class Settings{
         return true;
     }
     public static boolean checkNotifications(){// Checking notifications from admin or other users
-        return false;
+        if(MainSystemUserController.GetProperty("UserNotification").equals("Enabled")){
+            myNotifications.clear();
+            String path = ProgramController.userRunPath + "\\Users\\Notifications\\" + SwitchController.focusUser + ".txt";
+            boolean exists = (new File(path)).exists();
+            File file = new File(path);
+            if(exists){
+                try {
+                    BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
+                    String line;
+                    while((line = reader.readLine()) != null){
+                        if(!line.equals("")){
+                            myNotifications.add(line);
+                        }
+                    }
+                    reader.close();
+                    return true;
+                } catch (Exception e) {
+                    MessageProcessor.processMessage(-2, "Failed to read Notification File for User: " + SwitchController.focusUser, true);
+                    return false;
+                }
+            }else{
+                MessageProcessor.processMessage(1, "No Notification File for User: " + SwitchController.focusUser, false);
+                return false;
+            }
+        }else{
+            MessageProcessor.processMessage(-1, "User Notifications are Disabled", false);
+            return false;
+        }
     }
 
     public static boolean printRequests(){//Print User Requests. (submitted requests to admin)
@@ -68,6 +97,7 @@ public class Settings{
                 Logo.displayLogo();
                 System.out.println("Selected Item: " + myRequests.get(option));
                 System.out.println("Would you like to Revoke your Request? (y/n)");
+                temp = CustomScanner.nextLine();
                 temp = CustomScanner.nextLine();
                 if(temp.equals("y") || temp.equals("yes")){
                     for(int i = 0; i < AdministrativeFunctions.administrativeRequestKeyWord.size(); i++){
@@ -103,6 +133,8 @@ public class Settings{
 
     public static void settingsMenu() throws NumberFormatException{
         checkRequests();
+        checkNotifications();
+        requestsMade = AdministrativeFunctions.updateRequestsMade();
         Logo.displayLogo();
         System.out.println();
         System.out.println("Settings Menu");
@@ -122,14 +154,15 @@ public class Settings{
         String key = "PermissionLevel";
 		if(parseInt(MainSystemUserController.GetProperty(key)) >= 6){
             System.out.println("[FIRST]: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());  	
+            System.out.println("[SETUPDATE]: Forces Configuration File to add any new changes without having to reinstall program");
         }
         if(parseInt(MainSystemUserController.GetProperty(key)) >= 8) {
         	System.out.println("[REQUESTS]: View User Requests; Current Request Count: [" + requestsMade + "]");
         }else {
-        	System.out.println("[REQUESTS]: My Requests: Current Requests: " + myRequests.size());
+        	System.out.println("[REQUESTS]: My Requests: Current Requests: [" + myRequests.size() + "]");
         }
         if(parseInt(MainSystemUserController.GetProperty(key)) < 8){
-            System.out.println("[NOTI]: My Notifications Notification Count: [" + myNotifications + "]");
+            System.out.println("[NOTI]: My Notifications Notification Count: [" + myNotifications.size() + "]");
         }
         System.out.println("[RETURN]: Return");
         System.out.println();
@@ -206,6 +239,13 @@ public class Settings{
                 MessageProcessor.processMessage(-1, "User Does not have permission to use this function", true);
                 settingsMenu();
             }
+        }else if(option.equals("setupdate")){
+            if(parseInt(MainSystemUserController.GetProperty(key)) >= 6){
+                ForceUpdateConfiguration();
+            }else{
+                MessageProcessor.processMessage(-1, "User does not have permission to use this function", false);
+                settingsMenu();
+            }
         }else if(option.equals("return")){
             //MainSystem
             MainMenu.mainMenu();
@@ -215,6 +255,23 @@ public class Settings{
         }
     }
 
+    private static void ForceUpdateConfiguration() {
+        boolean exists = SettingsController.searchForSet("DebugSet");
+        if(!exists){
+            SettingsController.setSetting("DebugSet", "true");
+            MessageProcessor.processMessage(1, "Console Setting \"DebugSet\" was created successfully. Default Value: true", false);
+        }
+        SettingsController.saveSettings();
+        SettingsController.loadSettings();
+        MessageProcessor.processMessage(1, "Configuration File Updated", true);
+        String userFolder = ProgramController.userRunPath + "\\Users\\Notifications";
+        File file = new File(userFolder);
+        if(!file.exists()){
+            file.mkdirs();
+            MessageProcessor.processMessage(1, "Successfully created Directories at: " + userFolder, true);
+        }
+        settingsMenu();
+    }
     public static boolean loadSettings(){ //Loads main Settings for the program to launch
         MessageProcessor.processMessage(1, "Loading Settings file from config.properties", false);
         System.out.println(SystemMessages.getLastMessage());

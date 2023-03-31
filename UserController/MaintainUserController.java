@@ -119,7 +119,7 @@ public class MaintainUserController {
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
-                MessageProcessor.processMessage(-1, "Unable to load User Profile", false);
+                MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
                 return false;
             }
         }else{
@@ -207,19 +207,19 @@ public class MaintainUserController {
                 setValue(user, "UserNotification", "true"); 
                 MessageProcessor.processMessage(1, message, true);
             }else {
-                MessageProcessor.processMessage(-1, "User Already had \"Notification\"", true);
+                MessageProcessor.processMessage(-1, "User: " + SwitchController.focusUser + " Already had \"Notification\"", true);
             }
             if(!SearchForKey("NotifyPath")) {
             	setValue(user, "NotifyPath", "NULL");
             	MessageProcessor.processMessage(1, message, true);
             }else {
-            	MessageProcessor.processMessage(-1, "User Already had \"NotifyPath\"", true);
+            	MessageProcessor.processMessage(-1, "User: " + SwitchController.focusUser + " Already had \"NotifyPath\"", true);
             }
             if(!SearchForKey("NotepadPath")) {
             	setValue(user, "NotepadPath", "NULL");
             	MessageProcessor.processMessage(1, message, true);
             }else {
-            	MessageProcessor.processMessage(-1, "User Already had \"NotepadPath\"", true);
+            	MessageProcessor.processMessage(-1, "User: " + SwitchController.focusUser + " Already had \"NotepadPath\"", true);
             }
             saveUserProperties(user);
             return true;

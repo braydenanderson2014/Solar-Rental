@@ -30,8 +30,7 @@ public class SecondaryUserController{
 
     public static boolean TargetAccount(String AccountToTarget){//target the account in the arguments.
         AccountToTarget = TargetedAccount;
-        //todo: Check target against user list to verify user exists.
-        return true;
+        return UserListController.SearchForUser(TargetedAccount);
     }
 
     public static boolean loadTargetedAccount(){ //Load the Users Properties.

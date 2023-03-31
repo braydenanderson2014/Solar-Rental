@@ -22,7 +22,7 @@ public class UserListController {
         if(CheckUserListAvailability()){
             try (InputStream input = new FileInputStream(UserList)){
                 userlist.load(input);
-                MessageProcessor.processMessage(1, "UserList Loaded", true);
+                MessageProcessor.processMessage(1, "UserList Loaded", false);
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);

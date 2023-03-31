@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+
 import InstallManager.ProgramController;
 import messageHandler.MessageProcessor;
 
@@ -25,11 +26,11 @@ public class MainSystemUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
-                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Login Functions", true);
+                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Functions", false);
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
-                MessageProcessor.processMessage(-1, "Unable to load User Profile", false);
+                MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
                 return false;
             }
         }else{
@@ -55,7 +56,6 @@ public class MainSystemUserController {
             MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
             return false;
         }
-
     }
 
     public static boolean SearchForKey(String Key){

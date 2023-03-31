@@ -16,10 +16,9 @@ public class ErrorMessages {
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
         dTime  = myDateObj.format(myFormatObj);
-        ErrorMessages.add("[Error]: " + message);
-        ErrorMessagesT.add("[" + dTime + "][Error]: " + message);
+        ErrorMessages.add(message);
+        ErrorMessagesT.add("[" + dTime + "]" + message);
         visibleToConsole.add(VisibleToConsole);
-        AllMessages.addMessage("[Error]: " + message, VisibleToConsole);
         return message;
     }
 

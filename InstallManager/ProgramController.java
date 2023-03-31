@@ -52,7 +52,6 @@ public class ProgramController {
         if(firstTime){
             SetupMenu();
         }else{
-            MessageProcessor.processMessage(1, "FirstTime: False", true);
             SystemSetLoader.loadSystems();
             Login.loginScreen();
         }

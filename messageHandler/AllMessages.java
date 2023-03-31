@@ -16,10 +16,7 @@ public class AllMessages {
     public static List<Boolean> visibleToConsole = new ArrayList<>();
     public static String addMessage(String message, boolean visibleToConsoles){
         allMessages.add(message);
-        myDateObj = LocalDateTime.now();
-        myFormatOBJ1 = DateTimeFormatter.ofPattern(MM_DD_YYYY_HH_MM_SS);
-        dTime  = myDateObj.format(myFormatOBJ1);
-        allMessagesT.add("[" + dTime + "]" + message);
+        allMessagesT.add("[" + getTime() + "]" + message);
         visibleToConsole.add(visibleToConsoles);
         return message;
     }

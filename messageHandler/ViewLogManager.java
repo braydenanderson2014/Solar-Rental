@@ -10,15 +10,15 @@ public class ViewLogManager {
     public static void viewMessages(List<String> messages, List<String> messagesWithTimestamp) {
         for (int i = 0; i < messages.size(); i++) {
             if (ConsoleSettings.timeSet) {
-                System.out.println(messagesWithTimestamp.get(i));
+                System.out.println(messagesWithTimestamp.get(i) + "[" + AllMessages.visibleToConsole.get(i) + "]");
             } else {
-                System.out.println(messages.get(i));
+                System.out.println(messages.get(i) + "[" + AllMessages.visibleToConsole.get(i) + "]");
             }
         }
         MessageProcessor.processMessage(1, "Press Enter to continue", true);
         System.out.println(SystemMessages.getLastMessage());
         String enter = CustomScanner.nextLine();
-        MessageProcessor.processMessage(1, enter, false);
+        MessageProcessor.processMessage(-3, enter, false);
     }
 
     public static void viewWarnings() {

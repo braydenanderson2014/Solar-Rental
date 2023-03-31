@@ -33,7 +33,7 @@ public class AutoSetup {
         setting = "debugSite";
         exists = SettingsController.searchForSet(setting);
         if(exists) {
-        	MessageProcessor.processMessage(1, "Found debugSite in Configureation... ", false);
+        	MessageProcessor.processMessage(1, "Found debugSite in Configuration... ", false);
         	System.out.println(SystemMessages.getLastMessage());
         }else {
         	SettingsController.setSetting(setting,"https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");
@@ -90,6 +90,12 @@ public class AutoSetup {
         //#endregion
         //#region UserFolders
         String userFolder = ProgramController.userRunPath + "\\Users\\Notebooks";
+        file = new File(userFolder);
+        if(!file.exists()){
+            file.mkdirs();
+            MessageProcessor.processMessage(1, "Successfully created Directories at: " + userFolder, false);
+        }
+        userFolder = ProgramController.userRunPath + "\\Users\\Notifications";
         file = new File(userFolder);
         if(!file.exists()){
             file.mkdirs();
@@ -160,6 +166,11 @@ public class AutoSetup {
         if(!exists){
             SettingsController.setSetting("UserNotifySet", "true");
             MessageProcessor.processMessage(1, "Console Setting \"UserNotifySet\" was created successfully. Default Value: true", false);
+        }
+        exists = SettingsController.searchForSet("DebugSet");
+        if(!exists){
+            SettingsController.setSetting("DebugSet", "true");
+            MessageProcessor.processMessage(1, "Console Setting \"DebugSet\" was created successfully. Default Value: true", false);
         }
         exists = SettingsController.searchForSet("Date/TimeSet");
         if(!exists){

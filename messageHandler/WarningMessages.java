@@ -16,10 +16,9 @@ public class WarningMessages{
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
         dTime  = myDateObj.format(myFormatObj);
-        WarningMessages.add("[Warning]: " + message);
-        WarningMessagesT.add("[" + dTime + "][Warning]: " + message);
+        WarningMessages.add( message);
+        WarningMessagesT.add("[" + dTime + "]" + message);
         visibleToConsole.add(VisibleToConsole);
-        AllMessages.addMessage("[Warning]: " + message, VisibleToConsole);
         return message;
     }
 

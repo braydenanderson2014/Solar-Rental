@@ -25,11 +25,11 @@ public class LoginUserController {
             UserProperties = UserProperties2 + User + ".properties";
             try (InputStream input = new FileInputStream(UserProperties)){
                 userprop.load(input);
-                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Login Functions", true);
+                MessageProcessor.processMessage(1, "User Profile Loaded, Ready for Login Functions", false);
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
-                MessageProcessor.processMessage(-1, "Unable to load User Profile", false);
+                MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
                 return false;
             }
         }else{
@@ -115,7 +115,7 @@ public class LoginUserController {
     }
 
     public static boolean ChangePass(String User) {
-        MessageProcessor.processMessage(1, "Password Change Initiated: ChangePass", false);
+        MessageProcessor.processMessage(1, "Password Change Initiated: ChangePass for Account: " + User, false);
         loadUserProperties(User);
         Logo.displayLogo();
         System.out.println("Old Password: ");
@@ -159,7 +159,6 @@ public class LoginUserController {
                 }
             }
         }
-
     }
     public static boolean adminUpdateUserPass(String user){
     	setValue(user, "Password", "Solar");

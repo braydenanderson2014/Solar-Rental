@@ -13,9 +13,6 @@ import java.util.List;
  *
  */
 public class MessageProcessor {
-	public static List<String> allMessages = new ArrayList<>();
-	public static List<String> allMessagesT = new ArrayList<>();
-	public static List<Boolean> visibleToConsoles = new ArrayList<>();
 	public static List<String> gatheredMessages = new ArrayList<>();
 	public static List<String> gatheredMessagesT = new ArrayList<>();
  	private static final String MM_DD_YYYY_HH_MM_SS = "MM-dd-yyyy HH:mm:ss";
@@ -44,11 +41,7 @@ public class MessageProcessor {
 			messageTypeProcessed = "Invalid Message Type";
 			return messageTypeProcessed;
 		}
-		String getTime = getTime();
-		allMessages.add("[" + messageTypeProcessed + "]" + message);
-		allMessagesT.add("[" + getTime + "][" + messageTypeProcessed + "]" + message);
 		AllMessages.addMessage("[" + messageTypeProcessed + "]" + message, visibleToConsole);
-		visibleToConsoles.add(visibleToConsole);
 		return "";
 	}
 	public static String getTime(){
@@ -58,16 +51,17 @@ public class MessageProcessor {
         return dTime;
     }
 	public static String gatherVisible() {
-	    gatheredMessages.clear();
-	    gatheredMessagesT.clear();
-	    for (int i = 0; i < allMessages.size(); i++) {
-	        if (visibleToConsoles.get(i) == true) {
-	            gatheredMessages.add(allMessages.get(i));
-	            gatheredMessagesT.add(allMessagesT.get(i));
-	        }
-	    }
-	    return "";
+		gatheredMessages.clear();
+		gatheredMessagesT.clear();
+		for (int i = 0; i < AllMessages.allMessages.size(); i++) {
+			if (AllMessages.visibleToConsole.get(i) == true) {
+				gatheredMessages.add(AllMessages.allMessages.get(i));
+				gatheredMessagesT.add(AllMessages.allMessagesT.get(i));
+			}
+		}
+		return "";
 	}
+	
 
 	public static boolean dumpAll(){
         LogDump.DumpLog("all");

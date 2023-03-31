@@ -12,45 +12,49 @@ public class ConsoleHandler{
 	public static List<String>messages = new ArrayList<String>();
 	public static List<String>messagesT = new ArrayList<String>();
 	public static List<Integer> indexesToRemove = new ArrayList<Integer>();
-	public static String getConsole(){
+	public static String getConsole() {
+		// Load settings and gather visible messages
 		SettingsController.loadSettings();
 		MessageProcessor.gatherVisible();
-		size = MessageProcessor.gatheredMessages.size();
+		int totalMessages = MessageProcessor.gatheredMessages.size();
 		checkSettings();
-		howManyTimes = 0;
-		if(SettingsController.getSetting("FirstTime").equals("true")) {
-			showHowMany = 5;
-		}else {
-			showHowMany = Integer.parseInt(SettingsController.getSetting("MaxConsole"));
+	
+		// Determine how many messages to show
+		int messagesToShow;
+		if (SettingsController.getSetting("FirstTime").equals("true")) {
+			messagesToShow = 5;
+		} else {
+			messagesToShow = Integer.parseInt(SettingsController.getSetting("MaxConsole"));
 		}
-		if(size == 0) {
+	
+		// If there are no messages
+		if (totalMessages == 0) {
 			System.out.println("NO MESSAGES ON THE CONSOLE, CHECK YOUR SETTINGS");
 			return "";
-		}else if(size < showHowMany) {
-			showHowMany = MessageProcessor.gatheredMessages.size();
-			showHowMany --;
 		}
-		size --;
-		size = size - showHowMany;
-		if(size < 1) {
-			return "";//Helps avoid an Index out of Bounds
-		}
+	
+		// Calculate starting index for messages to display
+		int startIndex = Math.max(0, totalMessages - messagesToShow);
+	
+		// Display messages
 		System.out.println("CONSOLE: ");
-		while(howManyTimes < showHowMany) {
-			if(SettingsController.getSetting("Date/TimeSet").equals("true")) {
-				System.out.println(MessageProcessor.gatheredMessagesT.get(size));
-				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessagesT.get(size), false);
-			}else {
-				System.out.println(MessageProcessor.gatheredMessages.get(size));
-				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(size), false);
+		for (int i = startIndex; i < totalMessages; i++) {
+			if (SettingsController.getSetting("Date/TimeSet").equals("true")) {
+				System.out.println(MessageProcessor.gatheredMessagesT.get(i));
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessagesT.get(i), false);
+			} else {
+				System.out.println(MessageProcessor.gatheredMessages.get(i));
+				MessageProcessor.processMessage(1, MessageProcessor.gatheredMessages.get(i), false);
 			}
-			howManyTimes++;
-			size++;
 		}
+	
+		// Clear gathered messages
 		MessageProcessor.gatheredMessages.clear();
 		MessageProcessor.gatheredMessagesT.clear();
+	
 		return "";
 	}
+	
 	public static String getAltConsole() {
 		return "";
 	}
@@ -65,30 +69,36 @@ public class ConsoleHandler{
 	}
 
 	private static Boolean checkSettings() {
-	    SettingsController.loadSettings();
-	    if(SettingsController.getSetting("FirstTime").equals("false") || SettingsController.getSetting("FirstTime")== null) {
-	    	return false;
-	    }
-	    if (SettingsController.getSetting("SystemSet").equals("false") || !ConsoleSettings.SystemSet) {
-	        removeMessagesByType("[System]: ");
-	    }
-
-	    if (SettingsController.getSetting("ErrorSet").equals("false") || !ConsoleSettings.ErrorSet) {
-	        removeMessagesByType("[Error]:");
-	    }
-
-	    if (SettingsController.getSetting("WarningSet").equals("false") || !ConsoleSettings.WarningSet) {
-	        removeMessagesByType("[Warning]:");
-	    }
-
-	    if (SettingsController.getSetting("UserNotifySet").equals("false") || !ConsoleSettings.UserNotifySet) {
-	        removeMessagesByType("[Notification]:");
-	    }
-	    if(SettingsController.getSetting("DebugSet").equals("false") || !ConsoleSettings.DebugSet) {
-	    	removeMessagesByType("[Debug]: ");
-	    }
-
-	    return true;
+		SettingsController.loadSettings();
+	
+		String systemSet = SettingsController.getSetting("SystemSet");
+		if (systemSet != null && systemSet.equals("false")) {
+			removeMessagesByType("[System]: ");
+		}
+	
+		String errorSet = SettingsController.getSetting("ErrorSet");
+		if (errorSet != null && errorSet.equals("false")) {
+			removeMessagesByType("[Error]:");
+		}
+	
+		String warningSet = SettingsController.getSetting("WarningSet");
+		if (warningSet != null && warningSet.equals("false")) {
+			removeMessagesByType("[Warning]:");
+		}
+	
+		String userNotifySet = SettingsController.getSetting("UserNotifySet");
+		if (userNotifySet != null && userNotifySet.equals("false")) {
+			removeMessagesByType("[Notification]:");
+		}
+	
+		String debugSet = SettingsController.getSetting("DebugSet");
+		if (debugSet != null && debugSet.equals("false")) {
+			removeMessagesByType("[Debug]: ");
+		}
+	
+		return true;
 	}
+	
+	
 
 }

@@ -14,10 +14,9 @@ public class SystemMessages{
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
         dTime  = myDateObj.format(myFormatObj);
-        SystemMessages.add("[System]: " + message);
-        SystemMessagesT.add("[" + dTime + "][System]: " + message);
+        SystemMessages.add(message);
+        SystemMessagesT.add("[" + dTime + "]" + message);
         visibleToConsole.add(VisibleToConsole);
-        AllMessages.addMessage("[System]: " + message, VisibleToConsole);
         return message;
     }
 

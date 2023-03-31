@@ -5,6 +5,8 @@ import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
 import assets.CustomScanner;
 import assets.Logo;
+import assets.Notebook;
+import messageHandler.AllMessages;
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.MessageProcessor;
@@ -25,6 +27,7 @@ public class MainMenu{
         System.out.println("[SWI]:  Switch User");
         System.out.println("[SET]:  Settings");
         System.out.println("[HELP]: Display Help Messages");
+        System.out.println("[SET TEST]: Set a Test Message");
         System.out.println("[OFF]:  Log Off");
         System.out.println("[EXIT]: Exit the Program");
         ConsoleHandler.getConsole();
@@ -33,6 +36,15 @@ public class MainMenu{
             case "pos":
                 POSMenu.PointofSaleMenu();
                 break;
+            case "set test":
+            System.out.println("Test Message: ");
+            String newMessage = CustomScanner.nextLine();
+            String newMessageT = newMessage;
+            AllMessages.allMessages.add(newMessage);
+            AllMessages.allMessagesT.add(newMessageT);
+            AllMessages.visibleToConsole.add(true); // or false, depending on the visibility you want
+            mainMenu();
+            break;
             case "admin":
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     AdministrativeFunctions.AdministrativeMenu();
@@ -42,8 +54,7 @@ public class MainMenu{
                 }
                 break;
             case "note":
-                MessageProcessor.processMessage(-1, "This function [NOTE] has not yet been implemented.. Check back in a later update", true);
-                mainMenu();
+                Notebook.notebookMenu();
                 break;
             case "swi": 
                 SwitchController.switchMenu(2);

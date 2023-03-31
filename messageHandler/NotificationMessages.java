@@ -16,14 +16,9 @@ public class NotificationMessages{
         myDateObj = LocalDateTime.now();
         myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
         dTime  = myDateObj.format(myFormatObj);
-        NotificationMessages.add("[Notification]: " + message);
-        NotificationMessagesT.add("[" + dTime + "][Notification]: " + message);
+        NotificationMessages.add(message);
+        NotificationMessagesT.add("[" + dTime + "]" + message);
         visibleToConsole.add(VisibleToConsole);
-        AllMessages.addMessage("[Notification]: " + message, VisibleToConsole);
-        MessageProcessor.processMessage(1, "Notification Message Size: " + size(), false);
-        MessageProcessor.processMessage(1, "Visible to Console Size: " + visibleToConsole.size(), false);
-        MessageProcessor.processMessage(1, "Last Message: " + message , false);
-        MessageProcessor.processMessage(1, "Last Visible Set: " + getLastVisibleSet(), false);
         return message;
     }
 
