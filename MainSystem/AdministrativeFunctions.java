@@ -93,14 +93,17 @@ public class AdministrativeFunctions {
             	System.out.println("Users on List");
             	Logo.displayLine();
             	UserListController.loadUserList();
-            	Enumeration keys = UserListController.userlist.keys();
+            	Enumeration<Object> keys = UserListController.userlist.keys();
             	while (keys.hasMoreElements()) {
                     String key1 = (String)keys.nextElement();
                     String value = (String)UserListController.userlist.get(key1);
                     System.out.println(key1 + ": " + value);
                     MessageProcessor.processMessage(1, key1 + ": " + value, false);
                 }
+                System.out.println();
+                System.out.println("Press Enter to continue");
             	String enter = CustomScanner.nextLine();
+                MessageProcessor.processMessage(-3, enter, false);
             	AdministrativeMenu();
             }else if(option.equals("passflag")){
                 Logo.displayLogo();
@@ -259,7 +262,7 @@ public class AdministrativeFunctions {
         MessageProcessor.processMessage(1, account + " was enabled", false);
         if(UserListController.SearchForUser(account)){
             LoginUserController.setValue(account, ACCOUNT2, "Enabled");
-            MessageProcessor.processMessage(1, USER + SecondaryUserController.getUserProp("Username") + " Account was Enabled", true);
+            MessageProcessor.processMessage(1, USER + account + "'s Account was Enabled", true);
             LoginUserController.setValue(account, "PassFlag", "true");
         }else{
             MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + account + "]", true);

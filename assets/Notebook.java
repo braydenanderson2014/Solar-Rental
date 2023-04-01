@@ -19,20 +19,14 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class Notebook {
-    private static ArrayList<String> userNotes = new ArrayList<>();
     private static ArrayList<String> currentNote = new ArrayList<>();
     private static Scanner scan = new Scanner(System.in);
     public static Properties userNotebooks = new Properties();
     private static String user = Login.getCurrentUser();
     private static String path = ProgramController.userRunPath;
-    
     private static String currentNoteName = null;
-    private static String notesFolderPath = path + File.separator + "notes";
-
-    
-    
-    
-    
+    private static String currentNotePath = null;
+    private static String notesFolderPath = path + File.separator + "Users\\Notebooks";
     public static void renameNote() {
         ConsoleHandler.getConsole();
         System.out.println("Enter the name of the note you want to rename:");
@@ -108,6 +102,7 @@ public class Notebook {
         String newNoteName = scan.nextLine();
         File newNote = new File(notesFolderPath + File.separator + newNoteName + ".txt");
         MessageProcessor.processMessage(1, newNote.toString(), false);
+        MessageProcessor.processMessage(1, notesFolderPath + File.separator + newNoteName + ".txt", true);
         userNotebooks.setProperty(newNoteName, newNote.toString());
         try {
             if (newNote.createNewFile()) {
@@ -115,6 +110,7 @@ public class Notebook {
             } else {
                 MessageProcessor.processMessage(-1, "Note already exists.", true);
             }
+            saveProperties();
         } catch (IOException e) {
             MessageProcessor.processMessage(-2, "Error creating note: " + e.getMessage(), true);
         }
@@ -124,6 +120,7 @@ public class Notebook {
     
     
     public static void loadNote() {
+        loadProperties();
         System.out.println("Enter the name of the note you want to load or type 'exit' to go back to the menu:");
         String noteName = scan.nextLine().trim();
     
@@ -133,7 +130,7 @@ public class Notebook {
         }
     
         String notePath = userNotebooks.getProperty(noteName);
-    
+        currentNotePath = notePath;
         if (notePath == null) {
             MessageProcessor.processMessage(-1, "Note not found. Please try again.", true);
             loadNote();
@@ -167,16 +164,19 @@ public class Notebook {
         if (currentNote != null) {
             System.out.println("Enter the text you want to add to the note (Type 'done' when finished):");
             String input = "";
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
-                while (!(input = scan.nextLine()).equalsIgnoreCase("done")) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(currentNotePath, true))) {
+                while (!(input = CustomScanner.nextLine()).equalsIgnoreCase("done")) {
                     bw.write(input + System.lineSeparator());
                 }
             } catch (IOException e) {
                 System.err.println("Error while writing to the note: " + e.getMessage());
+                MessageProcessor.processMessage(-2, "Error while writing to the note: " + e.getMessage(), false);
             }
             MessageProcessor.processMessage(1, "Note successfully updated.", true);
+            notebookMenu();
         } else {
             MessageProcessor.processMessage(-1, "No note is currently loaded. Please load a note first.", true);
+            notebookMenu();
         }
     }
     
@@ -213,8 +213,10 @@ public class Notebook {
             } else {
                 MessageProcessor.processMessage(-1, "Invalid line number. Please enter a valid line number.", true);
             }
+            notebookMenu();
         } else {
             MessageProcessor.processMessage(-1, "No note is currently loaded. Load a note first.", true);
+            notebookMenu();
         }
     }
     public static void saveCurrentNote() {
@@ -237,7 +239,7 @@ public class Notebook {
     
     public static void saveProperties() {
         try {
-            File userPropertiesFile = new File(path + File.separator + user + ".properties");
+            File userPropertiesFile = new File(notesFolderPath + File.separator + user + ".properties");
             try (FileOutputStream fos = new FileOutputStream(userPropertiesFile)) {
                 userNotebooks.store(fos, "User Notebooks");
             }
@@ -247,7 +249,7 @@ public class Notebook {
     }
     
     public static void loadProperties() {
-        File userPropertiesFile = new File(path + File.separator + user + ".properties");
+        File userPropertiesFile = new File(notesFolderPath + File.separator + user + ".properties");
         if (userPropertiesFile.exists()) {
             try (FileInputStream fis = new FileInputStream(userPropertiesFile)) {
                 userNotebooks.load(fis);
