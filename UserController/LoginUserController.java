@@ -6,6 +6,7 @@ import InstallManager.ProgramController;
 import MainSystem.SettingsController;
 import assets.CustomScanner;
 import assets.Logo;
+import assets.Notebook;
 import messageHandler.AllMessages;
 import messageHandler.MessageProcessor;
 public class LoginUserController {
@@ -73,8 +74,14 @@ public class LoginUserController {
 
                                 if(Boolean.parseBoolean(getProperty("PassFlag"))){
                                     ChangePass(User);
+                                    Notebook.currentNoteName = null;
+                                    Notebook.currentNotePath = null;
+                                    Notebook.currentNote.clear();
                                     return true;
                                 }else if(!Boolean.parseBoolean(getProperty("PassFlag"))){
+                                    Notebook.currentNoteName = null;
+                                    Notebook.currentNotePath = null;
+                                    Notebook.currentNote.clear();
                                     return true;
                                 }
                             }else if(getProperty("Account").equals("Disabled")){

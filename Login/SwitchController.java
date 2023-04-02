@@ -9,9 +9,7 @@ import messageHandler.MessageProcessor;
 public class SwitchController {
     private static ArrayList<String>loggedInUsers = new ArrayList<>();
     public static String focusUser;
-    private SwitchController(){
-        loggedInUsers.add("Temp");
-    }
+    
 
     public static String updateCurrentUser(String currentUser){
         if(!loggedInUsers.contains(currentUser)){
@@ -20,7 +18,7 @@ public class SwitchController {
         }
         MessageProcessor.processMessage(1, currentUser + " requested focus", false);
         focusUser = currentUser;
-        return Login.getCurrentUser();
+        return focusUser;
     }
 
     public static void removeCurrentUser(String currentUser){

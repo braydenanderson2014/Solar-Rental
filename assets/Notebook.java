@@ -3,14 +3,15 @@ package assets;
 import InstallManager.ProgramController;
 import Login.Login;
 import MainSystem.MainMenu;
+import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
-
+import java.util.stream.Collectors;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -19,13 +20,13 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class Notebook {
-    private static ArrayList<String> currentNote = new ArrayList<>();
+    public static List<String> currentNote = new ArrayList<>();
     private static Scanner scan = new Scanner(System.in);
     public static Properties userNotebooks = new Properties();
     private static String user = Login.getCurrentUser();
     private static String path = ProgramController.userRunPath;
-    private static String currentNoteName = null;
-    private static String currentNotePath = null;
+    public static String currentNoteName = null;
+    public static String currentNotePath = null;
     private static String notesFolderPath = path + File.separator + "Users\\Notebooks";
     public static void renameNote() {
         ConsoleHandler.getConsole();
@@ -62,6 +63,7 @@ public class Notebook {
     }
     public static void notebookMenu() {
         Logo.displayLogo();
+        user = Login.getCurrentUser();
         System.out.println("Welcome to the User Notes Menu; User: " + MainSystemUserController.GetProperty("AccountName"));
         System.out.println("[Create]: Create a new Note");
         System.out.println("[Load]: Load a Notebook");
@@ -161,24 +163,62 @@ public class Notebook {
     
     
     public static void addToExistingNote() {
-        if (currentNote != null) {
-            System.out.println("Enter the text you want to add to the note (Type 'done' when finished):");
-            String input = "";
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(currentNotePath, true))) {
-                while (!(input = CustomScanner.nextLine()).equalsIgnoreCase("done")) {
-                    bw.write(input + System.lineSeparator());
+        Logo.displayLogo();
+        try{
+            currentNote = Files.readAllLines(Paths.get(currentNotePath));
+                for (String line : currentNote) {
+                    System.out.println(line);
                 }
-            } catch (IOException e) {
-                System.err.println("Error while writing to the note: " + e.getMessage());
-                MessageProcessor.processMessage(-2, "Error while writing to the note: " + e.getMessage(), false);
-            }
-            MessageProcessor.processMessage(1, "Note successfully updated.", true);
+        }catch(IOException e){
+            System.out.println("No note loaded");
+            MessageProcessor.processMessage(-2, e.toString(), false);
             notebookMenu();
-        } else {
-            MessageProcessor.processMessage(-1, "No note is currently loaded. Please load a note first.", true);
+        }catch(NullPointerException e){
+            System.out.println("No note loaded");
+            MessageProcessor.processMessage(-2, e.toString(), false);
             notebookMenu();
         }
+    if (currentNote != null) {
+        System.out.println();
+        System.out.println("Enter the text you want to add to the note (Type 'done' when finished):");
+        System.out.println("Type 'undo' to undo the last line.");
+        
+        String input = "";
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(currentNotePath, true))) {
+            while (!(input = CustomScanner.nextLine()).equalsIgnoreCase("done")) {
+                if (input.equalsIgnoreCase("undo")) {
+                    List<String> lines = Files.lines(Paths.get(currentNotePath))
+                            .collect(Collectors.toList());
+                    if (!lines.isEmpty()) {
+                        lines.remove(lines.size() - 1);
+                        Files.write(Paths.get(currentNotePath), lines);
+                    }
+                } else {
+                    bw.write(input + System.lineSeparator());
+                    bw.flush();
+                }
+                Logo.displayLogo();
+                System.out.println("Note: " + currentNoteName);
+                Logo.displayLine();
+                currentNote = Files.readAllLines(Paths.get(currentNotePath));
+                for (String line : currentNote) {
+                    System.out.println(line);
+                }
+                System.out.println();
+                System.out.println("Enter the text you want to add to the note (Type 'done' when finished):");
+                System.out.println("Type 'undo' to undo the last line.");
+            }
+        } catch (IOException e) {
+            System.err.println("Error while writing to the note: " + e.getMessage());
+            MessageProcessor.processMessage(-2, "Error while writing to the note: " + e.getMessage(), false);
+        }
+        MessageProcessor.processMessage(1, "Note successfully updated.", true);
+        notebookMenu();
+    } else {
+        MessageProcessor.processMessage(-1, "No note is currently loaded. Please load a note first.", true);
+        notebookMenu();
     }
+}
     
     public static void deleteNote() {
         System.out.println("Enter the name of the note you want to delete:");
@@ -239,7 +279,7 @@ public class Notebook {
     
     public static void saveProperties() {
         try {
-            File userPropertiesFile = new File(notesFolderPath + File.separator + user + ".properties");
+            File userPropertiesFile = new File(notesFolderPath + File.separator + MainSystemUserController.GetProperty("Username") + ".properties");
             try (FileOutputStream fos = new FileOutputStream(userPropertiesFile)) {
                 userNotebooks.store(fos, "User Notebooks");
             }
@@ -249,8 +289,20 @@ public class Notebook {
     }
     
     public static void loadProperties() {
-        File userPropertiesFile = new File(notesFolderPath + File.separator + user + ".properties");
+        File userPropertiesFile = new File(notesFolderPath + File.separator + MainSystemUserController.GetProperty("Username") + ".properties");
         if (userPropertiesFile.exists()) {
+            try (FileInputStream fis = new FileInputStream(userPropertiesFile)) {
+                userNotebooks.load(fis);
+            } catch (IOException e) {
+                MessageProcessor.processMessage(-2, "Error loading properties: " + e.getMessage(), true);
+            }
+        }else {
+            try {
+                userPropertiesFile.createNewFile();
+            } catch (IOException e) {
+                MessageProcessor.processMessage(-2, "Error creating properties file: " + e.getMessage(), true);
+            }
+            saveProperties();
             try (FileInputStream fis = new FileInputStream(userPropertiesFile)) {
                 userNotebooks.load(fis);
             } catch (IOException e) {

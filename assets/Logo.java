@@ -15,7 +15,6 @@ public class Logo{
 		} catch (InterruptedException e) {
 			MessageProcessor.processMessage(-2, e.toString(), true);
 		}
-        String logo = "SOLAR";
         System.out.println(" #####  ####### #          #    ######    ");
         System.out.println("#     # #     # #         # #   #     #   "); 
         System.out.println("#       #     # #        #   #  #     #   ");
@@ -25,7 +24,7 @@ public class Logo{
         System.out.println(" #####  ####### ####### #     # #     #   ");   
         System.out.println("==========================================");
         System.out.println("Copyright 2022");    
-        return logo;
+        return "SOLAR RENTALS";
     }
 
     public static String displayLogo2(){
