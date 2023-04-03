@@ -1,5 +1,8 @@
 package MainSystem;
 
+import java.io.File;
+
+import InstallManager.ProgramController;
 import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
@@ -54,6 +57,11 @@ public class MainMenu{
                 }
                 break;
             case "note":
+                Notebook.notesFolderPath = ProgramController.userRunPath + File.separator + "Users" + File.separator + "Notebooks" + File.separator + SwitchController.focusUser + File.separator + "Notebooks";
+                Notebook.currentNote.clear();
+                Notebook.currentNoteName = null;
+                Notebook.currentNotePath = null;
+                MainSystemUserController.loadUserProperties(SwitchController.focusUser);
                 Notebook.notebookMenu();
                 break;
             case "swi": 

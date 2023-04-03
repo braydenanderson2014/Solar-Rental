@@ -3,7 +3,6 @@ package assets;
 import InstallManager.ProgramController;
 import Login.Login;
 import MainSystem.MainMenu;
-import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
@@ -27,7 +26,7 @@ public class Notebook {
     private static String path = ProgramController.userRunPath;
     public static String currentNoteName = null;
     public static String currentNotePath = null;
-    private static String notesFolderPath = path + File.separator + "Users\\Notebooks";
+    public static String notesFolderPath = path + File.separator + "Users" + File.separator + "Notebooks" + File.separator + user + File.separator + "Notebooks";
     public static void renameNote() {
         ConsoleHandler.getConsole();
         System.out.println("Enter the name of the note you want to rename:");
@@ -66,7 +65,11 @@ public class Notebook {
         user = Login.getCurrentUser();
         System.out.println("Welcome to the User Notes Menu; User: " + MainSystemUserController.GetProperty("AccountName"));
         System.out.println("[Create]: Create a new Note");
-        System.out.println("[Load]: Load a Notebook");
+        if(userNotebooks.size() == 0 || currentNoteName == null) {
+            System.out.println("[Load]: Load an Existing Note");
+        }else{
+            System.out.println("[Load]: Load an Existing Note; Current Loaded Note: " + currentNoteName);
+        }
         System.out.println("[Add]: Add to an Existing Note; Must have a Note");
         System.out.println("[Delete]: Delete a Note");
         System.out.println("[Rename]: Rename a Note");
@@ -100,28 +103,51 @@ public class Notebook {
     }
     
     private static void createNewNote() {
-        System.out.println("Enter the name of the new note:");
-        String newNoteName = scan.nextLine();
-        File newNote = new File(notesFolderPath + File.separator + newNoteName + ".txt");
-        MessageProcessor.processMessage(1, newNote.toString(), false);
-        MessageProcessor.processMessage(1, notesFolderPath + File.separator + newNoteName + ".txt", true);
-        userNotebooks.setProperty(newNoteName, newNote.toString());
-        try {
-            if (newNote.createNewFile()) {
-                MessageProcessor.processMessage(1, "Note created: " + newNoteName, true);
-            } else {
+        user = Login.getCurrentUser(); // Add this line to update the user
+        notesFolderPath = path + File.separator + "Users" + File.separator + "Notebooks" + File.separator + user + File.separator + "Notebooks"; // Add this line to update the notesFolderPath
+        File file = new File(notesFolderPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    
+        boolean creatingNote = true;
+        while (creatingNote) {
+            System.out.println("Enter the name of the new note:");
+            String newNoteName = scan.nextLine();
+            File newNote = new File(notesFolderPath + File.separator + newNoteName + ".txt");
+            
+            if (newNote.exists()) {
                 MessageProcessor.processMessage(-1, "Note already exists.", true);
+                System.out.println("Do you want to rename the file? Type 'yes' to rename, or any other key to go back to the menu:");
+                String userInput = scan.nextLine();
+                if (userInput.equalsIgnoreCase("yes")) {
+                    continue;
+                } else {
+                    break;
+                }
+            } else {
+                userNotebooks.setProperty(newNoteName, newNote.toString());
+                try {
+                    if (newNote.createNewFile()) {
+                        MessageProcessor.processMessage(1, "Note created: " + newNoteName, true);
+                    }
+                    saveProperties();
+                } catch (IOException e) {
+                    MessageProcessor.processMessage(-2, "Error creating note: " + e.getMessage(), true);
+                }
+                creatingNote = false;
             }
-            saveProperties();
-        } catch (IOException e) {
-            MessageProcessor.processMessage(-2, "Error creating note: " + e.getMessage(), true);
         }
     
         notebookMenu();
     }
     
     
+    
+    
     public static void loadNote() {
+        user = Login.getCurrentUser(); // Add this line to update the user
+        notesFolderPath = path + File.separator + "Users" + File.separator + user + File.separator + "Notebooks"; // Add this line to update the notesFolderPath
         loadProperties();
         System.out.println("Enter the name of the note you want to load or type 'exit' to go back to the menu:");
         String noteName = scan.nextLine().trim();
@@ -162,9 +188,12 @@ public class Notebook {
     
     
     
+    
     public static void addToExistingNote() {
         Logo.displayLogo();
         try{
+            System.out.println("Current note: " + currentNoteName);
+            Logo.displayLine();
             currentNote = Files.readAllLines(Paths.get(currentNotePath));
                 for (String line : currentNote) {
                     System.out.println(line);
@@ -198,8 +227,8 @@ public class Notebook {
                     bw.flush();
                 }
                 Logo.displayLogo();
-                System.out.println("Note: " + currentNoteName);
-                Logo.displayLine();
+                System.out.println("Current note: " + currentNoteName);
+                Logo.displayLine();                
                 currentNote = Files.readAllLines(Paths.get(currentNotePath));
                 for (String line : currentNote) {
                     System.out.println(line);
@@ -230,8 +259,10 @@ public class Notebook {
             userNotebooks.remove(noteName);
             saveProperties();
             MessageProcessor.processMessage(1, "Note deleted successfully.", true);
+            notebookMenu();
         } else {
             MessageProcessor.processMessage(-1 ,"No note found with the given name.", true);
+            notebookMenu();
         }
     }
     
@@ -287,6 +318,7 @@ public class Notebook {
             MessageProcessor.processMessage(-2, "Error saving properties: " + e.getMessage(), true);
         }
     }
+
     
     public static void loadProperties() {
         File userPropertiesFile = new File(notesFolderPath + File.separator + MainSystemUserController.GetProperty("Username") + ".properties");
@@ -296,7 +328,7 @@ public class Notebook {
             } catch (IOException e) {
                 MessageProcessor.processMessage(-2, "Error loading properties: " + e.getMessage(), true);
             }
-        }else {
+        } else {
             try {
                 userPropertiesFile.createNewFile();
             } catch (IOException e) {
@@ -310,7 +342,4 @@ public class Notebook {
             }
         }
     }
-    
-    
-    
 }
