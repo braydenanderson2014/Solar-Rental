@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=EncryptPass
-comment1.params=pass
-comment1.target=boolean\ encryptPass(java.lang.String)
-comment2.params=EncryptedPass
-comment2.target=boolean\ decryptPass(java.lang.String)
-numComments=3

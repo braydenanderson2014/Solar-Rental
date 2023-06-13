@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=Categories
-comment1.params=item\ Category\ price\ description\ itemID
-comment1.target=Categories(java.lang.String,\ java.lang.String,\ double,\ java.lang.String,\ int)
-comment2.params=
-comment2.target=void\ serializeToXML()
-numComments=3

@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=UserMessageHandler
-comment1.params=user\ message
-comment1.target=boolean\ sendMessageToUser(java.lang.String,\ java.lang.String)
-comment2.params=user
-comment2.target=boolean\ CheckUserAccount(java.lang.String)
-numComments=3
