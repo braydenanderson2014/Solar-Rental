@@ -108,6 +108,7 @@ public class Notebook {
         File file = new File(notesFolderPath);
         if (!file.exists()) {
             file.mkdirs();
+            MessageProcessor.processMessage(1, "Created New Directory at: " + notesFolderPath, false);
         }
     
         boolean creatingNote = true;
@@ -138,7 +139,6 @@ public class Notebook {
                 creatingNote = false;
             }
         }
-    
         notebookMenu();
     }
     
