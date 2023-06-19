@@ -3,6 +3,7 @@ package messageHandler;
 import java.time.LocalDateTime;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import MainSystem.SettingsController;
 
@@ -11,6 +12,7 @@ public class MessageProcessor {
     private static int maxMessages = 5;
 
     private static List<Message> messages = new LinkedList<>();
+    private static List<Message> log = new LinkedList<>();
     private static Map<Integer, String> messageTypes = Map.of(
             -2, "[Error]: ",
             -1, "[Warning]: ",
@@ -86,7 +88,8 @@ public class MessageProcessor {
 
         Message newMessage = new Message(messageType, message, visibleToConsole);
         messages.add(newMessage);
-        //AutoGenerateLog.log.add(newMessage.toString());
+        log.add(newMessage);
+        // AutoGenerateLog.log.add(newMessage.toString());
 
         while (messages.size() > maxMessages) {
             messages.remove(0);
@@ -94,6 +97,7 @@ public class MessageProcessor {
     }
 
     public static void displayMessages() {
+        System.out.println("Console: ");
         for (Message message : messages) {
             if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
                 System.out.println(message);
@@ -102,22 +106,26 @@ public class MessageProcessor {
         }
     }
 
+    public static List<Message> getMessages() {
+        return new ArrayList<>(log);
+    }
+
     public static void setMessageTypeVisibility(int messageType, boolean isVisible) {
         if (messageTypes.containsKey(messageType)) {
             messageTypeVisibility.put(messageType, isVisible);
             String tempString;
-        if(messageType == -2){
-            tempString = "Display Error Messages";
-        }else if(messageType == -1){
-            tempString = "Display Warning Messages";
-        }else if(messageType == 0){
-            tempString = "Display Info Messages";
-        }else if(messageType == 1){
-            tempString = "Display System Messages";
-        }else{
-            tempString = "Display Debug Messages";
-        }
-        SettingsController.setSetting(tempString, String.valueOf(isVisible));
+            if (messageType == -2) {
+                tempString = "Display Error Messages";
+            } else if (messageType == -1) {
+                tempString = "Display Warning Messages";
+            } else if (messageType == 0) {
+                tempString = "Display Info Messages";
+            } else if (messageType == 1) {
+                tempString = "Display System Messages";
+            } else {
+                tempString = "Display Debug Messages";
+            }
+            SettingsController.setSetting(tempString, String.valueOf(isVisible));
         }
     }
 
@@ -180,28 +188,28 @@ public class MessageProcessor {
         // Update the index for next time
         messageTypeColorIndex.put(messageType, nextColorIndex);
     }
-        private static Map<String, String> colorNameToCodeMap = Map.ofEntries(
-        Map.entry("BLACK", "\u001B[30m"),
-        Map.entry("RED", "\u001B[31m"),
-        Map.entry("GREEN", "\u001B[32m"),
-        Map.entry("YELLOW", "\u001B[33m"),
-        Map.entry("BLUE", "\u001B[34m"),
-        Map.entry("PURPLE", "\u001B[35m"),
-        Map.entry("CYAN", "\u001B[36m"),
-        Map.entry("WHITE", "\u001B[37m"),
-        Map.entry("BRIGHT_BLACK", "\u001B[90m"),
-        Map.entry("BRIGHT_RED", "\u001B[91m"),
-        Map.entry("BRIGHT_GREEN", "\u001B[92m"),
-        Map.entry("BRIGHT_YELLOW", "\u001B[93m"),
-        Map.entry("BRIGHT_BLUE", "\u001B[94m"),
-        Map.entry("BRIGHT_PURPLE", "\u001B[95m"),
-        Map.entry("BRIGHT_CYAN", "\u001B[96m"),
-        Map.entry("BRIGHT_WHITE", "\u001B[97m")
-);
 
-public static String getColorCodeByName(String colorName) {
-    return colorNameToCodeMap.getOrDefault(colorName.toUpperCase(), "\u001B[37m"); // Default to WHITE if name is not found
-}
+    private static Map<String, String> colorNameToCodeMap = Map.ofEntries(
+            Map.entry("BLACK", "\u001B[30m"),
+            Map.entry("RED", "\u001B[31m"),
+            Map.entry("GREEN", "\u001B[32m"),
+            Map.entry("YELLOW", "\u001B[33m"),
+            Map.entry("BLUE", "\u001B[34m"),
+            Map.entry("PURPLE", "\u001B[35m"),
+            Map.entry("CYAN", "\u001B[36m"),
+            Map.entry("WHITE", "\u001B[37m"),
+            Map.entry("BRIGHT_BLACK", "\u001B[90m"),
+            Map.entry("BRIGHT_RED", "\u001B[91m"),
+            Map.entry("BRIGHT_GREEN", "\u001B[92m"),
+            Map.entry("BRIGHT_YELLOW", "\u001B[93m"),
+            Map.entry("BRIGHT_BLUE", "\u001B[94m"),
+            Map.entry("BRIGHT_PURPLE", "\u001B[95m"),
+            Map.entry("BRIGHT_CYAN", "\u001B[96m"),
+            Map.entry("BRIGHT_WHITE", "\u001B[97m"));
 
+    public static String getColorCodeByName(String colorName) {
+        return colorNameToCodeMap.getOrDefault(colorName.toUpperCase(), "\u001B[37m"); // Default to WHITE if name is
+                                                                                       // not found
+    }
 
 }

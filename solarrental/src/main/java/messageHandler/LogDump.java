@@ -7,94 +7,64 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import InstallManager.ProgramController;
+import MainSystem.SettingsController;
+import messageHandler.MessageProcessor.Message;
 
 public class LogDump {
-    private static LocalDateTime myDateObj = LocalDateTime.now();
-    private static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MM-dd-yyyy HH-mm-ss");
-    private static String dTime = myDateObj.format(myFormatObj);
-    private static int EMT = 0;
-    private static int WMT = 0;
-    private static int UMT = 0;
-    private static int SMT = 0;
-    private static int AMT = 0;
-    private static int DMT = 0;
+    private static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     public static boolean DumpLog(String Mode) {
-        ConsoleHandler.getConsole();
-        String path;
-        path = ProgramController.systemRunPath + "/Logs";
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-
+        String path = SettingsController.getSetting("SystemPathLetter")+ SettingsController.getSetting("UserPath") + "Logs/" + Mode.toLowerCase() + "Log"  + LocalDateTime.now().format(myFormatObj) + ".txt";
+        MessageProcessor.processMessage(2, "Dumping log to " + path, true);
         try {
-            String messageType;
-            List<String> messages;
-            int index;
+            int messageType;
 
             switch (Mode.toLowerCase()) {
                 case "all":
-                    messageType = "[ALL MESSAGES]";
-                    messages = AllMessages.allMessagesT;
-                    index = AMT++;
+                    messageType = Integer.MIN_VALUE; // signifies all messages
                     break;
                 case "system":
-                    messageType = "[SYSTEM]";
-                    messages = SystemMessages.SystemMessagesT;
-                    index = SMT++;
+                    messageType = 1;
                     break;
                 case "user":
                 case "notification":
-                    messageType = "[NOTIFICATION]";
-                    messages = NotificationMessages.NotificationMessagesT;
-                    index = UMT++;
+                    messageType = 0; // assuming "user" and "notification" are type "info"
                     break;
                 case "warning":
-                    messageType = "[WARNING]";
-                    messages = WarningMessages.WarningMessagesT;
-                    index = WMT++;
+                    messageType = -1;
                     break;
                 case "error":
-                    messageType = "[ERROR]";
-                    messages = ErrorMessages.ErrorMessagesT;
-                    index = EMT++;
+                    messageType = -2;
                     break;
-                case "debugmt":
-                	messageType = "[DEBUG]:";
-                	messages = DebugMessages.DebugMessagesT;
-                	index = DMT++;
-                	break;
                 case "debug":
-                    for (int i = 0; i < AllMessages.allMessagesT.size(); i++) {
-                        System.out.println(AllMessages.allMessagesT.get(i));
-                    }
-                    System.exit(3);
-                    return false;
+                    messageType = 2;
+                    break;
                 default:
-                    MessageProcessor.processMessage(-2, "Invalid Mode For Log Dump... Dumping all Messages", true);
-                    return DumpLog("All");
+                    System.err.println("Invalid log dump mode: " + Mode);
+                    return false;
             }
 
-            myDateObj = LocalDateTime.now();
-            dTime = myDateObj.format(myFormatObj);
-            path = ProgramController.systemRunPath + "\\Logs/" + messageType + "[" + dTime + "]" + index + ".txt";
+            List<Message> messages = MessageProcessor.getMessages();
+            if (messageType != Integer.MIN_VALUE) {
+                // If not all messages, filter by messageType
+                messages = messages.stream()
+                        .filter(message -> message.messageType == messageType)
+                        .collect(Collectors.toList());
+            }
 
-            writeLogFile(path, messageType, messages);
-            MessageProcessor.processMessage(2, "Log Generated at Time: " + AllMessages.getTime(), true);
-            MessageProcessor.processMessage(1, "Log File Saved at: " + path, true);
+            writeLogFile(path, Mode.toUpperCase(), messages);
+            MessageProcessor.processMessage(1, "Log successfully dumped to " + path, true);
             return true;
         } catch (IOException e) {
-            MessageProcessor.processMessage(-2, "A Failure Creating the Log FILE Occured!!!", true);
-            MessageProcessor.processMessage(-1, "Now Entering [DEBUG] Mode... Log Type Shown [ALL]", true);
-            MessageProcessor.processMessage(1, "Attempted Path of File: " + path, true);
-            return DumpLog("debug");
+            MessageProcessor.processMessage(-2, "Error writing log file: " + e.getMessage(), true);
+            MessageProcessor.processMessage(2, "Error writing log file: " + e.getMessage() + " :" + path, true);
+            return false;
         }
     }
 
-    private static void writeLogFile(String path, String messageType, List<String> messages) throws IOException {
+    private static void writeLogFile(String path, String messageType, List<MessageProcessor.Message> messages) throws IOException {
         File file = new File(path);
         if (!file.exists()) {
             file.createNewFile();
@@ -102,10 +72,12 @@ public class LogDump {
         try (FileWriter fw = new FileWriter(file.getAbsoluteFile());
              BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write("Solar Logs (TYPE: " + messageType + ")\r\n");
-            for (String message : messages) {
+            for (MessageProcessor.Message message : messages) {
                 bw.write(message + "\r\n");
             }
-            bw.write("Report Generated at Time: " + AllMessages.getTime());
+            bw.write("Report Generated at Time: " + LocalDateTime.now().format(myFormatObj));
         }
+            MessageProcessor.processMessage(1, "Log successfully dumped to " + path, true);
+
     }
 }
