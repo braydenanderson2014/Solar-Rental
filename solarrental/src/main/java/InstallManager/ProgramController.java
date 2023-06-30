@@ -54,7 +54,7 @@ public class ProgramController {
             SetupMenu();
         }else{
             SystemSetLoader.loadSystems();
-            Login.loginScreen();
+            Login.showLoginScreen(null);
         }
     }
 

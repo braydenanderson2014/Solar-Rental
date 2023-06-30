@@ -2,6 +2,7 @@ package com.solarrental.assets;
 
 import InstallManager.ProgramController;
 import Login.Login;
+import Login.SwitchController;
 import MainSystem.MainMenu;
 import UserController.MainSystemUserController;
 import messageHandler.ConsoleHandler;
@@ -22,7 +23,7 @@ public class Notebook {
     public static List<String> currentNote = new ArrayList<>();
     private static Scanner scan = new Scanner(System.in);
     public static Properties userNotebooks = new Properties();
-    private static String user = Login.getCurrentUser();
+    private static String user = SwitchController.focusUser;
     private static String path = ProgramController.userRunPath;
     public static String currentNoteName = null;
     public static String currentNotePath = null;
@@ -62,7 +63,7 @@ public class Notebook {
     }
     public static void notebookMenu() {
         Logo.displayLogo();
-        user = Login.getCurrentUser();
+        user = SwitchController.focusUser;
         System.out.println("Welcome to the User Notes Menu; User: " + MainSystemUserController.GetProperty("AccountName"));
         System.out.println("[Create]: Create a new Note");
         if(userNotebooks.size() == 0 || currentNoteName == null) {
@@ -103,7 +104,7 @@ public class Notebook {
     }
     
     private static void createNewNote() {
-        user = Login.getCurrentUser(); // Add this line to update the user
+        user = SwitchController.focusUser; // Add this line to update the user
         notesFolderPath = path + File.separator + "Users" + File.separator + "Notebooks" + File.separator + user + File.separator + "Notebooks"; // Add this line to update the notesFolderPath
         File file = new File(notesFolderPath);
         if (!file.exists()) {
@@ -146,7 +147,7 @@ public class Notebook {
     
     
     public static void loadNote() {
-        user = Login.getCurrentUser(); // Add this line to update the user
+        user = SwitchController.focusUser; // Add this line to update the user
         notesFolderPath = path + File.separator + "Users" + File.separator + user + File.separator + "Notebooks"; // Add this line to update the notesFolderPath
         loadProperties();
         System.out.println("Enter the name of the note you want to load or type 'exit' to go back to the menu:");

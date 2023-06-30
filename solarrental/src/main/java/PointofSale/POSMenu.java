@@ -105,7 +105,7 @@ public class POSMenu {
                 break;
             case "off":
                 SwitchController.removeCurrentUser(SwitchController.focusUser);
-                Login.Login.loginScreen();
+                //Login.Login.loginScreen();
                 break;
             case "return":
                 MainMenu.mainMenu();

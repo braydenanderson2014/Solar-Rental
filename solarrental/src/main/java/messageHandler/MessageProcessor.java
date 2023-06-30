@@ -96,15 +96,17 @@ public class MessageProcessor {
         }
     }
 
-    public static void displayMessages() {
-        System.out.println("Console: ");
-        for (Message message : messages) {
-            if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
-                System.out.println(message);
-                message.visibleToConsole = false;
-            }
+    public static String displayMessages() {
+    StringBuilder consoleOutput = new StringBuilder("Console:\n");
+    for (Message message : messages) {
+        if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
+            consoleOutput.append(message).append("\n");
+            message.visibleToConsole = false;
         }
     }
+    return consoleOutput.toString();
+}
+
 
     public static List<Message> getMessages() {
         return new ArrayList<>(log);

@@ -82,7 +82,7 @@ public class MainMenu{
                 break;
             case "off":
                 SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"));
-                Login.Login.loginScreen();
+                //Login.Login.loginScreen();
                 break;
             case "exit":
                 LogDump.DumpLog("all");
