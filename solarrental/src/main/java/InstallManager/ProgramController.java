@@ -43,9 +43,6 @@ public class ProgramController {
         }
     }
 
-    public static void main(String[] args) {
-        Start();
-    }
 
     public static void Start() {
         new CustomScanner();
@@ -54,7 +51,7 @@ public class ProgramController {
             SetupMenu();
         }else{
             SystemSetLoader.loadSystems();
-            Login.showLoginScreen(null);
+            Login.loginScreen();
         }
     }
 

@@ -26,25 +26,23 @@ public class FirstTimeManager {
                 firstTime = Boolean.parseBoolean(SettingsController.getSetting(setting));
                 MessageProcessor.processMessage(1, "FirstTime: " + firstTime, false);
                 return firstTime;
-            }else{
-                MessageProcessor.processMessage(1, "Unable to Find Setting \"FirstTime\" ", true);
-                SettingsController.setSetting(setting, "false");
-                firstTime = true;
-                return firstTime;
             }
-        }else{
-            try{
-                file.createNewFile();
-                SettingsController.setSetting(setting, "false");
-                firstTime = true;
-                return firstTime;
-            }catch(IOException e){
-                MessageProcessor.processMessage(-2, "Unable to create Configuration File", true);
-                //MessageProcessor.dumpAll();
-                System.exit(1);
-                return true;
-            }
+			MessageProcessor.processMessage(1, "Unable to Find Setting \"FirstTime\" ", true);
+			SettingsController.setSetting(setting, "false");
+			firstTime = true;
+			return firstTime;
         }
+		try{
+		    file.createNewFile();
+		    SettingsController.setSetting(setting, "false");
+		    firstTime = true;
+		    return firstTime;
+		}catch(IOException e){
+		    MessageProcessor.processMessage(-2, "Unable to create Configuration File", true);
+		    //MessageProcessor.dumpAll();
+		    System.exit(1);
+		    return true;
+		}
     }
 
     public static boolean updateFirstTime(){

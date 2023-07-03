@@ -10,6 +10,12 @@ import InstallManager.ProgramController;
 import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import messageHandler.AllMessages;
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
@@ -94,4 +100,47 @@ public class MainMenu{
                 break;
         }
     }
+
+	public static void showMainMenu(Stage currentStage) {
+		VBox vbox = new VBox(20); // add your buttons to this vbox
+        vbox.setAlignment(Pos.CENTER);
+        Button posButton = new Button("POS: Point of Sale");
+        posButton.setOnAction(e -> {
+        	POSMenu.PointofSaleMenu();
+        });
+        Button adminButton = new Button("ADMIN: Administrative Functions");
+        adminButton.setOnAction(e -> {
+            // Call method to handle admin functions
+        });
+        Button noteButton = new Button("NOTE: Notebook ");
+        Button swiButton = new Button("SWI: Switch User");
+        Button setButton = new Button("SET: Settings");
+        Button helpButton = new Button("HELP: Display Help Messages");
+        Button offButton = new Button("OFF: Log Off");
+        Button exitButton = new Button("EXIT: Exit the Program");
+
+        // Add the buttons to the VBox
+        vbox.getChildren().addAll(posButton, adminButton, noteButton, swiButton, setButton, helpButton, offButton, exitButton);
+
+        // Create a new Scene for your main menu.
+        Scene mainMenuScene = new Scene(vbox, 300, 200);
+        // Create buttons and add them to the VBox...
+        // ...
+
+        
+
+        // Set the new Scene to the stage.
+        currentStage.setScene(mainMenuScene);
+        currentStage.setTitle("Main Menu");
+
+        // Make stage full screen
+        currentStage.setFullScreen(true);
+     // Set the fullscreen exit key combination to no combination, so user cannot accidentally exit fullscreen
+        currentStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+
+        // Show the stage
+        currentStage.show();
+
+		
+	}
 }

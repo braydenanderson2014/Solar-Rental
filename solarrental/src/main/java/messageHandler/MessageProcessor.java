@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import InstallManager.ProgramController;
 import MainSystem.SettingsController;
 
 public class MessageProcessor {
@@ -100,11 +101,17 @@ public class MessageProcessor {
     StringBuilder consoleOutput = new StringBuilder("Console:\n");
     for (Message message : messages) {
         if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
-            consoleOutput.append(message).append("\n");
-            message.visibleToConsole = false;
+        	if(SettingsController.getSetting("UI").equals("Enabled")) {
+                consoleOutput.append(message).append("\n");
+                message.visibleToConsole = false;
+                return consoleOutput.toString();
+    		}
+			System.out.println(message + "\n");
+			message.visibleToConsole = false;
+			return message + "\n";
         }
     }
-    return consoleOutput.toString();
+    return "";
 }
 
 
