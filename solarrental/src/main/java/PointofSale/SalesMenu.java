@@ -11,7 +11,6 @@ import UserController.MainSystemUserController;
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.MessageProcessor;
-import messageHandler.NotificationMessages;
 
 public class SalesMenu {
     public static List<String> ItemsOnInvoice = new ArrayList<>();
@@ -69,7 +68,7 @@ public class SalesMenu {
                 boolean success = CategoriesManager.ListAllCat();
                 if(!success){
                     MessageProcessor.processMessage(2, "No Categories to list at this time", success);
-                    System.out.println(NotificationMessages.getLastMessage());
+                    System.out.println(MessageProcessor.getMessages());
                 }
                 String Enter = CustomScanner.nextLine();
                 MessageProcessor.processMessage(1, "[Enter]", false);

@@ -67,7 +67,8 @@ public class CategoriesManager {
 
     public static Boolean ListAllCat(){
         LoadCatProperties();
-        Enumeration keys = CatList.keys();
+        @SuppressWarnings("rawtypes")
+		Enumeration keys = CatList.keys();
         try {
 			ProgramController.clearScreen();
 		} catch (IOException | InterruptedException e) {
@@ -91,11 +92,10 @@ public class CategoriesManager {
         if(CatList.contains(catID) || CatList.containsKey(category)){
             MessageProcessor.processMessage(-1, "ID or Category already Exists", false);
             return false;
-        }else{
-            CatList.put(category, catID);
-            SaveCatProperties();
-            return true;    
         }
+		CatList.put(category, catID);
+		SaveCatProperties();
+		return true;
     }
 
     public CategoriesManager(String item, String category, double price, String description, int itemID){
@@ -118,7 +118,8 @@ public class CategoriesManager {
         LoadCatProperties();
         boolean exists = checkID(id);
         if(exists){
-            Enumeration keys = CatList.keys();
+            @SuppressWarnings("rawtypes")
+			Enumeration keys = CatList.keys();
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement();
                 String value = (String)CatList.get(key);
@@ -126,16 +127,14 @@ public class CategoriesManager {
                 MessageProcessor.processMessage(1, key + ": " + value, false);
                 if(value.equals(id)){
                     return key;
-                }else{
-                    MessageProcessor.processMessage(-1, "Unable to find category", true);
-                    return "Null";
                 }
+				MessageProcessor.processMessage(-1, "Unable to find category", true);
+				return "Null";
             }
             return "NULL";
-        }else{
-            MessageProcessor.processMessage(-1, "Unable to find category", true);
-            return "Null";
         }
+		MessageProcessor.processMessage(-1, "Unable to find category", true);
+		return "Null";
     }
 
     public static String RetrieveLastCatbyID(String id) {
@@ -147,7 +146,8 @@ public class CategoriesManager {
         LoadCatProperties();
         boolean exists = checkID(id);
         if(exists){
-            Enumeration keys = CatList.keys();
+            @SuppressWarnings("rawtypes")
+			Enumeration keys = CatList.keys();
             while (keys.hasMoreElements()) {
                 String key = (String)keys.nextElement();
                 String value = (String)CatList.get(key);
@@ -157,15 +157,13 @@ public class CategoriesManager {
                     CatList.remove(key, value);
                     SaveCatProperties();
                     return true;
-                }else{
-                    MessageProcessor.processMessage(-1, "Unable to find category", true);
-                    return false;
                 }
+				MessageProcessor.processMessage(-1, "Unable to find category", true);
+				return false;
             }
             return true;
-        }else{
-            MessageProcessor.processMessage(-1, "Unable to find category", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "Unable to find category", true);
+		return false;
     }
 }

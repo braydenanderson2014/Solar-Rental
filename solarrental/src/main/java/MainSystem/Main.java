@@ -34,7 +34,7 @@ public class Main extends Application {
         }
     }
     
-    private void showSetupMenu(Stage stage) {
+    private static void showSetupMenu(Stage stage) {
     	S = stage;
 
         // Create buttons for each setup option
@@ -45,8 +45,8 @@ public class Main extends Application {
         // Set actions for each button
         autoSetupBtn.setOnAction(e -> AutoSetup.startAutoSetup());
         manualSetupBtn.setOnAction(e -> ManualSetup.configureSetup());
-        quitBtn.setOnAction(e -> System.exit(1));
-
+        quitBtn.setOnAction(e -> System.exit(0));
+        //0 = success; 1 = Error; 2 <= Program Specific
         // Add buttons to layout
         VBox vbox = new VBox(autoSetupBtn, manualSetupBtn, quitBtn);
 
@@ -64,7 +64,7 @@ public class Main extends Application {
     		MessageProcessor.processMessage(2, "Does UI Setting Exist: " + SettingsController.searchForSet("UI"), true);
     		if(!SettingsController.getSetting("UI").equals("Enabled")) {
     			new CustomScanner();
-    			ProgramController.SetupMenu();
+    			ProgramController.Start();
     		}else {
                 launch(args);
     		}

@@ -1,20 +1,28 @@
 package MainSystem;
 
 import java.io.File;
+import java.util.List;
 
 import com.solarrental.assets.CustomScanner;
 import com.solarrental.assets.Logo;
 import com.solarrental.assets.Notebook;
 
 import InstallManager.ProgramController;
+import Login.Login;
 import Login.SwitchController;
 import PointofSale.POSMenu;
 import UserController.MainSystemUserController;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import messageHandler.AllMessages;
 import messageHandler.ConsoleHandler;
@@ -88,7 +96,7 @@ public class MainMenu{
                 break;
             case "off":
                 SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"));
-                //Login.Login.loginScreen();
+                Login.loginScreen();
                 break;
             case "exit":
                 LogDump.DumpLog("all");
@@ -101,34 +109,73 @@ public class MainMenu{
         }
     }
 
+	@SuppressWarnings("unchecked")
 	public static void showMainMenu(Stage currentStage) {
+        MainSystemUserController.loadUserProperties(SwitchController.focusUser);
 		VBox vbox = new VBox(20); // add your buttons to this vbox
         vbox.setAlignment(Pos.CENTER);
+        Label welcomeLabel = new Label("Welcome to the Solar Main Menu User: " + MainSystemUserController.GetProperty("AccountName"));
+        vbox.getChildren().add(welcomeLabel);
         Button posButton = new Button("POS: Point of Sale");
         posButton.setOnAction(e -> {
         	POSMenu.PointofSaleMenu();
         });
-        Button adminButton = new Button("ADMIN: Administrative Functions");
-        adminButton.setOnAction(e -> {
-            // Call method to handle admin functions
-        });
+    	Button adminButton = new Button("ADMIN: Administrative Functions");
+        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8) {
+            adminButton.setOnAction(e -> {
+            	AdministrativeFunctions.displayAdministrativeMenu(currentStage);
+            });
+        }
+        
         Button noteButton = new Button("NOTE: Notebook ");
+        
         Button swiButton = new Button("SWI: Switch User");
+        swiButton.setOnAction(e -> {
+        	SwitchController.switchMenu(2, currentStage);
+        });
+        
         Button setButton = new Button("SET: Settings");
+        //FIXME:
         Button helpButton = new Button("HELP: Display Help Messages");
+        
         Button offButton = new Button("OFF: Log Off");
+        offButton.setOnAction(e -> {
+            SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"), currentStage);
+        });
         Button exitButton = new Button("EXIT: Exit the Program");
+        exitButton.setOnAction(e -> {
+        	System.exit(0);
+        });
+        TextFlow consoleOutput = MessageProcessor.getUIConsole(currentStage);
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(25, 25, 25, 25));
 
+        // ...
+
+        // Add consoleOutput to the grid
+        gridPane.add(consoleOutput, 0, 4, 2, 1);
+        GridPane.setVgrow(consoleOutput, Priority.ALWAYS);
+        GridPane.setHgrow(consoleOutput, Priority.ALWAYS);
         // Add the buttons to the VBox
-        vbox.getChildren().addAll(posButton, adminButton, noteButton, swiButton, setButton, helpButton, offButton, exitButton);
+        if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8) {
+        	vbox.getChildren().addAll(posButton, adminButton, noteButton, swiButton, setButton, helpButton, offButton, exitButton, consoleOutput);
+        }else {
+        	vbox.getChildren().addAll(posButton, noteButton, swiButton, setButton, helpButton, offButton, exitButton, consoleOutput);
 
+        }
         // Create a new Scene for your main menu.
         Scene mainMenuScene = new Scene(vbox, 300, 200);
         // Create buttons and add them to the VBox...
         // ...
-
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(25, 25, 25, 25));
         
-
+        
         // Set the new Scene to the stage.
         currentStage.setScene(mainMenuScene);
         currentStage.setTitle("Main Menu");

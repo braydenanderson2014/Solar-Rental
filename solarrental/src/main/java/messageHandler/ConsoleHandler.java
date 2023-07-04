@@ -75,6 +75,7 @@ public class ConsoleHandler {
     }
 
     public static String getConsole() {
+    	System.out.println("Console: ");
         MessageProcessor.displayMessages();
         return null;
     }

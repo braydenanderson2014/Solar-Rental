@@ -34,10 +34,9 @@ public class LoginUserController {
                 MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
+		return false;
     }
 
     public static boolean saveUserProperties(String User){
@@ -53,10 +52,9 @@ public class LoginUserController {
                 MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
+		return false;
     }
 
     public static boolean checkPassword(String User, String Pass){
@@ -130,43 +128,38 @@ public class LoginUserController {
         String oldPass = CustomScanner.nextLine();
         if(oldPass.equals("back") || oldPass.equals("Back")){
             return false;
-        }else {
-            System.out.println("New Password: ");
-            String newPass = CustomScanner.nextLine();
-            if(newPass.equals("back") || newPass.equals("Back")){
-                return false;
-            }else{
-                System.out.println("Confirm New Password: ");
-                String cNewPass = CustomScanner.nextLine();
-                if(cNewPass.equals("back") || cNewPass.equals("Back")){
-                    return false;
-                }else{
-                    if(oldPass.equals(getProperty("Password"))){
-                        if(cNewPass.equals(newPass)){
-                            setValue(User, "Password", newPass);
-                            setValue(User, "PassFlag", "false");
-                            setValue(User, "LastPassChange", AllMessages.getTime());
-                            MessageProcessor.processMessage(1, "Password Changed Sucessfully: ChangePass", true);
-                            return true;
-                        }else{
-                            MessageProcessor.processMessage(-1, "Passwords do not match, Try Again. Type \"Back\" to cancel", true);
-                            ChangePass(User);
-                        }
-                    }else {
-                        passChangeAttempts++;
-                        if(passChangeAttempts >=3){
-                            setValue(User, "Account", "Disabled");
-                            MessageProcessor.processMessage(-1, "Account was Disabled due to too many Attempts", true);
-                            return false;
-                        }else{
-                            MessageProcessor.processMessage(-1, "Old Password was incorrect, Password Change Failed", true);
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            }
         }
+		System.out.println("New Password: ");
+		String newPass = CustomScanner.nextLine();
+		if(newPass.equals("back") || newPass.equals("Back")){
+		    return false;
+		}
+		System.out.println("Confirm New Password: ");
+		String cNewPass = CustomScanner.nextLine();
+		if(cNewPass.equals("back") || cNewPass.equals("Back")){
+		    return false;
+		}
+		if(oldPass.equals(getProperty("Password"))){
+		    if(cNewPass.equals(newPass)){
+		        setValue(User, "Password", newPass);
+		        setValue(User, "PassFlag", "false");
+		        setValue(User, "LastPassChange", AllMessages.getTime());
+		        MessageProcessor.processMessage(1, "Password Changed Sucessfully: ChangePass", true);
+		        return true;
+		    }
+			MessageProcessor.processMessage(-1, "Passwords do not match, Try Again. Type \"Back\" to cancel", true);
+			ChangePass(User);
+		}else {
+		    passChangeAttempts++;
+		    if(passChangeAttempts >=3){
+		        setValue(User, "Account", "Disabled");
+		        MessageProcessor.processMessage(-1, "Account was Disabled due to too many Attempts", true);
+		        return false;
+		    }
+			MessageProcessor.processMessage(-1, "Old Password was incorrect, Password Change Failed", true);
+			return false;
+		}
+		return true;
     }
     public static boolean adminUpdateUserPass(String user){
     	setValue(user, "Password", "Solar");

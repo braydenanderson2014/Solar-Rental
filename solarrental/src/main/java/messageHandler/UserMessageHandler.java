@@ -33,8 +33,9 @@ public class UserMessageHandler {
                         return false;
                     }
                 }
-                try {
-                    BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
+                try{
+                    @SuppressWarnings("resource")
+					BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
                     String line;
                     while((line = reader.readLine()) != null){
                         if(line.equals(message)){
@@ -52,7 +53,8 @@ public class UserMessageHandler {
                     return false;
                 }
                 try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+                    @SuppressWarnings("resource")
+					BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
                     for(String line : Contents){
                         writer.write(line);
                         writer.newLine();
@@ -65,15 +67,13 @@ public class UserMessageHandler {
                     MessageProcessor.processMessage(-2, "Failed to write to Notification File for User: " + user, true);
                     return false;
                 }
-            }else{
-                MessageProcessor.processMessage(-1, "User Account Notifications cannot be found, Sending Request to admin for a new Account", true);
-                AdministrativeFunctions.newRequest(user, "Notifications File", "User requesting Notifications Enabled", "NA");
-                return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "Failed to find Target User: " + user, true);
-            return false;
+			MessageProcessor.processMessage(-1, "User Account Notifications cannot be found, Sending Request to admin for a new Account", true);
+			AdministrativeFunctions.newRequest(user, "Notifications File", "User requesting Notifications Enabled", "NA");
+			return false;
         }
+		MessageProcessor.processMessage(-1, "Failed to find Target User: " + user, true);
+		return false;
        
     }
 
@@ -83,10 +83,9 @@ public class UserMessageHandler {
             UserProperties = UserProperties2 + user + ".properties";
             File file = new File(UserProperties);
             return file.exists();
-        }else{
-            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
+		return false;
     }
 
 }

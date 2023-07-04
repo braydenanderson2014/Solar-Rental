@@ -44,9 +44,8 @@ public class AllMessages {
                 MessageProcessor.processMessage(-2, "An Error Occured While Getting Time Setting (E)", true);
                 return "";
             }
-        }else {
-            return "No Messages";
         }
+		return "No Messages";
     }
 
     public static boolean setLastVisibleSet(boolean b) {

@@ -15,7 +15,11 @@ import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
 import UserController.SecondaryUserController;
 import UserController.UserListController;
-import messageHandler.ClearAllMessages;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
 
@@ -38,7 +42,24 @@ public class AdministrativeFunctions {
         requestsMade = administrativeRequests.size();
         return requestsMade;
     }
-
+    public static void displayAdministrativeMenu(Stage stage) {
+    	updateRequestsMade();
+    	VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        Label welcomeLabel = new Label("Welcome to the Solar Administrative Menu User: " + MainSystemUserController.GetProperty("AccountName"));
+        layout.getChildren().add(welcomeLabel);
+        
+        Button createButton = new Button("Create a User");
+        createButton.setOnAction(e -> {
+        	MaintainUserController.displayCreateNewUserUI(stage);
+        });
+        
+        Button deleteButton = new Button("Delete a User");
+        deleteButton.setOnAction(e -> {
+            // Your code here...
+        });
+        
+    }
     public static void AdministrativeMenu(){
         updateRequestsMade();
         Logo.displayLogo();
@@ -127,10 +148,10 @@ public class AdministrativeFunctions {
                     String Choice = CustomScanner.nextLine().toLowerCase();
                     if(Choice.equals("yes") || Choice.equals("y")){
                         //MessageProcessor.dumpAll();
-                        ClearAllMessages.clearAll();
+                        MessageProcessor.clearAll();
                         AdministrativeMenu();
                     }else{
-                        ClearAllMessages.clearAll();
+                        MessageProcessor.clearAll();
                         AdministrativeMenu();
                     }
                 }else{
@@ -232,26 +253,25 @@ public class AdministrativeFunctions {
         if(accountRequestNamePool.isEmpty()){
             MessageProcessor.processMessage(-1, "No Account Requests have been made", true);
             return false;
-        }else{
-            int selection = 0;
-            Logo.displayLogo();
-            System.out.println("Account creation requests");
-            Logo.displayLine();
-            for(int i = 0; i < accountRequestNamePool.size(); i++){
-                selection++;
-                System.out.println(selection + ". " + accountRequestNamePool.get(i));
-            }
-            try{
-                int choice = CustomScanner.nextInt();
-                choice -- ;
-                MaintainUserController.createNewUser(accountRequestNamePool.get(choice));
-                return true;
-            }catch(InputMismatchException e){
-                MessageProcessor.processMessage(-2, e.toString(), true);
-                viewAccountList();
-            }
-            return true;
         }
+		int selection = 0;
+		Logo.displayLogo();
+		System.out.println("Account creation requests");
+		Logo.displayLine();
+		for(int i = 0; i < accountRequestNamePool.size(); i++){
+		    selection++;
+		    System.out.println(selection + ". " + accountRequestNamePool.get(i));
+		}
+		try{
+		    int choice = CustomScanner.nextInt();
+		    choice -- ;
+		    MaintainUserController.createNewUser(accountRequestNamePool.get(choice));
+		    return true;
+		}catch(InputMismatchException e){
+		    MessageProcessor.processMessage(-2, e.toString(), true);
+		    viewAccountList();
+		}
+		return true;
     }
 
     private static boolean enableAnAccount() { 
@@ -278,10 +298,9 @@ public class AdministrativeFunctions {
             MessageProcessor.processMessage(1, USER + ADMIN + " Account was Enabled", true);
             LoginUserController.setValue(ADMIN, "PassFlag", "true");
             return true;
-        }else{
-            MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + ADMIN + "]", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + ADMIN + "]", true);
+		return false;
     }
 
     private static boolean disableAnAccount() {
@@ -296,14 +315,12 @@ public class AdministrativeFunctions {
                 LoginUserController.setValue(account, ACCOUNT2, "Disabled");
                 MessageProcessor.processMessage(1, USER + LoginUserController.getProperty(account, "Username") + " Account was Disabled", true);
                 return true;
-            }else {
-            	MessageProcessor.processMessage(-1, "CANNOT Disable Admin Account", true);
-            	return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + account + "]", true);
-            return false;
+			MessageProcessor.processMessage(-1, "CANNOT Disable Admin Account", true);
+			return false;
         }
+		MessageProcessor.processMessage(-1, UNABLE_TO_FIND_USER + account + "]", true);
+		return false;
     }
 
     public static boolean newRequest(String focusUser, String request, String description, String newAccountName){

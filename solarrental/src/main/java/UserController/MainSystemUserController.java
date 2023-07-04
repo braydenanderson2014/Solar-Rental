@@ -33,10 +33,9 @@ public class MainSystemUserController {
                 MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
+		return false;
     }
 
     public static boolean saveUserProperties(String User){
@@ -52,10 +51,9 @@ public class MainSystemUserController {
                 MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
+		return false;
     }
 
     public static boolean SearchForKey(String Key){

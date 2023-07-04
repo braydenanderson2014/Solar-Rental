@@ -24,7 +24,6 @@ import messageHandler.ConsoleHandler;
 import messageHandler.ConsoleSettings;
 import messageHandler.LogDump;
 import messageHandler.MessageProcessor;
-import messageHandler.SystemMessages;
 import messageHandler.ViewLogManager;
 public class Settings{
     private static final String LOG_TYPE = "LogType";
@@ -68,14 +67,12 @@ public class Settings{
                     MessageProcessor.processMessage(-2, "Failed to read Notification File for User: " + SwitchController.focusUser, true);
                     return false;
                 }
-            }else{
-                MessageProcessor.processMessage(1, "No Notification File for User: " + SwitchController.focusUser, false);
-                return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "User Notifications are Disabled", false);
-            return false;
+			MessageProcessor.processMessage(1, "No Notification File for User: " + SwitchController.focusUser, false);
+			return false;
         }
+		MessageProcessor.processMessage(-1, "User Notifications are Disabled", false);
+		return false;
     }
 
     public static boolean printRequests(){//Print User Requests. (submitted requests to admin)
@@ -275,46 +272,29 @@ public class Settings{
     }
     public static boolean loadSettings(){ //Loads main Settings for the program to launch
         MessageProcessor.processMessage(1, "Loading Settings file from config.properties", false);
-        System.out.println(SystemMessages.getLastMessage());
         SettingsController.loadSettings();
         MessageProcessor.processMessage(1, "Settings File Loaded... Now reading from Settings", false);
-        System.out.println(SystemMessages.getLastMessage());
-
         MessageProcessor.processMessage(1, "FirstTime Setting: False", false);
-        System.out.println(SystemMessages.getLastMessage());
         MessageProcessor.processMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: " + SettingsController.getSetting("Path"), false);
-        System.out.println(SystemMessages.getLastMessage());
         VersionController.setVersion(SettingsController.getSetting("Version"));
         MessageProcessor.processMessage(1, "Version: " + SettingsController.getSetting("Version"), false);
-        System.out.println(SystemMessages.getLastMessage());
         Settings.logType = SettingsController.getSetting(LOG_TYPE);
         MessageProcessor.processMessage(1, "LogType: " + SettingsController.getSetting(LOG_TYPE), false);
-        System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.ErrorSet = Boolean.parseBoolean(SettingsController.getSetting("ErrorSet"));
         MessageProcessor.processMessage(1, "ErrorSet: " + Boolean.parseBoolean(SettingsController.getSetting("ErrorSet")), false);
-        System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.WarningSet = Boolean.parseBoolean(SettingsController.getSetting("WarningSet"));
         MessageProcessor.processMessage(1, "WarningSet: " + Boolean.parseBoolean(SettingsController.getSetting("WarningSet")), false);
-        System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.SystemSet = Boolean.parseBoolean(SettingsController.getSetting("SystemSet"));
         MessageProcessor.processMessage(1, "SystemSet: " + Boolean.parseBoolean(SettingsController.getSetting("SystemSet")), false);
-        System.out.println(SystemMessages.getLastMessage());
-        
         ConsoleSettings.DebugSet = Boolean.parseBoolean(SettingsController.getSetting("DebugSet"));
         MessageProcessor.processMessage(1, "DebugSet: " + Boolean.parseBoolean(SettingsController.getSetting("DebugSet")), false);
-        System.out.println(SystemMessages.getLastMessage());
-        
         ConsoleSettings.UserNotifySet = Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet"));
         MessageProcessor.processMessage(1, "UserNotifySet: " + Boolean.parseBoolean(SettingsController.getSetting("UserNotifySet")), false);
-        System.out.println(SystemMessages.getLastMessage());
         ConsoleSettings.timeSet = Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet"));
         MessageProcessor.processMessage(1, "Time Set: " + Boolean.parseBoolean(SettingsController.getSetting("DateTimeSet")), false);
-        System.out.println(SystemMessages.getLastMessage());
         LoginUserController.passFlag = Boolean.parseBoolean(SettingsController.getSetting("PassFlag"));
         MessageProcessor.processMessage(1, "PassFlag: " + Boolean.parseBoolean(SettingsController.getSetting("PassFlag")), false);
-        System.out.println(SystemMessages.getLastMessage());
         MessageProcessor.processMessage(1, "All Settings Loaded", false);
-        System.out.println(SystemMessages.getLastMessage());
         return true;
     }
 }

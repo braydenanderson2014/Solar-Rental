@@ -16,20 +16,19 @@ public class AutoSetupUserController {
         boolean success = checkFile("Admin");
         if(success){
             return !success;
-        }else{
-            File file = new File(UserProperties);
-            if(!file.exists()){
-                try {
-                    file.createNewFile();
-                    success = PopulateUserProperties();
-                    UserListController.addUserToList("Admin", 8);
-                } catch (Exception e) {
-                    MessageProcessor.processMessage(-2, e.toString(), true);
-                    return false;
-                }
-            }
-            return success;
         }
+		File file = new File(UserProperties);
+		if(!file.exists()){
+		    try {
+		        file.createNewFile();
+		        success = PopulateUserProperties();
+		        UserListController.addUserToList("Admin", 8);
+		    } catch (Exception e) {
+		        MessageProcessor.processMessage(-2, e.toString(), true);
+		        return false;
+		    }
+		}
+		return success;
         
     }
     private static boolean PopulateUserProperties() {

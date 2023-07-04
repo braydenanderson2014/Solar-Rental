@@ -47,7 +47,7 @@ public class CustomScanner
         return scan.nextBoolean();
     }
 
-    public int close(int b){
+    public static int close(int b){
         scan.close();
         try{
             b = System.in.available();

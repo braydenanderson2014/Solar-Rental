@@ -9,7 +9,6 @@ import MainSystem.SettingsController;
 import UserController.AutoSetupUserController;
 import javafx.stage.Stage;
 import messageHandler.MessageProcessor;
-import messageHandler.SystemMessages;
 
 public class AutoSetup {
     public static String systemPathLetter = ProgramController.systemPathLetter;
@@ -36,7 +35,6 @@ public class AutoSetup {
     private static void handleSetting(String setting, String defaultValue) {
         if(SettingsController.searchForSet(setting)) {
             MessageProcessor.processMessage(1, "Found " + setting + " in Configuration... ", false);
-            System.out.println(SystemMessages.getLastMessage());
             if (setting.contains("Letter")) {
                 defaultValue = SettingsController.getSetting(setting);
             }

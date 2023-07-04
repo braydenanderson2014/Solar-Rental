@@ -124,21 +124,19 @@ public class Notebook {
                 String userInput = scan.nextLine();
                 if (userInput.equalsIgnoreCase("yes")) {
                     continue;
-                } else {
-                    break;
                 }
-            } else {
-                userNotebooks.setProperty(newNoteName, newNote.toString());
-                try {
-                    if (newNote.createNewFile()) {
-                        MessageProcessor.processMessage(1, "Note created: " + newNoteName, true);
-                    }
-                    saveProperties();
-                } catch (IOException e) {
-                    MessageProcessor.processMessage(-2, "Error creating note: " + e.getMessage(), true);
-                }
-                creatingNote = false;
+				break;
             }
+			userNotebooks.setProperty(newNoteName, newNote.toString());
+			try {
+			    if (newNote.createNewFile()) {
+			        MessageProcessor.processMessage(1, "Note created: " + newNoteName, true);
+			    }
+			    saveProperties();
+			} catch (IOException e) {
+			    MessageProcessor.processMessage(-2, "Error creating note: " + e.getMessage(), true);
+			}
+			creatingNote = false;
         }
         notebookMenu();
     }

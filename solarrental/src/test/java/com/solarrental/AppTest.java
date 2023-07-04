@@ -11,7 +11,8 @@ class AppTest {
     /**
      * Rigorous Test.
      */
-    @Test
+    @SuppressWarnings("static-method")
+	@Test
     void testApp() {
         assertEquals(1, 1);
     }

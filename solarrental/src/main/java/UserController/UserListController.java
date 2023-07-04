@@ -12,10 +12,9 @@ public class UserListController {
         File file = new File(UserList);
         if(file.exists()){
             return true;
-        }else{
-            MessageProcessor.processMessage(-2, "Failed to Load userList in UserlistController", false);
-            return false;
         }
+		MessageProcessor.processMessage(-2, "Failed to Load userList in UserlistController", false);
+		return false;
     }
 
     public static boolean loadUserList() {
@@ -28,10 +27,9 @@ public class UserListController {
                 MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-2, "UserList Missing", true);
-            return false;
         }
+		MessageProcessor.processMessage(-2, "UserList Missing", true);
+		return false;
 
     }
 

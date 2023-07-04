@@ -19,12 +19,12 @@ public class ViewLogManager {
             }
         }
         MessageProcessor.processMessage(1, "Press Enter to continue", true);
-        System.out.println(SystemMessages.getLastMessage());
         String enter = CustomScanner.nextLine();
         MessageProcessor.processMessage(-3, enter, false);
     }
 
-    public List<MessageProcessor.Message> filterMessagesByType(int typeOfInterest,
+    @SuppressWarnings("static-method")
+	public List<MessageProcessor.Message> filterMessagesByType(int typeOfInterest,
             List<MessageProcessor.Message> allMessages) {
         return allMessages.stream()
                 .filter(msg -> msg.messageType == typeOfInterest)

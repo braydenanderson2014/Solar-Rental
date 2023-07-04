@@ -25,7 +25,8 @@ public class Updater {
     private static final String REPO_URL = "https://github.com/braydenanderson2014/Solar-Rental-Mac_Edition.git"; // URL
     private static final Path COMPILED_FOLDER = Path.of("compiled");
 
-    public void updateFromGitHub() throws IOException, GitAPIException {
+    @SuppressWarnings({ "resource", "static-method" })
+	public void updateFromGitHub() throws IOException, GitAPIException {
         MessageProcessor.processMessage(2, "Checking for Updates", true);
         File folder = REPO_PATH.toFile();
         MessageProcessor.processMessage(2, folder.toString(), true);
@@ -43,7 +44,8 @@ public class Updater {
         }
     }
 
-    public void compileSourceCode() throws IOException {
+    @SuppressWarnings("static-method")
+	public void compileSourceCode() throws IOException {
         MessageProcessor.processMessage(2, "Compiling Code...", true);
                                                                                    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) {
@@ -69,7 +71,8 @@ public class Updater {
         // This step is omitted here for simplicity
     }
 
-    public void deleteSourceCode() throws IOException {
+    @SuppressWarnings("static-method")
+	public void deleteSourceCode() throws IOException {
         MessageProcessor.processMessage(2, "Deleting Source Code...", true);
         Files.walk(REPO_PATH)
                 .filter(path -> path.toString().endsWith(".java"))
@@ -82,7 +85,8 @@ public class Updater {
                 });
     }
 
-    public void compileWithMaven() throws IOException {
+    @SuppressWarnings("static-method")
+	public void compileWithMaven() throws IOException {
         MessageProcessor.processMessage(2, "Compiling with Maven...", true);
         ProcessBuilder pb = new ProcessBuilder("mvn", "clean", "install");
         pb.directory(REPO_PATH.toFile()); // Set the working directory to your project directory
@@ -127,7 +131,8 @@ public class Updater {
         //SetupController.finishStart();
     }
 
-    public boolean isUpdateAvailable() throws IOException, InterruptedException, NoHeadException, GitAPIException {
+    @SuppressWarnings("static-method")
+	public boolean isUpdateAvailable() throws IOException, InterruptedException, NoHeadException, GitAPIException {
         MessageProcessor.processMessage(2, "Checking if update is available...", true);
         System.out.println("Checking if update is available...");
         File folder = REPO_PATH.toFile();

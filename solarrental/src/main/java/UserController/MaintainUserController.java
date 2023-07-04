@@ -16,6 +16,13 @@ import InstallManager.ProgramController;
 import Login.SwitchController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.Settings;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
 import messageHandler.UserMessageHandler;
@@ -35,7 +42,64 @@ public class MaintainUserController {
         saveUserProperties(user);
         return true;
     }
+    public static void displayCreateNewUserUI(Stage stage){
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
 
+        Label label = new Label("Please Create a new Username For the User: ");
+        TextField usernameInput = new TextField();
+        Label labelAccount = new Label("Please Type An Account Name for the New User:");
+        TextField accountNameInput = new TextField();
+        Label labelPermission = new Label("Please Set a Permission Level for the User (0<10)");
+        TextField permissionLevelInput = new TextField();
+
+        Button createButton = new Button("Create User");
+        createButton.setOnAction(e -> {
+            String username = usernameInput.getText();
+            String accountName = accountNameInput.getText();
+            int permissionLevel;
+
+            try {
+                permissionLevel = Integer.parseInt(permissionLevelInput.getText());
+            } catch (Exception ex) {
+                MessageProcessor.processMessage(-2, ex.toString(), true);
+                MessageProcessor.processMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
+                permissionLevel = 0;
+            }
+            if(createNewFile(username)) {
+            	setValue(username, "Username", username);
+            	setValue(username, "AccountName", accountName);
+            	setValue(username, "PermissionLevel", String.valueOf(permissionLevel));
+            	setValue(username, "SuccessfulLogins", "0");
+                setValue(username, "Account", "Disabled");
+                setValue(username, "FailedLoginAttempts", "0");
+                setValue(username, "PassFlag", "true");
+                setValue(username, "LastPassChange", "Never");
+                setValue(username, "Password", "Solar");
+                setValue(username, "AllTimeFailedLoginAttempts", "0");
+                setValue(username, "PassExpires", "true");
+                setValue(username, "isPassExpired", "true");
+                setValue(username, "LastLogin", "Never");
+                setValue(username, "NotifyPath", "NULL");
+                setValue(username, "NotepadPath", "NULL");
+                if(Integer.parseInt(GetProperty("PermissionLevel")) >=6){
+                    setValue(username, "UserNotification", "Enabled");
+                }else{
+                    setValue(username, "UserNotification", "Disabled");
+                }
+                saveUserProperties(username);
+            }
+            UserListController.addUserToList(username, permissionLevel);
+            // Add the user creation logic here...
+
+        });
+
+        layout.getChildren().addAll(label, usernameInput, labelAccount, accountNameInput, labelPermission, permissionLevelInput, createButton);
+
+        Scene scene = new Scene(layout, 400, 400);
+        stage.setScene(scene);
+        stage.show();
+    }
     public static boolean createNewUser(String UserToCreate){
         Logo.displayLogo();
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >=8){
@@ -80,34 +144,31 @@ public class MaintainUserController {
                 }
                 saveUserProperties(UserName);
                 return true;
-            }else {
-                MessageProcessor.processMessage(-1, "Failed to create User File", true);
-                return false;
-            } 
-        }else{
-            MessageProcessor.processMessage(-1, "User Does NOT have Permission to Use this tool", true);
-            return false;
+            }
+			MessageProcessor.processMessage(-1, "Failed to create User File", true);
+			return false; 
         }
+		MessageProcessor.processMessage(-1, "User Does NOT have Permission to Use this tool", true);
+		return false;
     }
 
     public static boolean createNewFile(String User){
         if(UserListController.SearchForUser(User)){
             MessageProcessor.processMessage(-1, "This User Already Exists: " + User, true);
             return false;
-        }else{
-            UserProperties = UserProperties2 + User + ".properties";
-            File file = new File(UserProperties);
-            if(!file.exists()){
-                try {
-                    file.createNewFile();
-                    MessageProcessor.processMessage(1, "Successfully Created User File", false);
-                    return true;
-                } catch (Exception e) {
-                    MessageProcessor.processMessage(-1, "Failed to create new File", true);
-                    return false;
-                }
-            } 
         }
+		UserProperties = UserProperties2 + User + ".properties";
+		File file = new File(UserProperties);
+		if(!file.exists()){
+		    try {
+		        file.createNewFile();
+		        MessageProcessor.processMessage(1, "Successfully Created User File", false);
+		        return true;
+		    } catch (Exception e) {
+		        MessageProcessor.processMessage(-1, "Failed to create new File", true);
+		        return false;
+		    }
+		}
         return true;
     }
 
@@ -124,10 +185,9 @@ public class MaintainUserController {
                 MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
+		return false;
     }
 
     public static boolean saveUserProperties(String User){
@@ -143,10 +203,9 @@ public class MaintainUserController {
                 MessageProcessor.processMessage(-2, e.toString(), true);
                 return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "User Not Found: LoginUserController: SaveUserProperties", false);
+		return false;
     }
 
     public static boolean SearchForKey(String Key){
@@ -225,10 +284,9 @@ public class MaintainUserController {
             }
             saveUserProperties(user);
             return true;
-        }else{
-            MessageProcessor.processMessage(-1, "Failed to find user to update", true);
-            return false;
         }
+		MessageProcessor.processMessage(-1, "Failed to find user to update", true);
+		return false;
     }
 
     public static boolean requestAccountChange(String User){
@@ -263,19 +321,17 @@ public class MaintainUserController {
                 setValue(User, "AccountName", AccountName);
                 UserMessageHandler.sendMessageToUser(User, "Admin Approved Account Name Change Request, Change Made Successfully");
                 return true;
-            }else {
-                if(approve.equals("n") || approve.equals("no")){
-                    MessageProcessor.processMessage(-1, "Admin Denied Request", true);
-                    UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change");
-                }else{
-                    MessageProcessor.processMessage(-1, "Invalid Option, Try Again", true);
-                }
-                return false;
             }
-        }else{
-            MessageProcessor.processMessage(-1, "Failed to find the User Properties.", true);
-            return false;
+			if(approve.equals("n") || approve.equals("no")){
+			    MessageProcessor.processMessage(-1, "Admin Denied Request", true);
+			    UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change");
+			}else{
+			    MessageProcessor.processMessage(-1, "Invalid Option, Try Again", true);
+			}
+			return false;
         }
+		MessageProcessor.processMessage(-1, "Failed to find the User Properties.", true);
+		return false;
 
     }
 
