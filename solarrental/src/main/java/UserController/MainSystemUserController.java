@@ -20,7 +20,7 @@ public class MainSystemUserController {
         return UserListController.loadUserList();
     }
 
-    public static boolean loadUserProperties(String User){
+    public synchronized static boolean loadUserProperties(String User){
         loadUserlist();
         if(UserListController.SearchForUser(User)){
             UserProperties = UserProperties2 + User + ".properties";
@@ -38,7 +38,7 @@ public class MainSystemUserController {
 		return false;
     }
 
-    public static boolean saveUserProperties(String User){
+    public synchronized static boolean saveUserProperties(String User){
         loadUserlist();
         boolean success = UserListController.SearchForUser(User);
         if(success){

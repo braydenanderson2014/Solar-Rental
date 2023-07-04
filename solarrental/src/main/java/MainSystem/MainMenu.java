@@ -109,8 +109,7 @@ public class MainMenu{
         }
     }
 
-	@SuppressWarnings("unchecked")
-	public static void showMainMenu(Stage currentStage) {
+	public synchronized static void showMainMenu(Stage currentStage) {
         MainSystemUserController.loadUserProperties(SwitchController.focusUser);
 		VBox vbox = new VBox(20); // add your buttons to this vbox
         vbox.setAlignment(Pos.CENTER);

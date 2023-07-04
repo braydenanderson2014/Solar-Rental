@@ -114,7 +114,7 @@ public class Login {
         stage.setTitle("Login Screen");
         stage.show();
     }
-    private static void handleLogin() {
+    private synchronized static void handleLogin() {
         String username = usernameField.getText();
         String password = passwordField.getText();
 

@@ -87,7 +87,7 @@ public class MessageProcessor {
 		}
 
 		@Override
-		public String toString() {
+		public synchronized String toString() {
 			if (SettingsController.getSetting("UI").equals("Enabled")) {
 				return messageTypes.get(messageType) + " [" + dateTime + "] " + message;
 			}
@@ -96,7 +96,7 @@ public class MessageProcessor {
 		}
 	}
 
-	public static void processMessage(int messageType, String message, Boolean visibleToConsole) {
+	public synchronized static void processMessage(int messageType, String message, Boolean visibleToConsole) {
 		if (!messageTypes.containsKey(messageType)) {
 			processMessage(-1, "Invalid Message Type sent to Processor: " + messageType + " Message: " + message,
 					visibleToConsole);
@@ -113,7 +113,7 @@ public class MessageProcessor {
 		}
 	}
 
-	public static TextFlow getUIConsole(Stage stage) {
+	public synchronized static TextFlow getUIConsole(Stage stage) {
 	    TextFlow textFlow = new TextFlow();
 	    List<Message> messagesToDisplay = getMessagesforUI();
 	    
@@ -143,7 +143,7 @@ public class MessageProcessor {
 	}
 
 
-	public static void displayMessages() {
+	public synchronized static void displayMessages() {
 		for (Message message : messages) {
 			if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
 				System.out.println(message);
@@ -152,19 +152,19 @@ public class MessageProcessor {
 		}
 	}
 
-	public static List<Message> getMessagesforUI() {
+	public synchronized static List<Message> getMessagesforUI() {
 		return messages;
 	}
 
-	public static String getMessageColor(int messageType) {
+	public synchronized static String getMessageColor(int messageType) {
 		return messageColors.getOrDefault(messageType, "\u001B[37m"); // Default to white if messageType is not found
 	}
 
-	public static List<Message> getMessages() {
+	public synchronized static List<Message> getMessages() {
 		return new ArrayList<>(log);
 	}
 
-	public static void setMessageTypeVisibility(int messageType, boolean isVisible) {
+	public synchronized static void setMessageTypeVisibility(int messageType, boolean isVisible) {
 		if (messageTypes.containsKey(messageType)) {
 			messageTypeVisibility.put(messageType, isVisible);
 			String tempString;
@@ -183,7 +183,7 @@ public class MessageProcessor {
 		}
 	}
 
-	public static String getJavaFXColorNameByAnsiCode(String ansiCode) {
+	public synchronized static String getJavaFXColorNameByAnsiCode(String ansiCode) {
 		switch (ansiCode) {
 		case "\u001B[30m":
 			return "BLACK";
@@ -222,7 +222,7 @@ public class MessageProcessor {
 		}
 	}
 
-	public static void setMessageTypeColor(int messageType, String color) {
+	public synchronized static void setMessageTypeColor(int messageType, String color) {
 		if (messageTypes.containsKey(messageType)) {
 			messageColors.put(messageType, color);
 			String tempString;
@@ -241,12 +241,12 @@ public class MessageProcessor {
 		}
 	}
 
-	public static void setMaxMessages(int newMax) {
+	public synchronized static void setMaxMessages(int newMax) {
 		maxMessages = newMax;
 		SettingsController.setSetting("Console Length", String.valueOf(newMax));
 	}
 
-	public static void cycleMessageTypeColor(int messageType) {
+	public synchronized static void cycleMessageTypeColor(int messageType) {
 		if (!messageTypes.containsKey(messageType)) {
 			processMessage(-1, "Invalid Message Type sent to Processor: " + messageType, true);
 			return;
@@ -291,7 +291,7 @@ public class MessageProcessor {
 			Map.entry("BRIGHT_PURPLE", "\u001B[95m"), Map.entry("BRIGHT_CYAN", "\u001B[96m"),
 			Map.entry("BRIGHT_WHITE", "\u001B[97m"));
 
-	public static String getColorCodeByName(String colorName) {
+	public synchronized static String getColorCodeByName(String colorName) {
 		return colorNameToCodeMap.getOrDefault(colorName.toUpperCase(), "\u001B[37m"); // Default to WHITE if name is
 		// not found
 	}
@@ -301,21 +301,6 @@ public class MessageProcessor {
 
 	}
 
-	static class PublicMessage {
-		public final int messageType;
-		public final String messageText;
-		public final LocalDateTime dateTime;
-
-		public PublicMessage(int messageType, String messageText, LocalDateTime dateTime) {
-			this.messageType = messageType;
-			this.messageText = messageText;
-			this.dateTime = dateTime;
-		}
-	}
-
-	public static List<PublicMessage> getPublicMessages() {
-		return messages.stream().map(m -> new PublicMessage(m.messageType, m.message, m.dateTime))
-				.collect(Collectors.toList());
-	}
+	
 
 }
