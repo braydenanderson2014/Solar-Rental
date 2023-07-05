@@ -43,7 +43,8 @@ public class Login {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
-
+        //Label Console = new Label("Console: ");
+        //gridPane.add(Console, 0, 4);
         TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
 
 
@@ -88,7 +89,12 @@ public class Login {
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(25, 25, 25, 25));
 
-        MessageProcessor.getUIConsole(stage);
+        TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
+     // Add consoleOutput to the grid
+        gridPane.add(consoleOutput, 0, 4, 2, 1);
+        GridPane.setVgrow(consoleOutput, Priority.ALWAYS);
+        GridPane.setHgrow(consoleOutput, Priority.ALWAYS);
+        
         Label usernameLabel = new Label("Username:");
         gridPane.add(usernameLabel, 0, 1);
         usernameField = new TextField(User);

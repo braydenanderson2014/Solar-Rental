@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import MainSystem.MainMenu;
 import messageHandler.ConsoleHandler;
@@ -143,7 +144,8 @@ public class SwitchController {
         VBox vbox = new VBox(20);
         Label label = new Label("Switch User Menu; Current user: " + focusUser);
         vbox.getChildren().add(label);
-        
+        TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
+        vbox.getChildren().add(consoleOutput);
         if (loggedInUsers.size() > 1) {
             Label select = new Label("Select a user to log in as");
             vbox.getChildren().add(select);

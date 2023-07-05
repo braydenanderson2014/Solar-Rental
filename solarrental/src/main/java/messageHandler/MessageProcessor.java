@@ -10,6 +10,7 @@ import InstallManager.ProgramController;
 import MainSystem.SettingsController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -25,7 +26,8 @@ public class MessageProcessor {
 	private static List<Message> log = new LinkedList<>();
 	public static Map<Integer, String> messageTypes = Map.of(-2, "[Error]: ", -1, "[Warning]: ", 0, "[Info]: ", 1,
 			"[System]: ", 2, "[Debug]: ");
-	private static List<String> colorCodes = List.of("\u001B[30m", // BLACK
+	private static List<String> colorCodes = List.of(
+			"\u001B[30m", // BLACK
 			"\u001B[31m", // RED
 			"\u001B[32m", // GREEN
 			"\u001B[33m", // YELLOW
@@ -115,8 +117,10 @@ public class MessageProcessor {
 
 	public synchronized static TextFlow getUIConsole(Stage stage) {
 	    TextFlow textFlow = new TextFlow();
-	    List<Message> messagesToDisplay = getMessagesforUI();
-	    
+	    List<Message> messagesToDisplay = new ArrayList<>(getMessagesforUI());
+	    Text text = new Text();
+	    text.setText("Console: \n");
+	    textFlow.getChildren().add(text);
 	    // Calculate the start index to show only maxMessages number of messages.
 	    int startIndex = Math.max(0, messagesToDisplay.size() - maxMessages);
 
@@ -126,7 +130,7 @@ public class MessageProcessor {
 	    for (Message message : messagesToShow) {
 	        // Ensure that the message is visible and the type is enabled for visibility.
 	        if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
-	            Text text = new Text();
+	            text = new Text();
 	            text.setText(message.toString() + "\n");
 
 	            // Get the color associated with the message type from the map.
@@ -144,7 +148,8 @@ public class MessageProcessor {
 
 
 	public synchronized static void displayMessages() {
-		for (Message message : messages) {
+		List<Message> messagesToDisplay = new ArrayList<>(getMessagesforUI());
+		for (Message message : messagesToDisplay) {
 			if (messageTypeVisibility.get(message.messageType) && message.visibleToConsole) {
 				System.out.println(message);
 				message.visibleToConsole = false;

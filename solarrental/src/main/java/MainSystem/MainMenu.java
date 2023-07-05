@@ -145,6 +145,7 @@ public class MainMenu{
         exitButton.setOnAction(e -> {
         	System.exit(0);
         });
+        
         TextFlow consoleOutput = MessageProcessor.getUIConsole(currentStage);
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
