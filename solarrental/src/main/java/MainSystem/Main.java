@@ -33,7 +33,12 @@ public class Main extends Application {
             Login.showLoginScreen(primaryStage);
         }
     }
-    
+	public static void reloadUI(Stage stage) {
+		VBox vbox = new VBox();
+	    Scene scene = new Scene(vbox, 400, 400);
+	    stage.setScene(scene);
+	}
+
     private static void showSetupMenu(Stage stage) {
     	S = stage;
 

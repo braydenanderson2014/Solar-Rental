@@ -18,7 +18,10 @@ import MainSystem.AdministrativeFunctions;
 import MainSystem.Settings;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -43,6 +46,7 @@ public class MaintainUserController {
         return true;
     }
     public static void displayCreateNewUserUI(Stage stage){
+    	stage.setTitle("Create New User");
         VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER);
 
@@ -90,11 +94,71 @@ public class MaintainUserController {
                 saveUserProperties(username);
             }
             UserListController.addUserToList(username, permissionLevel);
+            AdministrativeFunctions.displayAdministrativeMenu(stage);
+
             // Add the user creation logic here...
 
         });
 
         layout.getChildren().addAll(label, usernameInput, labelAccount, accountNameInput, labelPermission, permissionLevelInput, createButton);
+
+        Scene scene = new Scene(layout, 400, 400);
+        stage.setScene(scene);
+        stage.show();
+    }
+    public static void displayCreateNewUserUI(Stage stage, String username){
+    	stage.setTitle("Auto Create New User");
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+
+        
+        Label labelAccount = new Label("Please Type An Account Name for the New User:");
+        TextField accountNameInput = new TextField();
+        Label labelPermission = new Label("Please Set a Permission Level for the User (0<10)");
+        TextField permissionLevelInput = new TextField();
+
+        Button createButton = new Button("Create User");
+        createButton.setOnAction(e -> {
+            String accountName = accountNameInput.getText();
+            int permissionLevel;
+
+            try {
+                permissionLevel = Integer.parseInt(permissionLevelInput.getText());
+            } catch (Exception ex) {
+                MessageProcessor.processMessage(-2, ex.toString(), true);
+                MessageProcessor.processMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
+                permissionLevel = 0;
+            }
+            if(createNewFile(username)) {
+            	setValue(username, "Username", username);
+            	setValue(username, "AccountName", accountName);
+            	setValue(username, "PermissionLevel", String.valueOf(permissionLevel));
+            	setValue(username, "SuccessfulLogins", "0");
+                setValue(username, "Account", "Disabled");
+                setValue(username, "FailedLoginAttempts", "0");
+                setValue(username, "PassFlag", "true");
+                setValue(username, "LastPassChange", "Never");
+                setValue(username, "Password", "Solar");
+                setValue(username, "AllTimeFailedLoginAttempts", "0");
+                setValue(username, "PassExpires", "true");
+                setValue(username, "isPassExpired", "true");
+                setValue(username, "LastLogin", "Never");
+                setValue(username, "NotifyPath", "NULL");
+                setValue(username, "NotepadPath", "NULL");
+                if(Integer.parseInt(GetProperty("PermissionLevel")) >=6){
+                    setValue(username, "UserNotification", "Enabled");
+                }else{
+                    setValue(username, "UserNotification", "Disabled");
+                }
+                saveUserProperties(username);
+            }
+            UserListController.addUserToList(username, permissionLevel);
+            AdministrativeFunctions.displayAdministrativeMenu(stage);
+            // Add the user creation logic here...
+
+        });
+
+        layout.getChildren().addAll(labelAccount, accountNameInput, labelPermission, permissionLevelInput, createButton);
 
         Scene scene = new Scene(layout, 400, 400);
         stage.setScene(scene);
@@ -303,7 +367,45 @@ public class MaintainUserController {
         }
         return true;
     }
+    public static void updateAccountName(Stage stage, String User, String AccountName){
+    	stage.setTitle("Update Account Name");
+        UserListController.loadUserList();
+        if(UserListController.SearchForUser(User)){
+            MaintainUserController.loadUserProperties(User);
+            
+            Label accountLabel = new Label("Update Account Name:");
+            Label lastAccountNameLabel = new Label("Last Account Name: " + GetProperty("AccountName"));
+            Label requestedAccountNameLabel = new Label("Requested Account Name: " + AccountName);
+            
+            Button approveButton = new Button("Approve");
+            approveButton.setOnAction(e -> {
+                AdministrativeFunctions.removeRequest();
+                setValue(User, "AccountName", AccountName);
+                UserMessageHandler.sendMessageToUser(User, "Admin Approved Account Name Change Request, Change Made Successfully");
+                Alert alert = new Alert(AlertType.INFORMATION, "The account name change has been approved.", ButtonType.OK);
+                alert.showAndWait();
+                stage.close();
+            });
 
+            Button denyButton = new Button("Deny");
+            denyButton.setOnAction(e -> {
+                MessageProcessor.processMessage(-1, "Admin Denied Request", true);
+                UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change");
+                Alert alert = new Alert(AlertType.INFORMATION, "The account name change has been denied.", ButtonType.OK);
+                alert.showAndWait();
+                stage.close();
+            });
+
+            VBox layout = new VBox(10, accountLabel, lastAccountNameLabel, requestedAccountNameLabel, approveButton, denyButton);
+            Scene scene = new Scene(layout, 300, 200);
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            MessageProcessor.processMessage(-1, "Failed to find the User Properties.", true);
+            Alert alert = new Alert(AlertType.ERROR, "Failed to find the User Properties.", ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
     public static boolean updateAccountName(String User, String AccountName){
         UserListController.loadUserList();
         if(UserListController.SearchForUser(User)){
@@ -338,4 +440,9 @@ public class MaintainUserController {
     public static boolean deleteUser(String user) {
         return true;
     }
+
+	public static void deleteUser(String targetAccount, Stage stage) {
+		// TODO Auto-generated method stub
+		
+	}
 }
