@@ -152,7 +152,10 @@ public class MainMenu {
 		});
 
 		Button setButton = new Button("SET: Settings");
-		// FIXME:
+		setButton.setOnAction(e ->{
+			Settings.settingsMenu(currentStage);
+		});
+		
 		Button helpButton = new Button("HELP: Display Help Messages");
 
 		Button offButton = new Button("OFF: Log Off");
@@ -250,12 +253,6 @@ public class MainMenu {
         Platform.runLater(new Runnable() {
 			public void run() {
 				currentStage.hide();
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				currentStage.show();
 			}
 		});
@@ -265,7 +262,6 @@ public class MainMenu {
         currentStage.centerOnScreen();
 
 		// Show the stage
-		currentStage.show();
 
 	}
 }

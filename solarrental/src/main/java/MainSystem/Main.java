@@ -18,6 +18,7 @@ import messageHandler.MessageProcessor;
 
 public class Main extends Application {
 	private static Stage S;
+	public static Thread watchdogThread;
     public static Stage getS() {
 		return S;
 	}
@@ -65,15 +66,23 @@ public class Main extends Application {
     }
     public static void main(String[] args) {
     	SettingsController.loadSettings();
+    	MessageProcessor.processMessage(2, "Starting WatchDog Thread!", true);
+    	watchdogThread = new Thread(SettingsWatchDog::mainLoop); // Modify this line
+        watchdogThread.start();
+    	
     	if(SettingsController.searchForSet("UI")) {
     		MessageProcessor.processMessage(2, "Does UI Setting Exist: " + SettingsController.searchForSet("UI"), true);
     		if(!SettingsController.getSetting("UI").equals("Enabled")) {
     			new CustomScanner();
+    			MessageProcessor.processMessage(2, "Starting Program in Console Mode", true);
     			ProgramController.Start();
     		}else {
+    			MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
                 launch(args);
     		}
     	}else {
+    		MessageProcessor.processMessage(-1, "Failed to find UI Setting!", true);
+    		MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
             launch(args);
     	}
     }
