@@ -8,32 +8,50 @@ import InstallManager.ManualSetup;
 import InstallManager.ProgramController;
 import InstallManager.SystemSetLoader;
 import Login.Login;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import messageHandler.MessageProcessor;
+import javafx.util.Duration;
+
 
 public class Main extends Application {
 	private static Stage S;
-	public static Thread watchdogThread;
+
     public static Stage getS() {
 		return S;
 	}
 
-
-	@Override
-    public void start(Stage primaryStage) {
-    	new CustomScanner();
-        if (FirstTimeManager.checkFirstTime()) {
-            showSetupMenu(primaryStage);
-        } else {
-            SystemSetLoader.loadSystems();
-            Login.showLoginScreen(primaryStage);
-        }
+    public static void hideUI(Stage stage) {
+        stage.hide();
     }
+
+    public static void showUI(Stage stage) {
+       stage.show();
+    }
+    public static void setStage(Stage stage) {
+    	S = stage;
+    }
+    public static boolean isUIVisible() {
+        final boolean[] result = {false};
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
+        delay.setOnFinished(event -> {
+            if (S != null) {
+                // The stage has been initialized, so check if it is visible.
+                result[0] = S.isShowing();
+            }
+            // If S is null, result[0] will remain false.
+        });
+        delay.play();
+        return result[0];
+    }
+
+
+	
 	public static void reloadUI(Stage stage) {
 		VBox vbox = new VBox();
 	    Scene scene = new Scene(vbox, 400, 400);
@@ -64,26 +82,65 @@ public class Main extends Application {
         stage.setTitle("Solar-Rental Setup");
         stage.show();
     }
-    public static void main(String[] args) {
-    	SettingsController.loadSettings();
-    	MessageProcessor.processMessage(2, "Starting WatchDog Thread!", true);
-    	watchdogThread = new Thread(SettingsWatchDog::mainLoop); // Modify this line
-        watchdogThread.start();
-    	
-    	if(SettingsController.searchForSet("UI")) {
-    		MessageProcessor.processMessage(2, "Does UI Setting Exist: " + SettingsController.searchForSet("UI"), true);
-    		if(!SettingsController.getSetting("UI").equals("Enabled")) {
-    			new CustomScanner();
-    			MessageProcessor.processMessage(2, "Starting Program in Console Mode", true);
-    			ProgramController.Start();
-    		}else {
-    			MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
-                launch(args);
-    		}
-    	}else {
-    		MessageProcessor.processMessage(-1, "Failed to find UI Setting!", true);
-    		MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
-            launch(args);
-    	}
+    
+    @Override
+    public void start(Stage primaryStage) {
+		 if(SettingsController.searchForSet("UI")) {
+	            MessageProcessor.processMessage(2, "Does UI Setting Exist: " + SettingsController.searchForSet("UI"), true);
+	            if(!SettingsController.getSetting("UI").equals("Enabled")) {
+	            	MessageProcessor.processMessage(2, "Starting Program in Console Mode", true);
+	            	if(Platform.isFxApplicationThread()) {
+	            		setStage(primaryStage);
+	            		primaryStage.hide();
+	            	}
+	                ProgramController.Start();
+	            }else {
+	                MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
+	                if (Platform.isFxApplicationThread()) { // if it's the JavaFX thread
+	                	setStage(primaryStage);
+	                    if (FirstTimeManager.checkFirstTime()) {
+	                        showSetupMenu(primaryStage);
+	                    } else {
+	                        SystemSetLoader.loadSystems();
+	                        Login.showLoginScreen(primaryStage);
+	                    }
+	                } else { // it's not the JavaFX thread
+	                	String [] args = null;
+	                    launch(args);
+	                }
+	            }
+			 
+		 }else {
+			 MessageProcessor.processMessage(-1, "Failed to find UI Setting!", true);
+	            MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
+	            if (Platform.isFxApplicationThread()) { // if it's the JavaFX thread
+	                
+	            } else { // it's not the JavaFX thread
+	            	String [] args = null;
+	                launch(args);
+	            } 
+		 }
+		setStage(primaryStage);
+        if (FirstTimeManager.checkFirstTime()) {
+            showSetupMenu(primaryStage);
+        } else {
+            SystemSetLoader.loadSystems();
+            Login.showLoginScreen(primaryStage);
+        }
     }
+    public static void main(String[] args) {
+        SettingsController.loadSettings();
+        new CustomScanner();
+        if (Platform.isFxApplicationThread()) { // if it's the JavaFX thread
+            try {
+                new Main().start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else { // it's not the JavaFX thread
+            launch(args);
+        }
+        
+    }
+
 }

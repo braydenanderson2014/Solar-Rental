@@ -46,6 +46,7 @@ public class SettingsController{
         loadSettings();
         prop.setProperty(settingType, setting);
         saveSettings();
+        //SettingsWatchDog.checkAndLogChanges();
         return settingType + setting;
     }
 }

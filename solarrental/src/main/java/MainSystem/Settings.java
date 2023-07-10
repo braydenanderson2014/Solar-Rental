@@ -16,10 +16,12 @@ import com.solarrental.assets.VersionController;
 
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;
+import Login.Login;
 import Login.SwitchController;
 import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -333,10 +335,16 @@ public class Settings {
 		} else if (option.equals("ui")) {
 			if (SettingsController.getSetting("UI").equals("Enabled")) {
 				SettingsController.setSetting("UI", "Disabled");
-			} else {
+			}else {
 				SettingsController.setSetting("UI", "Enabled");
+				if (Platform.isFxApplicationThread()) {
+                    // current thread is the JavaFX Application Thread
+                    Platform.runLater(() -> {
+                        Main.showUI(Main.getS());
+                    });
+                }
+                				
 			}
-			settingsMenu();
 		} else if (option.equals("return")) {
 			// MainSystem
 			MainMenu.mainMenu();
@@ -417,19 +425,22 @@ public class Settings {
 		});
 
 		Button UI;
-		if (SettingsController.getSetting("UI").equals("Enabled")) {
 			UI = new Button("UI: Enable/Disable UI Mode: Enabled");
-		} else {
-			UI = new Button("UI: Enable/Disable UI Mode: Disabled");
-		}
+		
 		UI.setOnAction(e -> {
-			if(SettingsController.getSetting("UI").equals("Enabled")) {
-				SettingsController.setSetting("UI", "Disabled");
-			}else {
-				SettingsController.setSetting("UI", "Enabled");
-			}
-			settingsMenu(primaryStage);
+			Main.setStage(primaryStage);
+		    if(SettingsController.getSetting("UI").equals("Enabled")) {
+		        SettingsController.setSetting("UI", "Disabled");
+		        UI.setText("UI: Enable/Disable UI Mode: Disabled");
+		        Main.hideUI(primaryStage);
+		        Login.loginScreen(SwitchController.focusUser);
+		    }else {
+		        SettingsController.setSetting("UI", "Enabled");
+		        UI.setText("UI: Enable/Disable UI Mode: Enabled");
+		        Main.showUI(primaryStage);
+		    }
 		});
+
 
 		Button Force = new Button("Force Profile Update");
 		Force.setOnAction(e -> {
