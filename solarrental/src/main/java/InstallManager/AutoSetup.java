@@ -15,7 +15,7 @@ public class AutoSetup {
     public static String systemWorkingPath = ProgramController.systemDefaultPath;
     public static String userPathLetter = ProgramController.userPathLetter;
     public static String userWorkingPath = ProgramController.userDefaultPath;
-    private static Stage stage = Main.getS();
+    private static Stage stage = Main.getStage();
     public static void startAutoSetup() {
         handleSetting("SystemPathLetter", systemPathLetter);
         handleSetting("debugSite", "https://github.com/login?return_to=%2Fbraydenanderson2014%2FSolar-Rental%2Fissues%2Fnew");

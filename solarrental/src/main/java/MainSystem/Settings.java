@@ -31,6 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import messageHandler.AllMessages;
 import messageHandler.ConsoleHandler;
@@ -335,15 +336,16 @@ public class Settings {
 		} else if (option.equals("ui")) {
 			if (SettingsController.getSetting("UI").equals("Enabled")) {
 				SettingsController.setSetting("UI", "Disabled");
-			}else {
+			} else {
 				SettingsController.setSetting("UI", "Enabled");
 				if (Platform.isFxApplicationThread()) {
-                    // current thread is the JavaFX Application Thread
-                    Platform.runLater(() -> {
-                        Main.showUI(Main.getS());
-                    });
-                }
-                				
+					// current thread is the JavaFX Application Thread
+					Platform.runLater(() -> {
+						Main.showUI(Main.getStage());
+						settingsMenu(Main.getStage());
+					});
+				}
+
 			}
 		} else if (option.equals("return")) {
 			// MainSystem
@@ -406,7 +408,12 @@ public class Settings {
 			String settingType = LOG_TYPE;
 			SettingsController.setSetting(settingType, logType);
 			MessageProcessor.processMessage(1, "Log Type: " + logType, true);
-			settingsMenu(primaryStage);
+			if (logType.equals("debugmt")) {
+				log.setText("Log: Log Dump Type: DEBUG");
+			} else {
+				log.setText("Log: Log Dump Type: " + logType.toUpperCase());
+			}
+
 		});
 
 		Button viewLogs = new Button("View Logs");
@@ -424,35 +431,35 @@ public class Settings {
 
 		});
 
-		Button UI;
-			UI = new Button("UI: Enable/Disable UI Mode: Enabled");
-		
+		Button UI = new Button("UI: Enable/Disable UI Mode: Enabled");
+
 		UI.setOnAction(e -> {
 			Main.setStage(primaryStage);
-		    if(SettingsController.getSetting("UI").equals("Enabled")) {
-		        SettingsController.setSetting("UI", "Disabled");
-		        UI.setText("UI: Enable/Disable UI Mode: Disabled");
-		        Main.hideUI(primaryStage);
-		        Login.loginScreen(SwitchController.focusUser);
-		    }else {
-		        SettingsController.setSetting("UI", "Enabled");
-		        UI.setText("UI: Enable/Disable UI Mode: Enabled");
-		        Main.showUI(primaryStage);
-		    }
+			if (SettingsController.getSetting("UI").equals("Enabled")) {
+				SettingsController.setSetting("UI", "Disabled");
+				UI.setText("UI: Enable/Disable UI Mode: Disabled");
+				Main.hideUI(primaryStage);
+				settingsMenu();
+			}
 		});
-
 
 		Button Force = new Button("Force Profile Update");
 		Force.setOnAction(e -> {
 
 		});
-		Button First = null;
-		Button setupdate = null;
+		Button First;
+		Button setupdate;
 		String key = "PermissionLevel";
 		if (parseInt(MainSystemUserController.GetProperty(key)) >= 6) {
 			First = new Button("First: Enable/Disable FirstTime Setup:" + FirstTimeManager.checkFirstTime());
 			First.setOnAction(e -> {
-
+				if (SettingsController.getSetting("FirstTime").equals("true")) {
+					SettingsController.setSetting("FirstTime", "false");
+					First.setText("First: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+				} else {
+					SettingsController.setSetting("FirstTime", "true");
+					First.setText("First: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+				}
 			});
 
 			setupdate = new Button("Force Configuration update");
@@ -467,13 +474,23 @@ public class Settings {
 			requests = new Label("View User Requests; Current Request Count: [" + requestsMade + "]");
 			Requests = new Button("Requests: View User Requests");
 			Requests.setOnAction(e -> {
-
+				if (requestsMade == 0) {
+					MessageProcessor.processMessage(-1, "No Requests at this time", true);
+					Requests.setText("Requests: View User Requests; NO REQUESTS AT THIS TIME!!!");
+				} else {
+					AdministrativeFunctions.resoultionAdvisory(primaryStage);
+				}
 			});
 		} else {
-			requests = new Label("My Request Count: [" + myRequests.size() + "]");
+			requests = new Label("My Request Count: [" + requestsMade + "]");
 			Requests = new Button("My Requests");
 			Requests.setOnAction(e -> {
-
+				if (myRequests.size() == 0) {
+					Requests.setText("My Request Count: NO REQUESTS HAVE BEEN MADE!");
+					MessageProcessor.processMessage(-1, "No Requests Have been made at this time!", true);
+				} else {
+					printRequests(primaryStage);
+				}
 			});
 		}
 		Button notify = null;
@@ -490,9 +507,9 @@ public class Settings {
 		back.setOnAction(e -> {
 			MainMenu.showMainMenu(primaryStage);
 		});
-
-		vbox.getChildren().addAll(path, Console, RAB, log, viewLogs, Dump, Update, UI, Force,
-				requests, Requests, back);
+		TextFlow console = MessageProcessor.getUIConsole(primaryStage);
+		vbox.getChildren().addAll(path, Console, RAB, log, viewLogs, Dump, Update, UI, Force, requests, Requests, back,
+				console);
 		Scene scene = new Scene(vbox);
 		primaryStage.setScene(scene);
 		primaryStage.hide();
@@ -517,6 +534,7 @@ public class Settings {
 		}
 		settingsMenu();
 	}
+
 	private static void ForceUpdateConfiguration(Stage stage) {
 		boolean exists = SettingsController.searchForSet("DebugSet");
 		if (!exists) {

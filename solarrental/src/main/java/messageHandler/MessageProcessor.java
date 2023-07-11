@@ -142,7 +142,7 @@ public class MessageProcessor {
 	            // Once a message is shown, it's marked as not visible to avoid duplication.
 	            message.visibleToConsole = false;
 	        }
-	    }
+	    } 
 	    return textFlow;
 	}
 
@@ -158,7 +158,7 @@ public class MessageProcessor {
 	}
 
 	public synchronized static List<Message> getMessagesforUI() {
-		return messages;
+		return log;
 	}
 
 	public synchronized static String getMessageColor(int messageType) {

@@ -20,10 +20,10 @@ import javafx.util.Duration;
 
 
 public class Main extends Application {
-	private static Stage S;
+	private static Stage mainStage;
 
-    public static Stage getS() {
-		return S;
+    public static Stage getStage() {
+		return mainStage;
 	}
 
     public static void hideUI(Stage stage) {
@@ -34,15 +34,15 @@ public class Main extends Application {
        stage.show();
     }
     public static void setStage(Stage stage) {
-    	S = stage;
+    	mainStage = stage;
     }
     public static boolean isUIVisible() {
         final boolean[] result = {false};
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         delay.setOnFinished(event -> {
-            if (S != null) {
+            if (mainStage != null) {
                 // The stage has been initialized, so check if it is visible.
-                result[0] = S.isShowing();
+                result[0] = mainStage.isShowing();
             }
             // If S is null, result[0] will remain false.
         });
@@ -59,7 +59,7 @@ public class Main extends Application {
 	}
 
     private static void showSetupMenu(Stage stage) {
-    	S = stage;
+    	mainStage = stage;
 
         // Create buttons for each setup option
         Button autoSetupBtn = new Button("Auto Setup Program");

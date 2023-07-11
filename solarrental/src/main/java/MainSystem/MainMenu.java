@@ -62,18 +62,14 @@ public class MainMenu {
 			System.out.println("Test Message: ");
 			String newMessage = CustomScanner.nextLine();
 			String newMessageT = newMessage;
-			AllMessages.allMessages.add(newMessage);
-			AllMessages.allMessagesT.add(newMessageT);
-			AllMessages.visibleToConsole.add(true); // or false, depending on the visibility you want
+			MessageProcessor.processMessage(0, newMessageT, true);
 			mainMenu();
 			break;
 		case "admin":
 			if (Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8) {
 				AdministrativeFunctions.AdministrativeMenu();
 			} else {
-				MessageProcessor.processMessage(-1,
-						SwitchController.focusUser + " does not have the proper permissions to use this function",
-						true);
+				MessageProcessor.processMessage(-1, SwitchController.focusUser + " does not have the proper permissions to use this function", true);
 				mainMenu();
 			}
 			break;
