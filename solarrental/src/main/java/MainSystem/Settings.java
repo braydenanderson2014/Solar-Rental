@@ -371,7 +371,7 @@ public class Settings {
 
 		Button Console = new Button("Console Settings");
 		Console.setOnAction(e -> {
-
+			ConsoleHandler.ConsoleSettings(primaryStage);
 		});
 
 		Button RAB = new Button("Report A Bug");
@@ -423,7 +423,12 @@ public class Settings {
 
 		Button Dump = new Button("Dump Logs");
 		Dump.setOnAction(e -> {
-
+			if(logType.equals("debugmt")) {
+				logType.equals("Debug");
+			}
+			LogDump.DumpLog(logType);
+			Label label = LogDump.getLabel();
+			vbox.getChildren().add(label);
 		});
 
 		Button Update = new Button("Update Account Menu");
@@ -478,7 +483,7 @@ public class Settings {
 					MessageProcessor.processMessage(-1, "No Requests at this time", true);
 					Requests.setText("Requests: View User Requests; NO REQUESTS AT THIS TIME!!!");
 				} else {
-					AdministrativeFunctions.resoultionAdvisory(primaryStage);
+					AdministrativeFunctions.resolutionAdvisory(primaryStage);
 				}
 			});
 		} else {
@@ -512,7 +517,9 @@ public class Settings {
 				console);
 		Scene scene = new Scene(vbox);
 		primaryStage.setScene(scene);
-		primaryStage.hide();
+		primaryStage.requestFocus();
+		primaryStage.centerOnScreen();
+		primaryStage.setMaximized(true);
 		primaryStage.show();
 	}
 
@@ -523,6 +530,7 @@ public class Settings {
 			MessageProcessor.processMessage(1,
 					"Console Setting \"DebugSet\" was created successfully. Default Value: true", false);
 		}
+		
 		SettingsController.saveSettings();
 		SettingsController.loadSettings();
 		MessageProcessor.processMessage(1, "Configuration File Updated", true);
@@ -559,8 +567,7 @@ public class Settings {
 		SettingsController.loadSettings();
 		MessageProcessor.processMessage(1, "Settings File Loaded... Now reading from Settings", false);
 		MessageProcessor.processMessage(1, "FirstTime Setting: False", false);
-		MessageProcessor.processMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: "
-				+ SettingsController.getSetting("Path"), false);
+		MessageProcessor.processMessage(1, "Path Letter: " + SettingsController.getSetting("PathLetter") + ", Path: " + SettingsController.getSetting("Path"), false);
 		VersionController.setVersion(SettingsController.getSetting("Version"));
 		MessageProcessor.processMessage(1, "Version: " + SettingsController.getSetting("Version"), false);
 		Settings.logType = SettingsController.getSetting(LOG_TYPE);

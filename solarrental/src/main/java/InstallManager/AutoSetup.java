@@ -85,6 +85,7 @@ public class AutoSetup {
     private static void createAdminAccount() {
         AutoSetupUserController.AutoCreateAdmin();
         FirstTimeManager.updateFirstTime();
-        Login.showLoginScreen(stage);
+        Login.showLoginScreen();
+        //Login.showLoginScreen(stage);
     }
 }

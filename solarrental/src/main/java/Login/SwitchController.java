@@ -77,16 +77,21 @@ public class SwitchController {
                 MessageProcessor.processMessage(1,
                         "User: " + loggedInUsers.get(size) + "Needs password to login... Moving to LoginScreen", true);
                 focusUser = loggedInUsers.get(size);
-                Login.showLoginScreen(stage, loggedInUsers.get(size));
+                stage.close();
+                Login.showLoginScreen(loggedInUsers.get(size));
             } else {
                 MessageProcessor.processMessage(-1, "No Users are logged in... Switching to Login Screen", true);
                 focusUser = "Null";
-                Login.showLoginScreen(stage);
+                stage.close();
+                Login.showLoginScreen();
+                //Login.showLoginScreen(stage);
             }
         } else {
             MessageProcessor.processMessage(-1, "No Current Users detected. Unable to remove CurrentUser from list",
                     true);
-            Login.showLoginScreen(stage);
+            stage.close();
+            Login.showLoginScreen();
+            //Login.showLoginScreen(stage);
         }
     }
     public static boolean forceLogoff(String user) {
@@ -152,7 +157,8 @@ public class SwitchController {
             Button backButton = new Button("[0]: Go Back");
             backButton.setOnAction(e -> {
                 if (mode == 1) {
-                    Login.showLoginScreen(stage);
+                    Login.showLoginScreen();
+                	//Login.showLoginScreen(stage);
                 } else if (mode == 2) {
                     MainMenu.showMainMenu(stage);
                 }
@@ -166,7 +172,8 @@ public class SwitchController {
                     if (loggedInUsers.get(index).equals(focusUser)) {
                         MainMenu.showMainMenu(stage);
                     }
-                    Login.showLoginScreen(stage, loggedInUsers.get(index));
+                    stage.close();
+                    Login.showLoginScreen(loggedInUsers.get(index));
                 });
                 vbox.getChildren().add(userButton);
             }
@@ -183,7 +190,8 @@ public class SwitchController {
             }
         } else {
             MessageProcessor.processMessage(-1, "No other Logged in users", true);
-            Login.showLoginScreen(stage);
+            Login.showLoginScreen();
+            //Login.showLoginScreen(stage);
         }
 
         stage.show();

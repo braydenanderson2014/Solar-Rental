@@ -97,12 +97,12 @@ public class Main extends Application {
 	            }else {
 	                MessageProcessor.processMessage(2, "Starting Program in UI Mode", true);
 	                if (Platform.isFxApplicationThread()) { // if it's the JavaFX thread
-	                	setStage(primaryStage);
+	                	//setStage(primaryStage);
 	                    if (FirstTimeManager.checkFirstTime()) {
 	                        showSetupMenu(primaryStage);
 	                    } else {
 	                        SystemSetLoader.loadSystems();
-	                        Login.showLoginScreen(primaryStage);
+	                        Login.showLoginScreen();
 	                    }
 	                } else { // it's not the JavaFX thread
 	                	String [] args = null;
@@ -125,7 +125,7 @@ public class Main extends Application {
             showSetupMenu(primaryStage);
         } else {
             SystemSetLoader.loadSystems();
-            Login.showLoginScreen(primaryStage);
+            Login.showLoginScreen();
         }
     }
     public static void main(String[] args) {

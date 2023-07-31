@@ -134,7 +134,8 @@ public class MessageProcessor {
 	            text.setText(message.toString() + "\n");
 
 	            // Get the color associated with the message type from the map.
-	            Color color = UImessageColors.getOrDefault(message.messageType, Color.BLACK);
+				Color color = Color.valueOf(getJavaFXColorNameByAnsiCode(getMessageColor(message.messageType))); 
+						//UImessageColors.getOrDefault(message.messageType, Color.BLACK);
 	            text.setFill(color);
 
 	            textFlow.getChildren().add(text);
@@ -283,8 +284,11 @@ public class MessageProcessor {
 			tempString = "Debug Color";
 		}
 		SettingsController.setSetting(tempString, colorCodes.get(nextColorIndex));
+		
 		// Update the index for next time
 		messageTypeColorIndex.put(messageType, nextColorIndex);
+		processMessage(2, messageType + " " + colorCodes.get(nextColorIndex), true);
+		processMessage(messageType, tempString + " changed to: " + getJavaFXColorNameByAnsiCode(colorCodes.get(nextColorIndex)), true);
 	}
 
 	private static Map<String, String> colorNameToCodeMap = Map.ofEntries(Map.entry("BLACK", "\u001B[30m"),

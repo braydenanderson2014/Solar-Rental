@@ -9,6 +9,13 @@ import com.solarrental.assets.TxtColorTable;
 
 import MainSystem.Settings;
 import MainSystem.SettingsController;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
 public class ConsoleHandler {
     public static boolean isErrorEnabled = true;
@@ -176,6 +183,58 @@ public class ConsoleHandler {
                 break;
         }
 
+    }
+    public static void ConsoleSettings(Stage stage) {
+        VBox vbox = new VBox();
+        Scene scene = new Scene(vbox);
+        stage.setScene(scene);
+
+        Label title = new Label("Console Settings");
+        vbox.getChildren().add(title);
+
+        String[] settings = {"Error", "Warning", "Info", "System", "Debug"};
+        for (String setting : settings) {
+            CheckBox checkBox = new CheckBox(setting + " Messages");
+            checkBox.setSelected(true); // Assuming all settings are true initially
+            checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                // Here you should implement what happens when the checkbox is clicked
+                // For example, if you have a set method like `setIsErrorEnabled(newVal)`, you can call it here
+            });
+            vbox.getChildren().add(checkBox);
+        }
+
+        String[] colorSettings = {"ErrorColor", "WarningColor", "InfoColor", "SystemColor", "DebugColor"};
+        for (String colorSetting : colorSettings) {
+            int messageType;
+            Button button = new Button(colorSetting);
+            if(colorSetting.equals("ErrorColor")) {
+            	messageType = -2;
+            }else if(colorSetting.equals("WarningColor")){
+            	messageType = -1;
+            }else if(colorSetting.equals("InfoColor")) {
+            	messageType = 0;
+            }else if(colorSetting.equals("SystemColor")) {
+            	messageType = 1;
+            }else if(colorSetting.equals("DebugColor")) {
+            	messageType = 2;
+            }else {
+            	messageType = 100;
+            }
+            
+            button.setOnAction(e -> {
+            	MessageProcessor.cycleMessageTypeColor(messageType);
+            	ConsoleSettings(stage);
+            });
+            vbox.getChildren().add(button);
+        }
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> Settings.settingsMenu(stage));
+        vbox.getChildren().add(backButton);
+        TextFlow console = MessageProcessor.getUIConsole(stage);
+        vbox.getChildren().add(console);
+        stage.show();
+        
     }
 
     public static boolean saveConsoleSettings() {

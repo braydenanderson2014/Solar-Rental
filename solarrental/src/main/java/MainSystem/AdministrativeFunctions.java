@@ -26,7 +26,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
@@ -59,15 +61,38 @@ public class AdministrativeFunctions {
 
 	public static void displayAdministrativeMenu(Stage stage) {
 		updateRequestsMade();
-		// Get the dimensions of the screen
-	    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-		VBox layout = new VBox(10);
-		layout.setFillWidth(true);
-		layout.setAlignment(Pos.CENTER);
-
-		Label welcomeLabel = new Label("Welcome to the Solar Administrative Menu User: "
+		//#region NavBar
+		HBox navBar = new HBox(10);
+		Button logout = new Button("Logout");
+		logout.setOnAction(e -> {
+			SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"), stage);
+		});
+		Button settings = new Button("Settings");
+		settings.setOnAction(e -> {
+			Settings.settingsMenu(stage);
+		});
+		Button ConsoleButton = new Button("Console");
+		ConsoleButton.setOnAction(e -> {
+			
+		});
+		Label welcomeLabel = new Label("Welcome to the Solar Administrative Menu; Current User: "
 				+ MainSystemUserController.GetProperty("AccountName"));
-		layout.getChildren().add(welcomeLabel);
+		
+		navBar.getChildren().addAll(logout, settings, ConsoleButton, welcomeLabel);
+		//#endregion
+		
+		BorderPane mainLayout = new BorderPane();
+		mainLayout.setTop(navBar); // Navigation bar on top
+		
+		
+		// Get the dimensions of the screen
+		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+		VBox layout = new VBox(20);
+		layout.setAlignment(Pos.CENTER_LEFT);
+		//layout.setFillWidth(true);
+
+		
+		//layout.getChildren().add(welcomeLabel);
 
 		if (!targetAccount.equals("")) {
 			Label target = new Label("Target Account: " + targetAccount);
@@ -93,7 +118,11 @@ public class AdministrativeFunctions {
 		Button requestButton = new Button("Requests");
 		layout.getChildren().add(requestButton);
 		requestButton.setOnAction(e -> {
-
+			if(requestsMade == 0) {
+				requestsLabel.setText("No Requests Have been Made at this Time! Requests made: [" + requestsMade + "]");
+			} else {
+				resolutionAdvisory(stage);
+			}
 		});
 
 		Button changePass = new Button("Change a User's Pass");
@@ -134,7 +163,7 @@ public class AdministrativeFunctions {
 
 		Button cls = new Button("Clear Logs");
 		layout.getChildren().add(cls);
-		target.setOnAction(e -> {
+		cls.setOnAction(e -> {
 
 		});
 
@@ -143,7 +172,9 @@ public class AdministrativeFunctions {
 		back.setOnAction(e -> {
 			MainMenu.showMainMenu(stage);
 		});
-
+		// Set the max width of buttons to fill the available space
+	    
+	    
 		TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
 		GridPane gridPane = new GridPane();
 		gridPane.setAlignment(Pos.CENTER);
@@ -161,19 +192,19 @@ public class AdministrativeFunctions {
 
 			}
 		});
+		mainLayout.setCenter(layout);
 		// Create a new Scene for your main menu.
-		Scene mainMenuScene = new Scene(layout, 300, 200);
+		Scene mainMenuScene = new Scene(mainLayout);
 		// Create buttons and add them to the VBox...
 		// ...
 
 		// Set the new Scene to the stage.
 		stage.setScene(mainMenuScene);
 
-		stage.setWidth(screenBounds.getWidth() - 20); // 20 pixels less than screen width
-        stage.setHeight(screenBounds.getHeight() - 40); // 40 pixels less than screen height
+		stage.setMaximized(true);
 		// Set the fullscreen exit key combination to no combination, so user cannot
 		// accidentally exit fullscreen
-		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+		//stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		stage.setTitle("Administrative Menu");
 		// Show the stage
 		stage.show();
@@ -307,7 +338,7 @@ public class AdministrativeFunctions {
 		}
 	}
 
-	public static void resoultionAdvisory(Stage stage) {
+	public static void resolutionAdvisory(Stage stage) {
 		stage.setTitle("Resolution Advisory");
 		if (updateRequestsMade() == 0) {
 			MessageProcessor.processMessage(-1, "No Requests have been Made; Requests: [0]", true);

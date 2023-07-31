@@ -10,13 +10,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import MainSystem.SettingsController;
+import javafx.scene.control.Label;
 import messageHandler.MessageProcessor.Message;
 
 public class LogDump {
-    private static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
+    private static DateTimeFormatter myFormatObjs = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private static Label label = new Label();
 
     public static boolean DumpLog(String Mode) {
-        String path = SettingsController.getSetting("SystemPathLetter")+ SettingsController.getSetting("UserPath") + "Logs/" + Mode.toLowerCase() + "Log"  + LocalDateTime.now().format(myFormatObj) + ".txt";
+        String dir = SettingsController.getSetting("SystemPathLetter")+ SettingsController.getSetting("UserPath") + "Logs/";
+    	String path = SettingsController.getSetting("SystemPathLetter")+ SettingsController.getSetting("UserPath") + "Logs/" + Mode.toLowerCase() + "Log"  + LocalDateTime.now().format(myFormatObj) + ".txt";
+    	File file = new File(dir);
+        if(!file.exists()) {
+        	file.mkdirs();
+        }
         MessageProcessor.processMessage(2, "Dumping log to " + path, true);
         try {
             int messageType;
@@ -56,10 +64,11 @@ public class LogDump {
 
             writeLogFile(path, Mode.toUpperCase(), messages);
             MessageProcessor.processMessage(1, "Log successfully dumped to " + path, true);
+            setLabel("Log successfully dumped to " + path);
             return true;
         } catch (IOException e) {
             MessageProcessor.processMessage(-2, "Error writing log file: " + e.getMessage(), true);
-            MessageProcessor.processMessage(2, "Error writing log file: " + e.getMessage() + " :" + path, true);
+            MessageProcessor.processMessage(2, "Error writing log file: " + e.getMessage() + ": " + path, true);
             return false;
         }
     }
@@ -75,9 +84,16 @@ public class LogDump {
             for (MessageProcessor.Message message : messages) {
                 bw.write(message + "\r\n");
             }
-            bw.write("Report Generated at Time: " + LocalDateTime.now().format(myFormatObj));
+            bw.write("Report Generated at Time: " + LocalDateTime.now().format(myFormatObjs));
         }
             MessageProcessor.processMessage(1, "Log successfully dumped to " + path, true);
 
+    }
+    public static void setLabel(String message) {
+    	label = new Label(message);
+    }
+    
+    public static Label getLabel() {
+    	return label;
     }
 }

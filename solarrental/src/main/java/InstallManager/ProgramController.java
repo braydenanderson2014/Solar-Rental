@@ -11,7 +11,7 @@ import messageHandler.MessageProcessor;
 
 public class ProgramController {
     public static String userPathLetter = "C:";
-    public static String userDefaultPath = "\\Users\\Public\\Documents\\Solar\\ProgramFiles/";
+    public static String userDefaultPath = "\\Users\\Public\\Documents\\Solar\\ProgramFiles\\";
     public static String systemPathLetter = "C:";
     public static String systemDefaultPath = "\\Users\\Public\\Documents";
     public static String systemPath = "C:\\Users\\Public\\Documents";

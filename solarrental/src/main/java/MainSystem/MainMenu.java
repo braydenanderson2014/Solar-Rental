@@ -28,12 +28,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import messageHandler.AllMessages;
 import messageHandler.ConsoleHandler;
 import messageHandler.LogDump;
 import messageHandler.MessageProcessor;
 
 public class MainMenu {
+	private static Stage stage = new Stage();
 	public static void mainMenu() {
 		MainSystemUserController.loadUserProperties(SwitchController.focusUser);
 		if (MainSystemUserController.GetProperty("AccountName").equals("Blank")) {
@@ -114,6 +116,10 @@ public class MainMenu {
 	}
 
 	public synchronized static void showMainMenu(Stage currentStage) {
+		currentStage.close();
+		stage.close();
+		stage = new Stage();
+		stage.initStyle(StageStyle.DECORATED);
 		// Get the dimensions of the screen
 		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 		MainSystemUserController.loadUserProperties(SwitchController.focusUser);
@@ -133,37 +139,37 @@ public class MainMenu {
 		MainSystemUserController.loadUserProperties(SwitchController.focusUser);
 		if (Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8) {
 			adminButton.setOnAction(e -> {
-				AdministrativeFunctions.displayAdministrativeMenu(currentStage);
+				AdministrativeFunctions.displayAdministrativeMenu(stage);
 			});
 		}
 
 		Button noteButton = new Button("NOTE: Notebook ");
 		noteButton.setOnAction(e -> {
-			Notebook.notebookMenuUI(currentStage);
+			Notebook.notebookMenuUI(stage);
 		});
 
 		Button swiButton = new Button("SWI: Switch User");
 		swiButton.setOnAction(e -> {
-			SwitchController.switchMenu(2, currentStage);
+			SwitchController.switchMenu(2, stage);
 		});
 
 		Button setButton = new Button("SET: Settings");
 		setButton.setOnAction(e ->{
-			Settings.settingsMenu(currentStage);
+			Settings.settingsMenu(stage);
 		});
 		
 		Button helpButton = new Button("HELP: Display Help Messages");
 
 		Button offButton = new Button("OFF: Log Off");
 		offButton.setOnAction(e -> {
-			SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"), currentStage);
+			SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"), stage);
 		});
 		Button exitButton = new Button("EXIT: Exit the Program");
 		exitButton.setOnAction(e -> {
 			System.exit(0);
 		});
 
-		TextFlow consoleOutput = MessageProcessor.getUIConsole(currentStage);
+		TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
 		GridPane gridPane = new GridPane();
 		gridPane.setAlignment(Pos.CENTER);
 		gridPane.setHgap(10);
@@ -231,33 +237,48 @@ public class MainMenu {
 		gridPane.setPadding(new Insets(25, 25, 25, 25));
 
 		// Set the new Scene to the stage.
-		currentStage.setScene(mainMenuScene);
-		currentStage.setTitle("Main Menu");
+		stage.setScene(mainMenuScene);
+		stage.setTitle("Main Menu");
 
 		// Make stage full screen
-		// currentStage.setFullScreen(true);
+		// stage.setFullScreen(true);
 
 		// Instead, set the stage size to match the screen dimensions
 		// If you want some space around the edges, subtract from the width and height
-		currentStage.setWidth(screenBounds.getWidth() - 20); // 20 pixels less than screen width
-		currentStage.setHeight(screenBounds.getHeight() - 40); // 40 pixels less than screen height
+		stage.setWidth(screenBounds.getWidth() - 20); // 20 pixels less than screen width
+		stage.setHeight(screenBounds.getHeight() - 40); // 40 pixels less than screen height
 		// Set the fullscreen exit key combination to no combination, so user cannot
 		// accidentally exit fullscreen
-		currentStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		// Set window to maximized
-        currentStage.setMaximized(true);
+        stage.setMaximized(true);
+        stage.setResizable(true);
         Platform.runLater(new Runnable() {
 			public void run() {
-				currentStage.hide();
-				currentStage.show();
+				stage.hide();
+				stage.show();
 			}
 		});
         
 
         // Center window on screen
-        currentStage.centerOnScreen();
+        stage.centerOnScreen();
 
 		// Show the stage
 
 	}
+
+	public static Scene getMainMenuScene() {
+        // This is a placeholder; replace with your actual setup code for the main menu
+        VBox root = new VBox();
+
+        Label welcomeLabel = new Label("Welcome to the main menu!");
+        root.getChildren().add(welcomeLabel);
+
+        Scene scene = new Scene(root, 500, 400);
+        
+        // Additional setup, if needed...
+
+        return scene;
+    }
 }

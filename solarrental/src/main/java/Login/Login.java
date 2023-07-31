@@ -8,11 +8,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,10 +25,11 @@ import com.solarrental.assets.Logo;
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;
 import MainSystem.AdministrativeFunctions;
+import MainSystem.Main;
 import MainSystem.MainMenu;
 
 import MainSystem.SettingsController;
-import SelfUpdater.Main;
+
 import UserController.LoginUserController;
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
@@ -37,113 +40,190 @@ public class Login {
 	private static PasswordField passwordField;
 	static String username;
 	protected static String password;
+	public static GridPane gridPane = new GridPane();
+    public static Scene scene = new Scene(gridPane, 500, 400);
+    public static Stage stage = new Stage();
+    public static VBox vbox = new VBox();
 
-	public static void showLoginScreen(Stage stage) {
-		GridPane gridPane = new GridPane();
-		gridPane.setAlignment(Pos.CENTER);
-		gridPane.setHgap(10);
-		gridPane.setVgap(10);
-		gridPane.setPadding(new Insets(25, 25, 25, 25));
-		// Label Console = new Label("Console: ");
-		// gridPane.add(Console, 0, 4);
-		TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
+//	public static void showLoginScreen() {
+//		stage.close();
+//		stage = new Stage();
+//	    // Create a new stage for the login screen
+//	    stage.initStyle(StageStyle.TRANSPARENT);  // Make the stage transparent
+//
+//	    vbox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);" +  // Semi-transparent white
+//	                  "-fx-background-radius: 10;" +  // Rounded corners
+//	                  "-fx-padding: 20;" +  // Padding for visual comfort
+//	                  "-fx-alignment: center;");  // Content alignment
+//
+//	    gridPane.setAlignment(Pos.CENTER);
+//	    gridPane.setHgap(10);
+//	    gridPane.setVgap(10);
+//	    gridPane.setPadding(new Insets(25, 25, 25, 25));
+//
+//	    TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
+//	    gridPane.add(consoleOutput, 0, 4, 2, 1);
+//	    GridPane.setVgrow(consoleOutput, Priority.ALWAYS);
+//	    GridPane.setHgrow(consoleOutput, Priority.ALWAYS);
+//
+//	    Label usernameLabel = new Label("Username:");
+//	    gridPane.add(usernameLabel, 0, 1);
+//	    usernameField = new TextField();  // removed the TextField
+//	    gridPane.add(usernameField, 1, 1);
+//
+//	    Label passwordLabel = new Label("Password:");
+//	    gridPane.add(passwordLabel, 0, 2);
+//	    passwordField = new PasswordField();  // removed the PasswordField
+//	    gridPane.add(passwordField, 1, 2);
+//
+//	    Button loginBtn = new Button("Login");
+//	    loginBtn.setOnAction(e -> {
+//	        stage.close();
+//	        handleLogin(stage);
+//	    });
+//	    gridPane.add(loginBtn, 1, 3);
+//
+//	    Button CommandBtn = new Button("Commands");
+//	    CommandBtn.setOnAction(e -> commandInterface());
+//	    gridPane.add(CommandBtn, 0, 3);
+//
+//	    //vbox.getChildren().add(gridPane); // Add the gridPane to the root VBox
+//
+//	    scene.setFill(null);  // Make scene's background transparent
+//
+//	    stage.setScene(scene);
+//
+//	    scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+//	        if (event.getCode() == KeyCode.ENTER) {
+//	            stage.close();
+//	            handleLogin(stage);
+//	            event.consume();
+//	        }
+//	    });
+//
+//	    stage.sizeToScene();
+//	    stage.centerOnScreen();
+//	    stage.setTitle("Login Screen");
+//	    stage.show();
+//	}
 
-		// ...
+    public static void showLoginScreen() {
+    	stage.hide();
+    	stage.close();
+    	stage = new Stage();
+        stage.initStyle(StageStyle.UTILITY);
 
-		// Add consoleOutput to the grid
-		gridPane.add(consoleOutput, 0, 4, 2, 1);
-		GridPane.setVgrow(consoleOutput, Priority.ALWAYS);
-		GridPane.setHgrow(consoleOutput, Priority.ALWAYS);
+        VBox root = new VBox(10); // Vertical spacing between elements
+        root.setPadding(new Insets(20)); // Add padding to the VBox
+        Scene scene = new Scene(root, 400, 300);
+        scene.setFill(Color.TRANSPARENT); // Make the background transparent for rounded edges
+        stage.setTitle("Login Screen");
+        stage.setScene(scene);
+        stage.setResizable(false);
 
-		// ...
+        // Set the rounded window edges
 
-		Label usernameLabel = new Label("Username:");
-		gridPane.add(usernameLabel, 0, 1);
-		usernameField = new TextField();
-		gridPane.add(usernameField, 1, 1);
+        usernameField = new TextField();
+        usernameField.setPromptText("Username");
+        usernameField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                handleLogin(stage);
+            }
+        });
 
-		Label passwordLabel = new Label("Password:");
-		gridPane.add(passwordLabel, 0, 2);
-		passwordField = new PasswordField();
-		gridPane.add(passwordField, 1, 2);
+        passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+        passwordField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                handleLogin(stage);
+            }
+        });
 
-		Button loginBtn = new Button("Login");
-		loginBtn.setOnAction(e -> handleLogin());
-		gridPane.add(loginBtn, 1, 3);
+        Button loginButton = new Button("Login");
+        loginButton.setOnAction(e -> handleLogin(stage));
 
-		Button CommandBtn = new Button("Commands");
-		CommandBtn.setOnAction(e -> commandInterface(stage));
-		gridPane.add(CommandBtn, 0, 3);
+        Button commandsButton = new Button("Commands");
+        commandsButton.setOnAction(e -> {
+        	commandInterface();
+        });
 
-		Scene scene = new Scene(gridPane, 300, 200);
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				handleLogin();
-				event.consume();
-			}
-		});
-		stage.setScene(scene);
-		stage.setTitle("Login Screen");
-		stage.show();
+        TextFlow console = MessageProcessor.getUIConsole(stage);
+        root.getChildren().addAll(usernameField, passwordField, loginButton, commandsButton, console);
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    
+
+
+
+
+	public static void showLoginScreen(String User) {
+		stage.close();
+    	stage = new Stage();
+        stage.initStyle(StageStyle.UTILITY);
+
+        VBox root = new VBox(10); // Vertical spacing between elements
+        root.setPadding(new Insets(20)); // Add padding to the VBox
+        Scene scene = new Scene(root, 400, 300);
+        stage.hide();
+        scene.setFill(Color.TRANSPARENT); // Make the background transparent for rounded edges
+        stage.setTitle("Login Screen");
+        stage.setScene(scene);
+        stage.setResizable(false);
+
+        // Set the rounded window edges
+
+        usernameField = new TextField(User);
+        usernameField.setPromptText("Username");
+        usernameField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                handleLogin(Login.stage);
+            }
+        });
+
+        passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+        passwordField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                handleLogin(Login.stage);
+            }
+        });
+
+        Button loginButton = new Button("Login");
+        loginButton.setOnAction(e -> handleLogin(Login.stage));
+
+        Button commandsButton = new Button("Commands");
+
+        TextFlow console = MessageProcessor.getUIConsole(stage);
+        root.getChildren().addAll(usernameField, passwordField, loginButton, commandsButton, console);
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        stage.show();
 	}
 
-	public static void showLoginScreen(Stage stage, String User) {
-		GridPane gridPane = new GridPane();
-		gridPane.setAlignment(Pos.CENTER);
-		gridPane.setHgap(10);
-		gridPane.setVgap(10);
-		gridPane.setPadding(new Insets(25, 25, 25, 25));
+	private synchronized static void handleLogin(Stage stage) {
+	    String username = usernameField.getText();
+	    String password = passwordField.getText();
 
-		TextFlow consoleOutput = MessageProcessor.getUIConsole(stage);
-		// Add consoleOutput to the grid
-		gridPane.add(consoleOutput, 0, 4, 2, 1);
-		GridPane.setVgrow(consoleOutput, Priority.ALWAYS);
-		GridPane.setHgrow(consoleOutput, Priority.ALWAYS);
-
-		Label usernameLabel = new Label("Username:");
-		gridPane.add(usernameLabel, 0, 1);
-		usernameField = new TextField(User);
-		gridPane.add(usernameField, 1, 1);
-
-		Label passwordLabel = new Label("Password:");
-		gridPane.add(passwordLabel, 0, 2);
-		passwordField = new PasswordField();
-		gridPane.add(passwordField, 1, 2);
-
-		Button loginBtn = new Button("Login");
-		loginBtn.setOnAction(e -> handleLogin());
-		gridPane.add(loginBtn, 1, 3);
-
-		Scene scene = new Scene(gridPane, 300, 200);
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				handleLogin();
-				event.consume();
-			}
-		});
-		stage.setScene(scene);
-		stage.setTitle("Login Screen");
-		stage.show();
+	    if (LoginUserController.checkPassword(username, password)) {
+	        SwitchController.updateCurrentUser(username);
+	        
+	        //Scene mainMenuScene = MainMenu.getMainMenuScene();  // getMainMenuScene() is a new method you should create in MainMenu
+	        //stage.setScene(mainMenuScene);
+	        stage.close();
+	        MainMenu.showMainMenu(new Stage());
+	    } else {
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Login Failed");
+	        alert.setHeaderText(null);
+	        alert.setContentText("Invalid username or password. Please try again.");
+	        alert.showAndWait();
+	    }
 	}
 
-	private synchronized static void handleLogin() {
-		String username = usernameField.getText();
-		String password = passwordField.getText();
 
-		if (LoginUserController.checkPassword(username, password)) {
-			SwitchController.updateCurrentUser(username);
-
-			// Get the current stage and show main menu
-			Stage currentStage = (Stage) usernameField.getScene().getWindow();
-			MainMenu.showMainMenu(currentStage);
-		} else {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Login Failed");
-			alert.setHeaderText(null);
-			alert.setContentText("Invalid username or password. Please try again.");
-			alert.showAndWait();
-		}
-	}
 
 	public static void loginScreen() {
 		Logo.displayLogo();
@@ -196,9 +276,16 @@ public class Login {
 		}
 	}
 
-	public static void commandInterface(Stage stage) {
+	public static void commandInterface() {
+		stage.close();
+		stage = new Stage();
+		stage.initStyle(StageStyle.DECORATED);
+		stage.setMaximized(true);
+		VBox.clearConstraints(vbox);
+		GridPane.clearConstraints(gridPane);
+		
 		// Create a VBox to hold the Labels and buttons
-		VBox vbox = new VBox();
+		vbox = new VBox();
 		vbox.setSpacing(10); // Set spacing between elements
 
 		// Create a Label and button for each command, add them to the VBox
@@ -214,7 +301,7 @@ public class Login {
 		Button forceoffButton = new Button("ForceOff");
 		forceoffButton.setOnAction(e -> {
 			SwitchController.forceAllLogoff();
-			commandInterface(stage);
+			commandInterface();
 		});
 		vbox.getChildren().addAll(forceoffLabel, forceoffButton);
 
@@ -223,14 +310,9 @@ public class Login {
 		Button firstTime = new Button("Activate First Time");
 		firstTime.setOnAction(e -> {
 			SettingsController.setSetting("FirstTime", "true");
-			String [] args = null;
-			try {
-				Main.main(args);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				MessageProcessor.processMessage(-2, e1.toString(), true);
-			}
+			stage.close();
+			Main restart = new Main();
+			restart.start(new Stage());
 		});
 		vbox.getChildren().addAll(FirstTime, firstTime);
 
@@ -238,21 +320,17 @@ public class Login {
 		Button Restart = new Button("Restart Program");
 		Restart.setOnAction(e -> {
 			String [] args = null;
-			try {
-				MessageProcessor.processMessage(2, "User Restarted Program via Command Interface", true);
-				Main.main(args);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				MessageProcessor.processMessage(-2, e1.toString(), true);
-			}
+			stage.close();
+			Main prestart = new Main();
+			prestart.start(new Stage());
 		});
 		vbox.getChildren().addAll(restart, Restart);
 
 		Label back = new Label("[BACK]: \\\"Back\\\" takes you back to the Login Screen");
 		Button Back = new Button("Back");
 		Back.setOnAction(e -> {
-			showLoginScreen(stage);
+			//showLoginScreen(stage);
+			showLoginScreen();
 		});
 		vbox.getChildren().addAll(back, Back);
 
@@ -273,7 +351,7 @@ public class Login {
 			} else {
 				MessageProcessor.processMessage(-1, "Failed to Re-Enable Admin Account", true);
 			}
-			commandInterface(stage);
+			commandInterface();
 		});
 		vbox.getChildren().addAll(ResetAdmin, resetAdmin);
 
@@ -292,15 +370,16 @@ public class Login {
 		vbox.getChildren().addAll(exit, Exit);
 
 		// ...create the rest of your labels and buttons here...
-
+		stage.centerOnScreen();
 		// Create a new Scene for the VBox and show it on the stage
-		Scene scene = new Scene(vbox);
+		scene = new Scene(vbox);
+		stage.setResizable(true);
 		stage.setScene(scene);
 		stage.show();
 	}
 
 	private static void create(Stage stage) {
-		VBox vbox = new VBox();
+		vbox = new VBox();
 		// Create a Label for the user prompt
 		Label promptLabel = new Label("New Username:");
 		vbox.getChildren().add(promptLabel);
@@ -321,12 +400,13 @@ public class Login {
 			// requirements.
 			// This example assumes loginScreen() is a method that sets up the login screen
 			// on the current stage
-			showLoginScreen(stage);
+			//showLoginScreen(stage);
+			showLoginScreen();
 		});
 		vbox.getChildren().add(submitButton);
 
 		// Then you would add the VBox to your stage and show it:
-		Scene scene = new Scene(vbox);
+		scene = new Scene(vbox);
 		stage.setScene(scene);
 		stage.show();
 	}
