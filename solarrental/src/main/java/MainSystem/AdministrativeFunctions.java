@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
@@ -53,27 +54,30 @@ public class AdministrativeFunctions {
 	public static List<String> accountRequestNamePool = new ArrayList<>();
 	public static String targetAccount = "";
 	public static int requestsMade = 0;
+	
 
 	public static int updateRequestsMade() {
 		requestsMade = administrativeRequests.size();
 		return requestsMade;
 	}
 
-	public static void displayAdministrativeMenu(Stage stage) {
+	public static void displayAdministrativeMenu(Stage stages) {
+		stages.close();
+		final Stage stage = new Stage();
 		updateRequestsMade();
 		//#region NavBar
 		HBox navBar = new HBox(10);
 		Button logout = new Button("Logout");
 		logout.setOnAction(e -> {
-			SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"), stage);
+			SwitchController.removeCurrentUser(MainSystemUserController.GetProperty("Username"), new Stage());
 		});
 		Button settings = new Button("Settings");
 		settings.setOnAction(e -> {
-			Settings.settingsMenu(stage);
+			Settings.settingsMenu(new Stage());
 		});
 		Button ConsoleButton = new Button("Console");
 		ConsoleButton.setOnAction(e -> {
-			
+			ConsoleHandler.ConsoleSettings(new Stage());
 		});
 		Label welcomeLabel = new Label("Welcome to the Solar Administrative Menu; Current User: "
 				+ MainSystemUserController.GetProperty("AccountName"));
@@ -88,7 +92,9 @@ public class AdministrativeFunctions {
 		// Get the dimensions of the screen
 		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 		VBox layout = new VBox(20);
-		layout.setAlignment(Pos.CENTER_LEFT);
+		layout.setAlignment(Pos.TOP_LEFT);
+		layout.setPadding(new Insets(20));
+		layout.setMargin(layout, new Insets(20));
 		//layout.setFillWidth(true);
 
 		
@@ -102,13 +108,13 @@ public class AdministrativeFunctions {
 		Button createButton = new Button("Create a User");
 		layout.getChildren().add(createButton);
 		createButton.setOnAction(e -> {
-			MaintainUserController.displayCreateNewUserUI(stage);
+			MaintainUserController.displayCreateNewUserUI(new Stage());
 		});
 
 		Button deleteButton = new Button("Delete a User");
 		layout.getChildren().add(deleteButton);
 		deleteButton.setOnAction(e -> {
-			MaintainUserController.deleteUser(targetAccount, stage);
+			MaintainUserController.deleteUser(targetAccount, new Stage());
 			// Your code here...
 		});
 
@@ -121,7 +127,7 @@ public class AdministrativeFunctions {
 			if(requestsMade == 0) {
 				requestsLabel.setText("No Requests Have been Made at this Time! Requests made: [" + requestsMade + "]");
 			} else {
-				resolutionAdvisory(stage);
+				resolutionAdvisory(new Stage());
 			}
 		});
 
@@ -131,19 +137,41 @@ public class AdministrativeFunctions {
 
 		});
 
-		Button enableDisable = new Button("Enable/Disable an Account");
+		Button enableDisable = new Button("Enable/Disable an Account; Currently: " + MaintainUserController.GetProperty("Account"));
 		layout.getChildren().add(enableDisable);
 		enableDisable.setOnAction(e -> {
-
+			if(targetAccount.equals("")) {
+				MessageProcessor.processMessage(-1, "No Account has been loaded, please load an account first!", true);
+				displayAdministrativeMenu(stage);
+			}else {
+				if(MaintainUserController.GetProperty("Account").equals("Enabled")) {
+					MaintainUserController.setValue(targetAccount, "Account", "Disabled");
+					enableDisable.setText("Enable/Disable an Account; Currently: " + MaintainUserController.GetProperty("Account"));
+				}else {
+					MaintainUserController.setValue(targetAccount, "Account", "Enabled");
+					enableDisable.setText("Enable/Disable an Account; Currently: " + MaintainUserController.GetProperty("Account"));				}
+			}
+			
 		});
 
-		Button passFlag = new Button("Pass Flag");
+		Button passFlag = new Button("Pass Flag; Currently: " + MaintainUserController.GetProperty("PassFlag"));
 		layout.getChildren().add(passFlag);
 		passFlag.setOnAction(e -> {
-
+			if(targetAccount.equals("")) {
+				MessageProcessor.processMessage(-1, "No Account has been loaded, please load an account first!", true);
+				displayAdministrativeMenu(stage);
+			}else {
+				if(Boolean.parseBoolean(MaintainUserController.GetProperty("PassFlag"))) {
+					MaintainUserController.setValue(targetAccount, "PassFlag", String.valueOf(false));
+					passFlag.setText("Pass Flag; Currently: " + MaintainUserController.GetProperty("PassFlag"));
+				} else {
+					MaintainUserController.setValue(targetAccount, "PassFlag", String.valueOf(true));
+					passFlag.setText("Pass Flag; Currently: " + MaintainUserController.GetProperty("PassFlag"));
+				}
+			}
 		});
-
-		Button list = new Button("List All Users");
+		UserListController.loadUserList();
+		Button list = new Button("List All Users; Current User Count: " + UserListController.userlist.size());
 		layout.getChildren().add(list);
 		list.setOnAction(e -> {
 
@@ -158,7 +186,9 @@ public class AdministrativeFunctions {
 		Button target = new Button("Set Target Account");
 		layout.getChildren().add(target);
 		target.setOnAction(e -> {
-
+			stage.close();
+			setTarget();
+			displayAdministrativeMenu(new Stage());
 		});
 
 		Button cls = new Button("Clear Logs");
@@ -170,7 +200,7 @@ public class AdministrativeFunctions {
 		Button back = new Button("Return to Main Menu");
 		layout.getChildren().add(back);
 		back.setOnAction(e -> {
-			MainMenu.showMainMenu(stage);
+			MainMenu.showMainMenu(new Stage());
 		});
 		// Set the max width of buttons to fill the available space
 	    
@@ -209,6 +239,43 @@ public class AdministrativeFunctions {
 		// Show the stage
 		stage.show();
 	}
+
+
+	private static void setTarget() {
+	    Stage stage = new Stage();
+	    Label title = new Label("Target a User");
+	    TextField targetUserField = new TextField();
+	    Button confirmButton = new Button("Confirm");
+	    Button backButton = new Button("Back");
+
+	    Label messageLabel = new Label(); // To display messages
+
+	    confirmButton.setOnAction(event -> {
+	        targetAccount = targetUserField.getText();
+	        boolean exists = UserListController.checkUserList(targetAccount);
+	        if (exists) {
+	    		MaintainUserController.loadUserProperties(targetAccount);
+	            stage.close();
+	        } else {
+	            messageLabel.setText("User does not exist. Please try again.");
+	        }
+	    });
+
+	    backButton.setOnAction(event -> {
+	        targetAccount = ""; // Set an empty targetAccount
+	        stage.close();
+	    });
+
+	    VBox layout = new VBox(10);
+	    layout.getChildren().addAll(title, targetUserField, confirmButton, backButton, messageLabel);
+
+	    Scene scene = new Scene(layout, 300, 200);
+	    stage.setScene(scene);
+	    stage.showAndWait();
+	}
+
+
+
 
 	public static void AdministrativeMenu() {
 		updateRequestsMade();

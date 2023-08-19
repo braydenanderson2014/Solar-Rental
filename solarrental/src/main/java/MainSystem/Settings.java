@@ -24,14 +24,17 @@ import UserController.MaintainUserController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import messageHandler.AllMessages;
 import messageHandler.ConsoleHandler;
@@ -357,7 +360,8 @@ public class Settings {
 	}
 
 	public static void settingsMenu(Stage primaryStage) {
-		VBox vbox = new VBox(); // Create a layout to hold your items
+		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+		VBox vbox = new VBox(20); // Create a layout to hold your items
 		checkRequests();
 		checkNotifications();
 		requestsMade = AdministrativeFunctions.updateRequestsMade();
@@ -368,12 +372,18 @@ public class Settings {
 		path.setOnAction(e -> {
 
 		});
-
+		HBox hbox = new HBox(path);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button Console = new Button("Console Settings");
 		Console.setOnAction(e -> {
 			ConsoleHandler.ConsoleSettings(primaryStage);
 		});
-
+		hbox = new HBox(Console);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button RAB = new Button("Report A Bug");
 		RAB.setOnAction(e -> {
 			try {
@@ -385,6 +395,9 @@ public class Settings {
 				MessageProcessor.processMessage(-1, "Unable to Launch Webpage, [" + GE.toString() + "]", true);
 			}
 		});
+		hbox = new HBox(RAB); 
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
 		Button log;
 		if (logType.equals("debugmt")) {
 			log = new Button("Log: Log Dump Type: DEBUG");
@@ -415,12 +428,17 @@ public class Settings {
 			}
 
 		});
-
+		hbox = new HBox(log);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
 		Button viewLogs = new Button("View Logs");
 		viewLogs.setOnAction(e -> {
 
 		});
-
+		hbox = new HBox(viewLogs);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button Dump = new Button("Dump Logs");
 		Dump.setOnAction(e -> {
 			if(logType.equals("debugmt")) {
@@ -430,14 +448,20 @@ public class Settings {
 			Label label = LogDump.getLabel();
 			vbox.getChildren().add(label);
 		});
-
+		hbox = new HBox(Dump);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
+		
 		Button Update = new Button("Update Account Menu");
 		Update.setOnAction(e -> {
 
 		});
-
+		hbox = new HBox(Update);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button UI = new Button("UI: Enable/Disable UI Mode: Enabled");
-
 		UI.setOnAction(e -> {
 			Main.setStage(primaryStage);
 			if (SettingsController.getSetting("UI").equals("Enabled")) {
@@ -447,31 +471,44 @@ public class Settings {
 				settingsMenu();
 			}
 		});
-
+		hbox = new HBox(UI);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button Force = new Button("Force Profile Update");
 		Force.setOnAction(e -> {
 
 		});
+		hbox = new HBox(Force);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button First;
 		Button setupdate;
 		String key = "PermissionLevel";
 		if (parseInt(MainSystemUserController.GetProperty(key)) >= 6) {
-			First = new Button("First: Enable/Disable FirstTime Setup:" + FirstTimeManager.checkFirstTime());
+			First = new Button("First: Enable/Disable FirstTime Setup: " + String.valueOf(FirstTimeManager.checkFirstTime()).toUpperCase());
 			First.setOnAction(e -> {
 				if (SettingsController.getSetting("FirstTime").equals("true")) {
 					SettingsController.setSetting("FirstTime", "false");
-					First.setText("First: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+					First.setText("First: Enable/Disable FirstTime Setup: " + String.valueOf(FirstTimeManager.checkFirstTime()).toUpperCase());
 				} else {
 					SettingsController.setSetting("FirstTime", "true");
-					First.setText("First: Enable/Disable FirstTime Setup: " + FirstTimeManager.checkFirstTime());
+					First.setText("First: Enable/Disable FirstTime Setup: " + String.valueOf(FirstTimeManager.checkFirstTime()).toUpperCase());
 				}
 			});
-
+			hbox = new HBox(First);
+			hbox.setAlignment(Pos.CENTER);
+			vbox.getChildren().add(hbox);
+			
+			
 			setupdate = new Button("Force Configuration update");
 			setupdate.setOnAction(e -> {
 				ForceUpdateConfiguration(primaryStage);
 			});
-			vbox.getChildren().addAll(setupdate, First);
+			hbox = new HBox(setupdate);
+			hbox.setAlignment(Pos.CENTER);
+			vbox.getChildren().add(hbox);
 		}
 		Label requests;
 		Button Requests;
@@ -498,6 +535,14 @@ public class Settings {
 				}
 			});
 		}
+		hbox = new HBox(requests);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
+		hbox = new HBox(Requests);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		Button notify = null;
 		Label notificationCount = null;
 		if (parseInt(MainSystemUserController.GetProperty(key)) < 8) {
@@ -506,19 +551,36 @@ public class Settings {
 			notify.setOnAction(e -> {
 
 			});
-			vbox.getChildren().addAll(notificationCount, notify);
+			hbox = new HBox(notificationCount);
+			hbox.setAlignment(Pos.CENTER);
+			vbox.getChildren().add(hbox);
+			
+			hbox = new HBox(notify);
+			hbox.setAlignment(Pos.CENTER);
+			vbox.getChildren().add(hbox);
 		}
 		Button back = new Button("Return to Main Menu");
 		back.setOnAction(e -> {
 			MainMenu.showMainMenu(primaryStage);
 		});
+		hbox = new HBox(back);
+		hbox.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(hbox);
+		
 		TextFlow console = MessageProcessor.getUIConsole(primaryStage);
-		vbox.getChildren().addAll(path, Console, RAB, log, viewLogs, Dump, Update, UI, Force, requests, Requests, back,
-				console);
-		Scene scene = new Scene(vbox);
+		vbox.getChildren().add(console);
+		//HBox hbox = new HBox();
+		//hbox.getChildren().addAll(path, Console, RAB, log, viewLogs, Dump, Update, UI, Force, requests, Requests, back,
+			//oo	console);
+		primaryStage.setWidth(screenBounds.getWidth() - 20); // 20 pixels less than screen width
+		primaryStage.setHeight(screenBounds.getHeight() - 40); // 40 pixels less than screen height
+
+		Scene scene = new Scene(vbox, 300, 200);
 		primaryStage.setScene(scene);
-		primaryStage.requestFocus();
+		primaryStage.setResizable(true);
 		primaryStage.centerOnScreen();
+		primaryStage.setMaximized(false);
+		primaryStage.requestFocus();
 		primaryStage.setMaximized(true);
 		primaryStage.show();
 	}

@@ -188,7 +188,7 @@ public class ConsoleHandler {
         VBox vbox = new VBox();
         Scene scene = new Scene(vbox);
         stage.setScene(scene);
-
+        stage.setTitle("Console Settings");
         Label title = new Label("Console Settings");
         vbox.getChildren().add(title);
 
@@ -199,6 +199,7 @@ public class ConsoleHandler {
             checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
                 // Here you should implement what happens when the checkbox is clicked
                 // For example, if you have a set method like `setIsErrorEnabled(newVal)`, you can call it here
+            	//TODO: Implement what Happens
             });
             vbox.getChildren().add(checkBox);
         }
