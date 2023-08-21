@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import InstallManager.ProgramController;
@@ -14,10 +16,10 @@ import UserController.MaintainUserController;
 import UserController.UserListController;
 
 public class UserMessageHandler {
-    static String UserProperties = ProgramController.userRunPath + "\\Users/";
-    static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
-    static List<String> userNotifications = new ArrayList<>();
-    static ArrayList<String> Contents = new ArrayList<>();
+    private static String UserProperties = ProgramController.userRunPath + "\\Users/";
+    private static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
+    public static List<String> userNotifications = new ArrayList<>();
+    public static ArrayList<String> Contents = new ArrayList<>();
     public static boolean sendMessageToUser(String user, String message) {
         if(UserListController.SearchForUser(user)){
             if(CheckUserAccount(user)){
@@ -110,7 +112,12 @@ public class UserMessageHandler {
                 }
                 return true;
     		} catch(IOException e) {
-    			
+    			StringWriter sw = new StringWriter();
+    		    PrintWriter pw = new PrintWriter(sw);
+    		    e.printStackTrace(pw);
+    		    String stackTrace = sw.toString();
+
+    		    MessageProcessor.processMessage(2, stackTrace, true);
     			return false;
     		}
     	}

@@ -46,6 +46,7 @@ import messageHandler.ConsoleHandler;
 import messageHandler.ConsoleSettings;
 import messageHandler.LogDump;
 import messageHandler.MessageProcessor;
+import messageHandler.UserMessageHandler;
 import messageHandler.ViewLogManager;
 
 public class Settings {
@@ -84,8 +85,9 @@ public class Settings {
 					BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
 					String line;
 					while ((line = reader.readLine()) != null) {
-						if (!line.equals("")) {
+						if (!line.equals("") || !line.equals(" ")) {
 							myNotifications.add(line);
+							
 						}
 					}
 					reader.close();
@@ -110,6 +112,10 @@ public class Settings {
 
 	public static boolean printRequests() {// Print User Requests. (submitted requests to admin)
 		checkRequests();
+		if(myRequests.size() == 0) {
+			MessageProcessor.processMessage(-1, "No Requests Have Been Filed at this time", true);
+			settingsMenu();
+		}
 		int item = 0;
 		Logo.displayLogo();
 		for (int i = 0; i < myRequests.size(); i++) {
@@ -278,7 +284,6 @@ public class Settings {
 					"Path Controller has not yet been implemented, Check back at a later update", true);
 			settingsMenu();
 		} else if (option.equals("noti")) {
-			MessageProcessor.processMessage(1, "This Option is not yet Available, Check back at a later update", true);
 			checkNotifications();
 			printNotifications();
 
@@ -370,7 +375,6 @@ public class Settings {
 						settingsMenu(Main.getStage());
 					});
 				}
-
 			}
 		} else if (option.equals("return")) {
 			// MainSystem
@@ -384,7 +388,11 @@ public class Settings {
 	private static void printNotifications() {
 		if(MainSystemUserController.GetProperty("UserNotification").equals("Disabled")) {
 			MessageProcessor.processMessage(-1, "User Messages Have not been Enabled, Please contact Admin!", true);
-			return;
+			settingsMenu();
+		}
+		if(myNotifications.size() == 0) {
+			MessageProcessor.processMessage(-1, "No Notifications to view!", true);
+			settingsMenu();
 		}
 		for(int i = 0; i < myNotifications.size(); i++) {
 			System.out.println(myNotifications.get(i));
@@ -393,17 +401,21 @@ public class Settings {
 		// TODO Auto-generated method stub
 		String enter = CustomScanner.nextLine().toLowerCase();
 		if(enter.equals("y") || enter.equals("yes")) {
+			MessageProcessor.processMessage(2, "User chose option: " + enter + " for printNotification question about deletion", false);
 			try {
 				File file = new File(ProgramController.userRunPath + "\\Users\\Notifications\\" + SwitchController.focusUser + ".txt");
-				BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-	            myNotifications.clear();
-	            for(String line : myNotifications){
-	                writer.write("");
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+	            UserMessageHandler.userNotifications.clear();
+	            for(int i = 0; i < myNotifications.size(); i++){
+	            	
+	                writer.write(" ");
 	                writer.newLine();
+	                writer.write(" ");
 	            }
 	            writer.write("");
 	            writer.newLine();
 	            writer.close();
+	            myNotifications.clear();
 			}catch(IOException e) {
 				StringWriter sw = new StringWriter();
 			    PrintWriter pw = new PrintWriter(sw);

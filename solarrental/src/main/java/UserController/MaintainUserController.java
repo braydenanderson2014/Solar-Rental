@@ -45,7 +45,14 @@ public class MaintainUserController {
     private static boolean loadUserlist(){
         return UserListController.loadUserList();
     }
-
+    public static String checkStatus() {
+    	if(MainSystemUserController.GetProperty("UserNotification").equals("Disabled")) {
+    		status = "Disabled";
+    	}else if(MainSystemUserController.GetProperty("UserNotification").equals("Enabled")) {
+    		status = "Enabled";
+    	}
+    	return status;
+    }
     public static boolean setValue(String user, String key, String value){
         loadUserProperties(user);
         userprop.setProperty(key, value);
@@ -324,6 +331,7 @@ public class MaintainUserController {
     }
 
     public static void updateProfileSettings(String User){
+    	checkStatus();
         Logo.displayLogo();
         System.out.println("Account Updater: Menu");
         Logo.displayLine();
@@ -344,6 +352,10 @@ public class MaintainUserController {
             updateProfileSettings(User);
         }else if(option.equals("noti")){
             AdministrativeFunctions.newRequest(User, "Noti", "Enable Notifications", "Blank");
+            if(status.equals("Enabled")) {
+            	MessageProcessor.processMessage(-1, "Notifications have already been Enabled On your account!", true);
+            	updateProfileSettings(User);
+            }
             updateProfileSettings(User);
         }else if(option.equals("perm")){
             if(!SwitchController.focusUser.equals("Admin")){
