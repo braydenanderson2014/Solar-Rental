@@ -16,7 +16,12 @@ public class UserListController {
 		MessageProcessor.processMessage(-2, "Failed to Load userList in UserlistController", false);
 		return false;
     }
-
+    public static void DisplayAllUsers() {
+    	System.out.println(userlist.keys() + " " + userlist.values());
+    }
+    public static Properties GetAllUsersUI() {
+    	return userlist;
+    }
     public static boolean loadUserList() {
         if(CheckUserListAvailability()){
             try (InputStream input = new FileInputStream(UserList)){
@@ -25,6 +30,12 @@ public class UserListController {
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 return false;
             }
         }
@@ -46,6 +57,12 @@ public class UserListController {
             return true;
         }catch(IOException e){
             MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             return false;
         }
     }

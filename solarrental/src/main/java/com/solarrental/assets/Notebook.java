@@ -230,7 +230,12 @@ public class Notebook {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					StringWriter sw = new StringWriter();
+				    PrintWriter pw = new PrintWriter(sw);
+				    e.printStackTrace(pw);
+				    String stackTrace = sw.toString();
+
+				    MessageProcessor.processMessage(2, stackTrace, true);
 				}
 				stage.show();
 			}
@@ -278,6 +283,12 @@ public class Notebook {
 			    saveProperties();
 			} catch (IOException e) {
 			    MessageProcessor.processMessage(-2, "Error creating note: " + e.getMessage(), true);
+			    StringWriter sw = new StringWriter();
+			    PrintWriter pw = new PrintWriter(sw);
+			    e.printStackTrace(pw);
+			    String stackTrace = sw.toString();
+
+			    MessageProcessor.processMessage(2, stackTrace, true);
 			}
 			creatingNote = false;
         }
@@ -320,6 +331,12 @@ public class Notebook {
                 } catch (IOException ex) {
                     resultLabel.setText("Error creating note: " + ex.getMessage());
                     MessageProcessor.processMessage(-2, "Error creating note: " + ex.getMessage(), true);
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace(pw);
+                    String stackTrace = sw.toString();
+
+                    MessageProcessor.processMessage(2, stackTrace, true);
                 }
             }
         });
@@ -344,6 +361,12 @@ public class Notebook {
                     } catch (IOException ex) {
                         resultLabel.setText("Error creating note: " + ex.getMessage());
                         MessageProcessor.processMessage(-2, "Error creating note: " + ex.getMessage(), true);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        ex.printStackTrace(pw);
+                        String stackTrace = sw.toString();
+
+                        MessageProcessor.processMessage(2, stackTrace, true);
                     }
                 }
                 event.consume();
@@ -396,6 +419,13 @@ public class Notebook {
             MessageProcessor.processMessage(1, "Note loaded successfully!", true);
         } catch (IOException e) {
             MessageProcessor.processMessage(-1, "Failed to load the note. Please try again.", true);
+            MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
         }
     
         notebookMenu();
@@ -450,6 +480,12 @@ public class Notebook {
             } catch (IOException ex) {
                 resultLabel.setText("Failed to load the note. Please try again.");
                 MessageProcessor.processMessage(-1, "Failed to load the note. Please try again.", true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
             }
         });
         GridPane gridPane = new GridPane();
@@ -483,6 +519,12 @@ public class Notebook {
                 } catch (IOException ex) {
                     resultLabel.setText("Failed to load the note. Please try again.");
                     MessageProcessor.processMessage(-1, "Failed to load the note. Please try again.", true);
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace(pw);
+                    String stackTrace = sw.toString();
+
+                    MessageProcessor.processMessage(2, stackTrace, true);
                 }
                 event.consume();
             }
@@ -510,10 +552,22 @@ public class Notebook {
         }catch(IOException e){
             System.out.println("No note loaded");
             MessageProcessor.processMessage(-2, e.toString(), false);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             notebookMenu();
         }catch(NullPointerException e){
             System.out.println("No note loaded");
             MessageProcessor.processMessage(-2, e.toString(), false);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             notebookMenu();
         }
     if (currentNote != null) {
@@ -549,6 +603,12 @@ public class Notebook {
         } catch (IOException e) {
             System.err.println("Error while writing to the note: " + e.getMessage());
             MessageProcessor.processMessage(-2, "Error while writing to the note: " + e.getMessage(), false);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
         }
         MessageProcessor.processMessage(1, "Note successfully updated.", true);
         notebookMenu();
@@ -571,10 +631,22 @@ public class Notebook {
             currentNoteDisplay.setText(String.join("\n", currentNote));
         } catch (IOException e) {
             MessageProcessor.processMessage(-2, e.toString(), false);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             notebookMenuUI(stage);
             return;
         } catch (NullPointerException e) {
             MessageProcessor.processMessage(-2, e.toString(), false);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             notebookMenuUI(stage);
             return;
         }
@@ -593,6 +665,12 @@ public class Notebook {
                 inputField.clear();
             } catch (IOException ex) {
                 MessageProcessor.processMessage(-2, "Error while writing to the note: " + ex.getMessage(), false);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
             }
         });
 
@@ -606,6 +684,12 @@ public class Notebook {
                 }
             } catch (IOException ex) {
                 MessageProcessor.processMessage(-2, "Error while undoing last line: " + ex.getMessage(), false);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
             }
         });
 
@@ -649,6 +733,12 @@ public class Notebook {
                 lineNumber = Integer.parseInt(CustomScanner.nextLine());
             } catch (NumberFormatException e) {
                 MessageProcessor.processMessage(-2, "Invalid input. Please enter a valid line number.", true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 return;
             }
     
@@ -717,6 +807,12 @@ public class Notebook {
                     lineNumber = Integer.parseInt(inputField.getText());
                 } catch (NumberFormatException ex) {
                     MessageProcessor.processMessage(-2, "Invalid input. Please enter a valid line number.", true);
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace(pw);
+                    String stackTrace = sw.toString();
+
+                    MessageProcessor.processMessage(2, stackTrace, true);
                     return;
                 }
 
@@ -752,6 +848,12 @@ public class Notebook {
                 }
                 MessageProcessor.processMessage(1, "Current note saved successfully!", true);
             } catch (IOException e) {
+            	StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 MessageProcessor.processMessage(-2, "Error saving current note: " + e.getMessage(), true);
             }
         } else {
@@ -768,6 +870,12 @@ public class Notebook {
             }
         } catch (IOException e) {
             MessageProcessor.processMessage(-2, "Error saving properties: " + e.getMessage(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
         }
     }
 
@@ -779,18 +887,36 @@ public class Notebook {
                 userNotebooks.load(fis);
             } catch (IOException e) {
                 MessageProcessor.processMessage(-2, "Error loading properties: " + e.getMessage(), true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
             }
         } else {
             try {
                 userPropertiesFile.createNewFile();
             } catch (IOException e) {
                 MessageProcessor.processMessage(-2, "Error creating properties file: " + e.getMessage(), true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
             }
             saveProperties();
             try (FileInputStream fis = new FileInputStream(userPropertiesFile)) {
                 userNotebooks.load(fis);
             } catch (IOException e) {
                 MessageProcessor.processMessage(-2, "Error loading properties: " + e.getMessage(), true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
             }
         }
     }

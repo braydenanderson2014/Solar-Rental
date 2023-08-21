@@ -32,6 +32,12 @@ public class LoginUserController {
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
                 MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 return false;
             }
         }
@@ -50,6 +56,12 @@ public class LoginUserController {
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 return false;
             }
         }

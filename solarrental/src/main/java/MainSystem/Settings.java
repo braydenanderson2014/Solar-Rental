@@ -3,7 +3,12 @@ package MainSystem;
 import static java.lang.Integer.parseInt;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -86,8 +91,13 @@ public class Settings {
 					reader.close();
 					return true;
 				} catch (Exception e) {
-					MessageProcessor.processMessage(-2,
-							"Failed to read Notification File for User: " + SwitchController.focusUser, true);
+					MessageProcessor.processMessage(-2,	"Failed to read Notification File for User: " + SwitchController.focusUser, true);
+					StringWriter sw = new StringWriter();
+				    PrintWriter pw = new PrintWriter(sw);
+				    e.printStackTrace(pw);
+				    String stackTrace = sw.toString();
+
+				    MessageProcessor.processMessage(2, stackTrace, true);
 					return false;
 				}
 			}
@@ -149,6 +159,12 @@ public class Settings {
 			}
 		} catch (InputMismatchException | IndexOutOfBoundsException e) {
 			MessageProcessor.processMessage(-2, e.toString(), true);
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
 		}
 		return true;
 	}
@@ -264,8 +280,8 @@ public class Settings {
 		} else if (option.equals("noti")) {
 			MessageProcessor.processMessage(1, "This Option is not yet Available, Check back at a later update", true);
 			checkNotifications();
+			printNotifications();
 
-			settingsMenu();
 		} else if (option.equals("update")) {
 			MaintainUserController.loadUserProperties(SwitchController.focusUser);
 			MaintainUserController.updateProfileSettings(MaintainUserController.GetProperty("Username"));
@@ -277,6 +293,12 @@ public class Settings {
 				MessageProcessor.processMessage(2, SettingsController.getSetting("debugSite"), true);
 			} catch (Exception e) {
 				MessageProcessor.processMessage(-1, "Unable to Launch Webpage, [" + e.toString() + "]", true);
+				StringWriter sw = new StringWriter();
+			    PrintWriter pw = new PrintWriter(sw);
+			    e.printStackTrace(pw);
+			    String stackTrace = sw.toString();
+
+			    MessageProcessor.processMessage(2, stackTrace, true);
 			}
 			settingsMenu();
 		} else if (option.equals("force")) {
@@ -359,6 +381,42 @@ public class Settings {
 		}
 	}
 
+	private static void printNotifications() {
+		if(MainSystemUserController.GetProperty("UserNotification").equals("Disabled")) {
+			MessageProcessor.processMessage(-1, "User Messages Have not been Enabled, Please contact Admin!", true);
+			return;
+		}
+		for(int i = 0; i < myNotifications.size(); i++) {
+			System.out.println(myNotifications.get(i));
+		}
+		System.out.println("Would you like to clear the Notification?");
+		// TODO Auto-generated method stub
+		String enter = CustomScanner.nextLine().toLowerCase();
+		if(enter.equals("y") || enter.equals("yes")) {
+			try {
+				File file = new File(ProgramController.userRunPath + "\\Users\\Notifications\\" + SwitchController.focusUser + ".txt");
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+	            myNotifications.clear();
+	            for(String line : myNotifications){
+	                writer.write("");
+	                writer.newLine();
+	            }
+	            writer.write("");
+	            writer.newLine();
+	            writer.close();
+			}catch(IOException e) {
+				StringWriter sw = new StringWriter();
+			    PrintWriter pw = new PrintWriter(sw);
+			    e.printStackTrace(pw);
+			    String stackTrace = sw.toString();
+
+			    MessageProcessor.processMessage(2, stackTrace, true);
+			}
+		}
+		settingsMenu();
+		
+	}
+
 	public static void settingsMenu(Stage primaryStage) {
 		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 		VBox vbox = new VBox(20); // Create a layout to hold your items
@@ -393,6 +451,12 @@ public class Settings {
 				MessageProcessor.processMessage(2, SettingsController.getSetting("debugSite"), true);
 			} catch (Exception GE) {
 				MessageProcessor.processMessage(-1, "Unable to Launch Webpage, [" + GE.toString() + "]", true);
+				StringWriter sw = new StringWriter();
+			    PrintWriter pw = new PrintWriter(sw);
+			    GE.printStackTrace(pw);
+			    String stackTrace = sw.toString();
+
+			    MessageProcessor.processMessage(2, stackTrace, true);
 			}
 		});
 		hbox = new HBox(RAB); 

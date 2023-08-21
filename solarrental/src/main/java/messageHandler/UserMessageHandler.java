@@ -6,8 +6,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
 import InstallManager.ProgramController;
+import Login.SwitchController;
 import MainSystem.AdministrativeFunctions;
 import UserController.MaintainUserController;
 import UserController.UserListController;
@@ -15,7 +16,8 @@ import UserController.UserListController;
 public class UserMessageHandler {
     static String UserProperties = ProgramController.userRunPath + "\\Users/";
     static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
-    static ArrayList<String> Contents = new ArrayList<String>();
+    static List<String> userNotifications = new ArrayList<>();
+    static ArrayList<String> Contents = new ArrayList<>();
     public static boolean sendMessageToUser(String user, String message) {
         if(UserListController.SearchForUser(user)){
             if(CheckUserAccount(user)){
@@ -55,6 +57,7 @@ public class UserMessageHandler {
                 try {
                     @SuppressWarnings("resource")
 					BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+                    Contents.removeIf(null);
                     for(String line : Contents){
                         writer.write(line);
                         writer.newLine();
@@ -87,5 +90,35 @@ public class UserMessageHandler {
 		MessageProcessor.processMessage(-1, "Unable to find User on Userlist.", true);
 		return false;
     }
+    public static int checkUserMessages() {
+    	Boolean isMessages = readFileContents();
+    	MessageProcessor.processMessage(2, "User has Messages?: " + isMessages, true);
+    	return userNotifications.size();
+    }
+    
+    private static Boolean readFileContents() {
+    	String path = ProgramController.userRunPath + "\\Users\\Notifications\\" + SwitchController.focusUser + ".txt";
+    	File file = new File(path);
+    	if(file.exists()) {
+    		try {
+    			BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
+                String line;
+                while((line = reader.readLine()) != null){
+                    if(!line.equals("")){
+                        userNotifications.add(line);
+                    }
+                }
+                return true;
+    		} catch(IOException e) {
+    			
+    			return false;
+    		}
+    	}
+		MessageProcessor.processMessage(-1, "No Notification File exists!", true);
+		return false;
+	}
 
+	public static void readMessages() {
+    	
+    }
 }

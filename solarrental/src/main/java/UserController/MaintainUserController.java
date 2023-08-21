@@ -1,6 +1,8 @@
 package UserController;
 
+import java.util.ArrayList;
 import java.util.Properties;
+import java.util.List;
 
 import com.solarrental.assets.CustomScanner;
 import com.solarrental.assets.Logo;
@@ -11,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import InstallManager.ProgramController;
 import Login.SwitchController;
@@ -35,6 +39,9 @@ public class MaintainUserController {
     static String UserProperties2 = ProgramController.userRunPath + "\\Users/";
     public static Properties userprop = new Properties();
     public static String status = "Disabled";
+    public static List<String> newAccountName = new ArrayList<>();
+    public static List<String> originalUserName = new ArrayList<>();
+    public static List<Integer> requestID = new ArrayList<>();
     private static boolean loadUserlist(){
         return UserListController.loadUserList();
     }
@@ -66,6 +73,12 @@ public class MaintainUserController {
             try {
                 permissionLevel = Integer.parseInt(permissionLevelInput.getText());
             } catch (Exception ex) {
+            	StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 MessageProcessor.processMessage(-2, ex.toString(), true);
                 MessageProcessor.processMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
                 permissionLevel = 0;
@@ -127,6 +140,12 @@ public class MaintainUserController {
             } catch (Exception ex) {
                 MessageProcessor.processMessage(-2, ex.toString(), true);
                 MessageProcessor.processMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 permissionLevel = 0;
             }
             if(createNewFile(username)) {
@@ -187,6 +206,12 @@ public class MaintainUserController {
                     MessageProcessor.processMessage(-1, "Failed to set permission Level, Assigning Level 0", true);
                     setValue(UserName, "PermissionLevel", "0");
                     UserListController.addUserToList(UserName, 0);
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    String stackTrace = sw.toString();
+
+                    MessageProcessor.processMessage(2, stackTrace, true);
                 }
                 MessageProcessor.processMessage(2, "All Manual Input Complete, System Now Completing Profile Setup", true);
                 setValue(UserName, "SuccessfulLogins", "0");
@@ -229,6 +254,12 @@ public class MaintainUserController {
 		        MessageProcessor.processMessage(1, "Successfully Created User File", false);
 		        return true;
 		    } catch (Exception e) {
+		    	StringWriter sw = new StringWriter();
+		        PrintWriter pw = new PrintWriter(sw);
+		        e.printStackTrace(pw);
+		        String stackTrace = sw.toString();
+
+		        MessageProcessor.processMessage(2, stackTrace, true);
 		        MessageProcessor.processMessage(-1, "Failed to create new File", true);
 		        return false;
 		    }
@@ -247,6 +278,12 @@ public class MaintainUserController {
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
                 MessageProcessor.processMessage(-1, "Unable to load User Profile", true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 return false;
             }
         }
@@ -265,6 +302,12 @@ public class MaintainUserController {
                 return true;
             }catch(IOException e){
                 MessageProcessor.processMessage(-2, e.toString(), true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 return false;
             }
         }
@@ -315,6 +358,12 @@ public class MaintainUserController {
                 Settings.settingsMenu();
             } catch (Exception e) {
                 MessageProcessor.processMessage(-2, "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String stackTrace = sw.toString();
+
+                MessageProcessor.processMessage(2, stackTrace, true);
                 Settings.settingsMenu();
             }
         }else{
@@ -381,7 +430,7 @@ public class MaintainUserController {
             approveButton.setOnAction(e -> {
                 AdministrativeFunctions.removeRequest();
                 setValue(User, "AccountName", AccountName);
-                UserMessageHandler.sendMessageToUser(User, "Admin Approved Account Name Change Request, Change Made Successfully");
+                UserMessageHandler.sendMessageToUser(User, "Admin Approved Account Name Change Request, Change Made Successfully; Original Account Name: " + originalUserName + "; Request ID: " + requestID + "; " + newAccountName);
                 Alert alert = new Alert(AlertType.INFORMATION, "The account name change has been approved.", ButtonType.OK);
                 alert.showAndWait();
                 stage.close();
@@ -390,7 +439,7 @@ public class MaintainUserController {
             Button denyButton = new Button("Deny");
             denyButton.setOnAction(e -> {
                 MessageProcessor.processMessage(-1, "Admin Denied Request", true);
-                UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change");
+                UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change; Original Account Name: " + originalUserName + "; Request ID: " + requestID + "; " + newAccountName);
                 Alert alert = new Alert(AlertType.INFORMATION, "The account name change has been denied.", ButtonType.OK);
                 alert.showAndWait();
                 stage.close();
@@ -405,6 +454,9 @@ public class MaintainUserController {
             Alert alert = new Alert(AlertType.ERROR, "Failed to find the User Properties.", ButtonType.OK);
             alert.showAndWait();
         }
+        originalUserName.clear();
+        requestID.clear();
+        newAccountName.clear();
     }
     public static boolean updateAccountName(String User, String AccountName){
         UserListController.loadUserList();
@@ -421,17 +473,20 @@ public class MaintainUserController {
             if(approve.equals("y") || approve.equals("yes")){
                 AdministrativeFunctions.removeRequest();
                 setValue(User, "AccountName", AccountName);
-                UserMessageHandler.sendMessageToUser(User, "Admin Approved Account Name Change Request, Change Made Successfully");
+                UserMessageHandler.sendMessageToUser(User, "Admin Approved Account Name Change Request, Change Made Successfully; Original Account Name: "  + originalUserName + "; Request ID: " + requestID + "; " + newAccountName);
                 return true;
             }
 			if(approve.equals("n") || approve.equals("no")){
 			    MessageProcessor.processMessage(-1, "Admin Denied Request", true);
-			    UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change");
+			    UserMessageHandler.sendMessageToUser(User, "Admin Denied Your Request for Account Name Change; Original Account Name: "  + originalUserName + "; Request ID: " + requestID + "; " + newAccountName);
 			}else{
 			    MessageProcessor.processMessage(-1, "Invalid Option, Try Again", true);
 			}
 			return false;
         }
+        originalUserName.clear();
+        requestID.clear();
+        newAccountName.clear();
 		MessageProcessor.processMessage(-1, "Failed to find the User Properties.", true);
 		return false;
 

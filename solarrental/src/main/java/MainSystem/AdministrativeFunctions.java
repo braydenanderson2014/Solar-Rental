@@ -1,10 +1,13 @@
 package MainSystem;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Random;
 
 import com.solarrental.assets.CustomScanner;
@@ -26,7 +29,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -54,7 +59,7 @@ public class AdministrativeFunctions {
 	public static List<String> accountRequestNamePool = new ArrayList<>();
 	public static String targetAccount = "";
 	public static int requestsMade = 0;
-	
+	private static Properties userlist = new Properties();
 
 	public static int updateRequestsMade() {
 		requestsMade = administrativeRequests.size();
@@ -174,7 +179,8 @@ public class AdministrativeFunctions {
 		Button list = new Button("List All Users; Current User Count: " + UserListController.userlist.size());
 		layout.getChildren().add(list);
 		list.setOnAction(e -> {
-
+			//stage.close();
+			displayUsers();
 		});
 
 		Button tax = new Button("Set Tax %");
@@ -200,6 +206,7 @@ public class AdministrativeFunctions {
 		Button back = new Button("Return to Main Menu");
 		layout.getChildren().add(back);
 		back.setOnAction(e -> {
+			stage.close();
 			MainMenu.showMainMenu(new Stage());
 		});
 		// Set the max width of buttons to fill the available space
@@ -241,6 +248,38 @@ public class AdministrativeFunctions {
 	}
 
 
+	private static void displayUsers() {
+	    userlist = UserListController.GetAllUsersUI();
+
+	    Stage stage = new Stage();
+	    VBox layout = new VBox(10);
+
+	    if (userlist != null) {
+	        for (String username : userlist.stringPropertyNames()) {
+	            Label userLabel = new Label(username);
+	            layout.getChildren().add(userLabel);
+	        }
+	    } else {
+	        Label noUsersLabel = new Label("No users to display.");
+	        layout.getChildren().add(noUsersLabel);
+	    }
+	    Button ok = new Button("Ok");
+	    ok.setOnAction(e -> {
+	    	stage.close();
+	    });
+	    
+	    layout.getChildren().add(ok);
+	    Scene scene = new Scene(layout, 300, 200);
+	    scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+            	stage.close();
+            }
+	    });
+	    stage.setScene(scene);
+	    stage.showAndWait();
+	}
+
+
 	private static void setTarget() {
 	    Stage stage = new Stage();
 	    Label title = new Label("Target a User");
@@ -270,6 +309,17 @@ public class AdministrativeFunctions {
 	    layout.getChildren().addAll(title, targetUserField, confirmButton, backButton, messageLabel);
 
 	    Scene scene = new Scene(layout, 300, 200);
+	    scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+            	targetAccount = targetUserField.getText();
+    	        boolean exists = UserListController.checkUserList(targetAccount);
+    	        if (exists) {
+    	    		MaintainUserController.loadUserProperties(targetAccount);
+    	            stage.close();
+    	        } else {
+    	            messageLabel.setText("User does not exist. Please try again.");
+    	        }            }
+	    });
 	    stage.setScene(scene);
 	    stage.showAndWait();
 	}
@@ -327,6 +377,12 @@ public class AdministrativeFunctions {
 					AdministrativeMenu();
 				} catch (InputMismatchException e) {
 					MessageProcessor.processMessage(-2, e.toString(), true);
+					StringWriter sw = new StringWriter();
+				    PrintWriter pw = new PrintWriter(sw);
+				    e.printStackTrace(pw);
+				    String stackTrace = sw.toString();
+
+				    MessageProcessor.processMessage(2, stackTrace, true);
 					AdministrativeMenu();
 				}
 			} else if (option.equals("list")) {
@@ -401,6 +457,12 @@ public class AdministrativeFunctions {
 			MessageProcessor.processMessage(-2, e.toString() + " [E1T0]", true);
 			MessageProcessor.processMessage(-1, "An Error Occured with the Administrative Menu... Reloading Menu",
 					true);
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
 			AdministrativeMenu();
 		}
 	}
@@ -461,6 +523,7 @@ public class AdministrativeFunctions {
 					Optional<String> result = dialog.showAndWait();
 					if (result.isPresent()) {
 						String user = result.get();
+						MaintainUserController.newAccountName.add(administrativeRequests.get(option));
 						MaintainUserController.updateAccountName(stage, user, administrativeRequestedName.get(option));
 						administrativeRequests.remove(option);
 						administrativeRequestFull.remove(option);
@@ -531,6 +594,9 @@ public class AdministrativeFunctions {
 				System.out.println("New Account Name: ");
 				String accountName = administrativeRequestedName.get(option);
 				System.out.println(accountName);
+				MaintainUserController.newAccountName.add(administrativeRequests.get(option));
+				MaintainUserController.originalUserName.add(administrativeRequestUser.get(option));
+				MaintainUserController.requestID.add(administrativeRequestID.get(option));
 				administrativeRequests.remove(option);
 				administrativeRequestFull.remove(option);
 				administrativeRequestID.remove(option);
@@ -543,6 +609,12 @@ public class AdministrativeFunctions {
 				AdministrativeMenu();
 			}
 		} catch (InputMismatchException e) {
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
 			MessageProcessor.processMessage(-2, e.toString(), true);
 			return false;
 		}
@@ -573,6 +645,12 @@ public class AdministrativeFunctions {
 			return true;
 		} catch (InputMismatchException e) {
 			MessageProcessor.processMessage(-2, e.toString(), true);
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
 			viewAccountList();
 		}
 		return true;

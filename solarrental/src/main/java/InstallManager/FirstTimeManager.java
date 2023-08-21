@@ -2,6 +2,8 @@ package InstallManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import MainSystem.SettingsController;
 import messageHandler.MessageProcessor;
@@ -39,6 +41,12 @@ public class FirstTimeManager {
 		    return firstTime;
 		}catch(IOException e){
 		    MessageProcessor.processMessage(-2, "Unable to create Configuration File", true);
+		    StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
 		    //MessageProcessor.dumpAll();
 		    System.exit(1);
 		    return true;

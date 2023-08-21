@@ -3,6 +3,8 @@ package messageHandler;
 import MainSystem.Settings;
 import MainSystem.SettingsController;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,6 +117,12 @@ public class ViewLogManager {
                 } catch (Exception e) {
                     MessageProcessor.processMessage(-2,
                             "Failed to access Settings Menu, Reattempting to access Settings Menu", true);
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    String stackTrace = sw.toString();
+
+                    MessageProcessor.processMessage(2, stackTrace, true);
                     Settings.settingsMenu();
                 }
                 break;

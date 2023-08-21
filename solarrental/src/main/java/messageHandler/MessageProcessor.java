@@ -47,6 +47,11 @@ public class MessageProcessor {
 
 	private static Map<Integer, Integer> messageTypeColorIndex = new HashMap<>();
 	private static Map<Integer, String> messageColors = new HashMap<>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7991361598725371028L;
+
 		{
 			put(-2, "\033[0;31m"); // RED
 			put(-1, "\033[0;33m"); // YELLOW
@@ -56,6 +61,11 @@ public class MessageProcessor {
 		}
 	};
 	private static Map<Integer, Color> UImessageColors = new HashMap<>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 526551346330915333L;
+
 		{
 			put(-2, Color.RED);
 			put(-1, Color.YELLOW);
@@ -66,6 +76,11 @@ public class MessageProcessor {
 	};
 
 	private static Map<Integer, Boolean> messageTypeVisibility = new HashMap<>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		{
 			put(-2, true);
 			put(-1, true);
@@ -308,6 +323,14 @@ public class MessageProcessor {
 	public static void clearAll() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public static Map<Integer, Color> getUImessageColors() {
+		return UImessageColors;
+	}
+
+	public static void setUImessageColors(Map<Integer, Color> uImessageColors) {
+		UImessageColors = uImessageColors;
 	}
 
 	

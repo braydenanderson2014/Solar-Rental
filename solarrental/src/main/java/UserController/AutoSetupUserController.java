@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Properties;
 
 import InstallManager.ProgramController;
@@ -24,6 +26,12 @@ public class AutoSetupUserController {
 		        success = PopulateUserProperties();
 		        UserListController.addUserToList("Admin", 8);
 		    } catch (Exception e) {
+		    	StringWriter sw = new StringWriter();
+		        PrintWriter pw = new PrintWriter(sw);
+		        e.printStackTrace(pw);
+		        String stackTrace = sw.toString();
+
+		        MessageProcessor.processMessage(2, stackTrace, true);
 		        MessageProcessor.processMessage(-2, e.toString(), true);
 		        return false;
 		    }
@@ -57,6 +65,12 @@ public class AutoSetupUserController {
             return true;
         }catch(IOException e){
             MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             return false;
         }
     }

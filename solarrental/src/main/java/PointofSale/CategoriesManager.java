@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -35,6 +37,12 @@ public class CategoriesManager {
             }
         }catch(IOException e){
             MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             return false;
         }
         try (InputStream input = new FileInputStream(path)){
@@ -44,6 +52,12 @@ public class CategoriesManager {
         }catch(IOException e){
             MessageProcessor.processMessage(-2, e.toString(), true);
             MessageProcessor.processMessage(-1, "Unable to load Categories", false);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             return false;
         }
     }
@@ -56,6 +70,12 @@ public class CategoriesManager {
             LoadCatProperties();
             return true;
         }catch(IOException e){
+        	StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             MessageProcessor.processMessage(-2, e.toString(), true);
             return false;
         }
@@ -72,7 +92,12 @@ public class CategoriesManager {
         try {
 			ProgramController.clearScreen();
 		} catch (IOException | InterruptedException e) {
-			
+			StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
 			MessageProcessor.processMessage(-2, e.toString(), true);
 		}
 			Logo.displayLogo();

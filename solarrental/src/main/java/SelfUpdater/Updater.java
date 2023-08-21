@@ -13,6 +13,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -80,6 +82,12 @@ public class Updater {
                     try {
                         Files.delete(path);
                     } catch (IOException e) {
+                    	StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        String stackTrace = sw.toString();
+
+                        MessageProcessor.processMessage(2, stackTrace, true);
                         throw new RuntimeException(e);
                     }
                 });
@@ -100,6 +108,12 @@ public class Updater {
             }
         } catch (IOException e) {
             MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             e.printStackTrace();
         }
 
@@ -111,7 +125,12 @@ public class Updater {
             }
         } catch (InterruptedException e) {
             MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
 
+            MessageProcessor.processMessage(2, stackTrace, true);
             throw new RuntimeException("Maven compile process was interrupted", e);
         }
     }
@@ -122,6 +141,12 @@ public class Updater {
             updateFromGitHub();
         } catch (GitAPIException e) {
             MessageProcessor.processMessage(-2, e.toString(), true);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+
+            MessageProcessor.processMessage(2, stackTrace, true);
             e.printStackTrace();
         }
         compileSourceCode();
