@@ -59,6 +59,10 @@ public class Settings {
 	public static int requestsMade = 0;
 
 	public static int updateRequestsMade() { // Check admin requests
+		RequestLoader.loadJson();
+		if(requestsMade == 0) {
+			RequestLoader.loadJson();
+		}
 		requestsMade = AdministrativeFunctions.administrativeRequests.size();
 		return requestsMade;
 	}

@@ -59,13 +59,13 @@ public class UserMessageHandler {
                 try {
                     @SuppressWarnings("resource")
 					BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-                    Contents.removeIf(null);
+                    //Contents.removeIf();
                     for(String line : Contents){
-                        writer.write(line);
-                        writer.newLine();
+                        writer.write("\b" + line);
+                        //writer.newLine();
                     }
                     writer.write(message);
-                    writer.newLine();
+                    //writer.newLine();
                     writer.close();
                     return true;
                 } catch (IOException e) {
@@ -125,7 +125,5 @@ public class UserMessageHandler {
 		return false;
 	}
 
-	public static void readMessages() {
-    	
-    }
+	
 }

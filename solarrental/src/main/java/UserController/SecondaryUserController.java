@@ -1,5 +1,7 @@
 package UserController;
+
 import java.io.FileInputStream;
+//import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +40,7 @@ public class SecondaryUserController{
         try (InputStream input = new FileInputStream(ProgramController.userRunPath + "\\Users/" + TargetedAccount + ".properties")){
             userprop.load(input);
             MessageProcessor.processMessage(1, "UserProperties Loaded for User: " + TargetedAccount, true);
-            MessageProcessor.processMessage(1, ProgramController.userRunPath, false);
+            MessageProcessor.processMessage(2, ProgramController.userRunPath, false);
             return true;
         }catch(IOException e){
             MessageProcessor.processMessage(-2,e.toString(), true);
@@ -73,6 +75,7 @@ public class SecondaryUserController{
     }
 
     public static Boolean adjPermLev(String user) {
+    		//
     	return true;
     }
 

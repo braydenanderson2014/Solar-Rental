@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import Login.Login;
 import MainSystem.Main;
+import MainSystem.RequestLoader;
 import MainSystem.SettingsController;
 import UserController.AutoSetupUserController;
 import javafx.stage.Stage;
@@ -29,6 +30,8 @@ public class AutoSetup {
         checkCreateFile(ProgramController.userRunPath + "\\Users/Userlist.properties");
         checkCreateDir(ProgramController.userRunPath + "\\Categories/");
         checkCreateFile(ProgramController.userRunPath + "\\Categories/Categories.properties");
+        RequestLoader.createRequestFile();
+        RequestLoader.loadJson();
         createDefaultSysSet();
     }
     

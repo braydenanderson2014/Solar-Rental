@@ -14,6 +14,7 @@ import com.solarrental.assets.CustomScanner;
 import com.solarrental.assets.Logo;
 
 import Login.SwitchController;
+import MainSystem.RequestLoader.RequestData;
 import UserController.LoginUserController;
 import UserController.MainSystemUserController;
 import UserController.MaintainUserController;
@@ -60,8 +61,14 @@ public class AdministrativeFunctions {
 	public static String targetAccount = "";
 	public static int requestsMade = 0;
 	private static Properties userlist = new Properties();
+	private static Properties requestList = new Properties();
+	private static String requestFile;
 
 	public static int updateRequestsMade() {
+		RequestLoader.loadJson();
+		if(requestsMade == 0) {
+			RequestLoader.loadJson();
+		}
 		requestsMade = administrativeRequests.size();
 		return requestsMade;
 	}
@@ -563,6 +570,7 @@ public class AdministrativeFunctions {
 					size + ". " + administrativeRequests.get(i) + "[" + administrativeRequestID.get(i) + "]", false);
 		}
 		try {
+			RequestData data = new RequestData();
 			int option = CustomScanner.nextInt();
 			option--;
 			Logo.displayLogo();
@@ -578,6 +586,12 @@ public class AdministrativeFunctions {
 				administrativeRequestKeyWord.remove(option);
 				administrativeRequestUser.remove(option);
 				administrativeRequestedName.remove(option);
+				data.administrativeRequests.remove(option);
+				data.administrativeRequestFull.remove(option);
+				data.administrativeRequestID.remove(option);
+				data.administrativeRequestKeyWord.remove(option);
+				data.administrativeRequestUser.remove(option);
+				data.administrativeRequestedName.remove(option);
 			} else if (administrativeRequestKeyWord.get(option).contains("new Account")) {
 				MaintainUserController.createNewUser(administrativeRequestedName.get(option));
 				administrativeRequests.remove(option);
@@ -586,6 +600,12 @@ public class AdministrativeFunctions {
 				administrativeRequestKeyWord.remove(option);
 				administrativeRequestUser.remove(option);
 				administrativeRequestedName.remove(option);
+				data.administrativeRequests.remove(option);
+				data.administrativeRequestFull.remove(option);
+				data.administrativeRequestID.remove(option);
+				data.administrativeRequestKeyWord.remove(option);
+				data.administrativeRequestUser.remove(option);
+				data.administrativeRequestedName.remove(option);
 				AdministrativeMenu();
 			} else if (administrativeRequestKeyWord.get(option).contains("Change Account Name")) {
 				System.out.println("Target Username: ");
@@ -603,6 +623,12 @@ public class AdministrativeFunctions {
 				administrativeRequestKeyWord.remove(option);
 				administrativeRequestUser.remove(option);
 				administrativeRequestedName.remove(option);
+				data.administrativeRequests.remove(option);
+				data.administrativeRequestFull.remove(option);
+				data.administrativeRequestID.remove(option);
+				data.administrativeRequestKeyWord.remove(option);
+				data.administrativeRequestUser.remove(option);
+				data.administrativeRequestedName.remove(option);
 				MaintainUserController.updateAccountName(user1, accountName);
 			} else {
 				MessageProcessor.processMessage(-1, "No Resolutions Available", true);
@@ -708,6 +734,8 @@ public class AdministrativeFunctions {
 
 	public static boolean newRequest(String focusUser, String request, String description, String newAccountName) {
 		int requestID = requestIDGenerator();
+		String temp = "[" + focusUser + "] is requesting [" + request + "]...Full Description: "
+				+ description + "[Request ID: " + requestID + "]";
 		administrativeRequestedName.add(newAccountName);
 		administrativeRequestID.add(requestID);
 		administrativeRequestUser.add(focusUser);
@@ -719,6 +747,25 @@ public class AdministrativeFunctions {
 				"Request saved successfully, an Administrator will review the request as soon as possible. [Request ID: "
 						+ requestID + "]",
 				true);
+		RequestLoader.addRequest(newAccountName, requestID, focusUser, request, description, temp);
+
+		return true;
+	}
+	public static boolean newRequest(String focusUser, String request, String description, String newAccountName, int id) {
+		administrativeRequestedName.add(newAccountName);
+		administrativeRequestID.add(id);
+		administrativeRequestUser.add(focusUser);
+		administrativeRequestKeyWord.add(request);
+		administrativeRequests.add(description);
+		administrativeRequestFull.add("[" + focusUser + "] is requesting [" + request + "]...Full Description: "
+				+ description + "[Request ID: " + id + "]");
+		String temp = "[" + focusUser + "] is requesting [" + request + "]...Full Description: "
+				+ description + "[Request ID: " + id + "]";
+		MessageProcessor.processMessage(1,
+				"Request saved successfully, an Administrator will review the request as soon as possible. [Request ID: "
+						+ id + "]",
+				true);
+		RequestLoader.addRequest(newAccountName, id, newAccountName, request, description, temp);
 		return true;
 	}
 
