@@ -191,7 +191,7 @@ public class RequestLoader {
         requestData.administrativeRequestKeyWord.add(request);
         requestData.administrativeRequests.add(description);
         requestData.administrativeRequestFull.add(temp);
-        MessageProcessor.processMessage(2, id + " was added to Properties list Successfully!", true);
+        MessageProcessor.processMessage(2, id + " was added to JSON list Successfully!", true);
         MessageProcessor.processMessage(1, id + " " + path + " Successfully added to request list!", true);
         saveJson(); //Save Requests as JsonData (requests to file)
         return true;
