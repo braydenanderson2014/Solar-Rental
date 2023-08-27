@@ -563,11 +563,13 @@ public class AdministrativeFunctions {
 		System.out.println("Resolution Advisory");
 		Logo.displayLine();
 		int size = updateRequestsMade();
+		int itemnum = 1;
 		MessageProcessor.processMessage(1, "Current Requests: ", false);
 		for (int i = 0; i < administrativeRequests.size(); i++) {
-			System.out.println(size + ". " + administrativeRequests.get(i));
+			System.out.println(itemnum + ". " + administrativeRequests.get(i));
 			MessageProcessor.processMessage(1,
-					size + ". " + administrativeRequests.get(i) + "[" + administrativeRequestID.get(i) + "]", false);
+					itemnum + ". " + administrativeRequests.get(i) + "[" + administrativeRequestID.get(i) + "]", false);
+			itemnum++;
 		}
 		try {
 			RequestData data = new RequestData();
@@ -579,33 +581,24 @@ public class AdministrativeFunctions {
 			System.out.println(size + ". " + administrativeRequests.get(option));
 			String user = CustomScanner.nextLine();
 			if (administrativeRequestKeyWord.get(option).contains("Permissions")) {
-				SecondaryUserController.adjPermLev(user);
-				administrativeRequests.remove(option);
-				administrativeRequestFull.remove(option);
-				administrativeRequestID.remove(option);
-				administrativeRequestKeyWord.remove(option);
-				administrativeRequestUser.remove(option);
-				administrativeRequestedName.remove(option);
-				data.administrativeRequests.remove(option);
-				data.administrativeRequestFull.remove(option);
-				data.administrativeRequestID.remove(option);
-				data.administrativeRequestKeyWord.remove(option);
-				data.administrativeRequestUser.remove(option);
-				data.administrativeRequestedName.remove(option);
+				System.out.println("Target User?: ");
+				user = CustomScanner.nextLine();
+				itemnum--;
+				Boolean itWorked = SecondaryUserController.adjPermLev(user);
+				if(!itWorked) {
+					AdministrativeMenu();
+				}
+				
+				RequestLoader.removeRequestByID(administrativeRequestID.get(option));
 			} else if (administrativeRequestKeyWord.get(option).contains("new Account")) {
 				MaintainUserController.createNewUser(administrativeRequestedName.get(option));
-				administrativeRequests.remove(option);
-				administrativeRequestFull.remove(option);
-				administrativeRequestID.remove(option);
-				administrativeRequestKeyWord.remove(option);
-				administrativeRequestUser.remove(option);
-				administrativeRequestedName.remove(option);
-				data.administrativeRequests.remove(option);
-				data.administrativeRequestFull.remove(option);
-				data.administrativeRequestID.remove(option);
-				data.administrativeRequestKeyWord.remove(option);
-				data.administrativeRequestUser.remove(option);
-				data.administrativeRequestedName.remove(option);
+				RequestLoader.removeRequestByID(administrativeRequestID.get(option));
+//				data.administrativeRequests.remove(option);
+//				data.administrativeRequestFull.remove(option);
+//				data.administrativeRequestID.remove(option);
+//				data.administrativeRequestKeyWord.remove(option);
+//				data.administrativeRequestUser.remove(option);
+//				data.administrativeRequestedName.remove(option);
 				AdministrativeMenu();
 			} else if (administrativeRequestKeyWord.get(option).contains("Change Account Name")) {
 				System.out.println("Target Username: ");
@@ -617,18 +610,13 @@ public class AdministrativeFunctions {
 				MaintainUserController.newAccountName.add(administrativeRequests.get(option));
 				MaintainUserController.originalUserName.add(administrativeRequestUser.get(option));
 				MaintainUserController.requestID.add(administrativeRequestID.get(option));
-				administrativeRequests.remove(option);
-				administrativeRequestFull.remove(option);
-				administrativeRequestID.remove(option);
-				administrativeRequestKeyWord.remove(option);
-				administrativeRequestUser.remove(option);
-				administrativeRequestedName.remove(option);
-				data.administrativeRequests.remove(option);
-				data.administrativeRequestFull.remove(option);
-				data.administrativeRequestID.remove(option);
-				data.administrativeRequestKeyWord.remove(option);
-				data.administrativeRequestUser.remove(option);
-				data.administrativeRequestedName.remove(option);
+				RequestLoader.removeRequestByID(administrativeRequestID.get(option));
+//				data.administrativeRequests.remove(option);
+//				data.administrativeRequestFull.remove(option);
+//				data.administrativeRequestID.remove(option);
+//				data.administrativeRequestKeyWord.remove(option);
+//				data.administrativeRequestUser.remove(option);
+//				data.administrativeRequestedName.remove(option);
 				MaintainUserController.updateAccountName(user1, accountName);
 			} else {
 				MessageProcessor.processMessage(-1, "No Resolutions Available", true);

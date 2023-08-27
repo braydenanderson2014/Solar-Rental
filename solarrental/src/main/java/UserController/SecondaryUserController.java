@@ -6,11 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 import com.solarrental.assets.CustomScanner;
+import com.solarrental.assets.Logo;
 
 import InstallManager.ProgramController;
 import messageHandler.MessageProcessor;
@@ -75,8 +78,26 @@ public class SecondaryUserController{
     }
 
     public static Boolean adjPermLev(String user) {
-    		//
-    	return true;
+    	Logo.displayLogo();
+    	MaintainUserController.loadUserProperties(user);
+    	System.out.println("Current User : " + user);
+    	System.out.println("Current Permission Level: " + MaintainUserController.GetProperty("PermissionLevel")); 
+    	System.out.println("New Permission Level: ");
+    	String permissionLevel = CustomScanner.nextLine();
+    	try {
+        	int permLevel = Integer.parseInt(permissionLevel);
+        	MaintainUserController.setValue(user, "PermissionLevel", String.valueOf(permLevel));
+        	return true;
+    	} catch (Exception e) {
+    		MessageProcessor.processMessage(-2, "Invalid Number, try again!", true);
+    		StringWriter sw = new StringWriter();
+		    PrintWriter pw = new PrintWriter(sw);
+		    e.printStackTrace(pw);
+		    String stackTrace = sw.toString();
+
+		    MessageProcessor.processMessage(2, stackTrace, true);
+		    return false;
+    	}
     }
 
     public static void loadUserproperties(String account) {

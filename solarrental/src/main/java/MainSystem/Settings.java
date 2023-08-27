@@ -90,8 +90,7 @@ public class Settings {
 					String line;
 					while ((line = reader.readLine()) != null) {
 						if (!line.equals("") || !line.equals(" ")) {
-							myNotifications.add(line);
-							
+							myNotifications.add("\b" + line);
 						}
 					}
 					reader.close();
