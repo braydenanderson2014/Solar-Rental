@@ -1,4 +1,4 @@
-package com.solarrental.assets;
+package assets;
 
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.List;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 import java.io.File;
 import java.io.FileInputStream;

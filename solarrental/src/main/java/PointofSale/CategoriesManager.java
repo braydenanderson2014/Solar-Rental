@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import com.solarrental.assets.Logo;
+import assets.Logo;
 
 import InstallManager.AutoSetup;
 import InstallManager.ProgramController;

@@ -1,13 +1,12 @@
 package MainSystem;
 
-import com.solarrental.assets.CustomScanner;
-
 import InstallManager.AutoSetup;
 import InstallManager.FirstTimeManager;
 import InstallManager.ManualSetup;
 import InstallManager.ProgramController;
 import InstallManager.SystemSetLoader;
 import Login.Login;
+import assets.CustomScanner;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;

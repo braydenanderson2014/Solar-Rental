@@ -15,9 +15,9 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
-import com.solarrental.assets.VersionController;
+import assets.CustomScanner;
+import assets.Logo;
+import assets.VersionController;
 
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;

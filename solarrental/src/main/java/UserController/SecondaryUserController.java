@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 import InstallManager.ProgramController;
 import messageHandler.MessageProcessor;

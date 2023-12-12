@@ -2,9 +2,9 @@ package UserController;
 import java.io.*;
 import java.util.Properties;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
-import com.solarrental.assets.Notebook;
+import assets.CustomScanner;
+import assets.Logo;
+import assets.Notebook;
 
 import InstallManager.ProgramController;
 import MainSystem.SettingsController;

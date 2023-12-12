@@ -3,9 +3,17 @@ package PointofSale;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
-
+import assets.CustomScanner;
+import assets.Logo;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import Login.SwitchController;
 import UserController.MainSystemUserController;
 import messageHandler.ConsoleHandler;
@@ -193,4 +201,72 @@ public class SalesMenu {
         TheSalesMenu();
     }
 
+    public synchronized static void UIAddItem(Stage stage) {
+    	
+    }
+
+	public synchronized static void UIAddCategory(Stage stage) {
+		// TODO Auto-generated method stub
+	}
+
+	public synchronized static void UIDeleteItem(Stage stage) {
+		// TODO Auto-generated method stub
+	}
+
+	public synchronized static void UIDeleteCategory(Stage stage) {
+		// TODO Auto-generated method stub
+	}
+
+	public synchronized static void UIViewItems(Stage stage) {
+		// TODO Auto-generated method stub;
+	}
+
+	 public synchronized static void  UISalesMenu(Stage stage) {
+		stage.setTitle("Solar Rental - The Sales Menu");
+		VBox vbox = new VBox(10);
+		HBox hbox = new HBox(10);
+        vbox.setPadding(new Insets(20));
+        Label welcomeLabel = new Label("Welcome to the Solar Sales Menu; User: " + SwitchController.focusUser);
+        vbox.getChildren().add(welcomeLabel);        
+        Button Cat = new Button("[CAT]: Sales Catalogue");
+        Cat.setOnAction(e -> CategoriesManager.ListAllCat());
+        vbox.getChildren().add(Cat);
+     
+        
+     // Text Field
+        TextField textField = new TextField();
+        textField.setPromptText("Enter Item Number");
+     // Dropdown Menu
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll("By Item Number", "By Description");
+        comboBox.getSelectionModel().select("By Item Number");
+
+        // Submit Button
+        Button submitButton = new Button("Submit");
+        submitButton.setOnAction(e -> submitAction(textField, comboBox));
+
+        // Listener for ComboBox
+        comboBox.valueProperty().addListener((obs, oldItem, newItem) -> {
+            if (newItem.equals("By Item Number")) {
+                textField.setPromptText("Enter Item Number");
+            } else if (newItem.equals("By Description")) {
+                textField.setPromptText("Enter Description");
+            }
+        });
+
+        // Set on action for TextField to trigger submit action on Enter key
+        textField.setOnAction(e -> submitAction(textField, comboBox));
+
+        hbox.getChildren().addAll(textField, comboBox, submitButton);
+        vbox.getChildren().addAll(new Label("Enter Information:"), hbox);
+
+        Scene scene = new Scene(vbox, 400, 100);
+        stage.setScene(scene);
+        stage.show();
+	}
+	 
+	 private synchronized static  void submitAction(TextField textField, ComboBox<String> comboBox) {
+	        // Implement your submit action logic here
+	        System.out.println("Submitted: " + textField.getText() + ", Search Type: " + comboBox.getValue());
+	    }
 }

@@ -8,8 +8,8 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 public class ViewLogManager {
     public static void viewMessages(List<String> messages, List<String> messagesWithTimestamp) {

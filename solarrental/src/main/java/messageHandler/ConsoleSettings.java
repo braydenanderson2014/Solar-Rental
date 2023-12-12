@@ -1,7 +1,7 @@
 package messageHandler;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 import MainSystem.Settings;
 import MainSystem.SettingsController;

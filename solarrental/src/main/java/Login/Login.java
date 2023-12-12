@@ -19,8 +19,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.net.URI;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 import InstallManager.FirstTimeManager;
 import InstallManager.ProgramController;

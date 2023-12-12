@@ -2,8 +2,8 @@ package Login;
 
 import java.util.ArrayList;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,7 +54,6 @@ public class SwitchController {
                 Login.loginScreen(loggedInUsers.get(size));
             } else {
                 MessageProcessor.processMessage(-1, "No Users are logged in... Switching to Login Screen", true);
-                focusUser = "Null";
                 Login.loginScreen();
             }
         } else {
@@ -126,13 +125,12 @@ public class SwitchController {
             if (person.equals("back") || person.equals("0")) {
                 if (mode == 1) {
                     Login.loginScreen();
-                } else if (mode == 2) {
-                    MainMenu.mainMenu();
-                }
+                } 
+                	MainMenu.mainMenu();
             } else {
                 int personAsInt = Integer.parseInt(person);
                 if (personAsInt == 0) {
-                    Login.loginScreen();;
+                    Login.loginScreen();
                 }
                 personAsInt--;
                 if (loggedInUsers.get(personAsInt).equals(focusUser)) {

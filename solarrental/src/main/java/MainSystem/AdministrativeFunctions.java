@@ -10,8 +10,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 import Login.SwitchController;
 import MainSystem.RequestLoader.RequestData;

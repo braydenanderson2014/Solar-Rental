@@ -3,9 +3,9 @@ package MainSystem;
 import java.io.File;
 import java.util.List;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
-import com.solarrental.assets.Notebook;
+import assets.CustomScanner;
+import assets.Logo;
+import assets.Notebook;
 
 import InstallManager.ProgramController;
 import Login.Login;
@@ -132,7 +132,7 @@ public class MainMenu {
 
 		Button posButton = new Button("POS: Point of Sale");
 		posButton.setOnAction(e -> {
-			POSMenu.PointofSaleMenu();
+			POSMenu.displayPointOfSaleMenu(stage);
 		});
 
 		Button adminButton = new Button("ADMIN: Administrative Functions");

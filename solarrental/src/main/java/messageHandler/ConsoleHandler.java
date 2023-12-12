@@ -3,9 +3,9 @@ package messageHandler;
 import java.util.Arrays;
 import java.util.List;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
-import com.solarrental.assets.TxtColorTable;
+import assets.CustomScanner;
+import assets.Logo;
+import assets.TxtColorTable;
 
 import MainSystem.Settings;
 import MainSystem.SettingsController;

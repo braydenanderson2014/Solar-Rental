@@ -2,8 +2,8 @@ package InstallManager;
 
 import java.io.IOException;
 
-import com.solarrental.assets.CustomScanner;
-import com.solarrental.assets.Logo;
+import assets.CustomScanner;
+import assets.Logo;
 
 import Login.Login;
 import messageHandler.ConsoleHandler;

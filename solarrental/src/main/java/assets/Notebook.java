@@ -1,4 +1,4 @@
-package com.solarrental.assets;
+package assets;
 
 import InstallManager.ProgramController;
 import Login.Login;
@@ -134,7 +134,6 @@ public class Notebook {
         }
     }
 
-
     public static void notebookMenu() {
         Logo.displayLogo();
         user = SwitchController.focusUser;
@@ -259,7 +258,20 @@ public class Notebook {
             file.mkdirs();
             MessageProcessor.processMessage(1, "Created New Directory at: " + notesFolderPath, false);
         }
-    
+        file = new File(notesFolderPath + File.separator + user + ".properties");
+        if(!file.exists()) {
+        	try {
+				file.createNewFile();
+			} catch (IOException e) {
+				MessageProcessor.processMessage(-2, "Failed to create Properties File!", true);
+	    		StringWriter sw = new StringWriter();
+			    PrintWriter pw = new PrintWriter(sw);
+			    e.printStackTrace(pw);
+			    String stackTrace = sw.toString();
+
+			    MessageProcessor.processMessage(2, stackTrace, true);
+			}
+        }
         boolean creatingNote = true;
         while (creatingNote) {
             System.out.println("Enter the name of the new note:");
@@ -381,12 +393,10 @@ public class Notebook {
         stage.show();
     }
 
-    
-    
-    
     public static void loadNote() {
         user = SwitchController.focusUser; // Add this line to update the user
-        notesFolderPath = path + File.separator + "Users" + File.separator + user + File.separator + "Notebooks"; // Add this line to update the notesFolderPath
+        MessageProcessor.processMessage(2, user + " Loading Note", true);
+        notesFolderPath = path + File.separator + "Users" + File.separator + "Notebooks" + File.separator + user + File.separator + "Notebooks"; // Add this line to update the notesFolderPath
         loadProperties();
         System.out.println("Enter the name of the note you want to load or type 'exit' to go back to the menu:");
         String noteName = scan.nextLine().trim();
@@ -431,10 +441,9 @@ public class Notebook {
         notebookMenu();
     }
     
-    
     public static void loadNoteUI(Stage stage) {
         user = SwitchController.focusUser; 
-        notesFolderPath = path + File.separator + "Users" + File.separator + user + File.separator + "Notebooks"; 
+        notesFolderPath = path + File.separator + "Users" + File.separator + "Notebooks" + File.separator + user + File.separator + "Notebooks"; 
         loadProperties();
 
         VBox vbox = new VBox(20);
@@ -536,10 +545,7 @@ public class Notebook {
         stage.setTitle("Load Note");
         stage.show();
     }
-
-
-    
-    
+   
     public static void addToExistingNote() {
         Logo.displayLogo();
         try{
@@ -706,8 +712,6 @@ public class Notebook {
         stage.show();
     }
  
-    
-    
     public static void deleteNote() {
         System.out.println("Enter the name of the note you want to delete:");
         String noteName = CustomScanner.nextLine();
@@ -755,8 +759,6 @@ public class Notebook {
             notebookMenu();
         }
     }
-    
-    
     
     public static void deleteNoteUI(Stage stage) {
         VBox vbox = new VBox(10);
@@ -861,7 +863,6 @@ public class Notebook {
         }
     }
     
-    
     public static void saveProperties() {
         try {
             File userPropertiesFile = new File(notesFolderPath + File.separator + MainSystemUserController.GetProperty("Username") + ".properties");
@@ -879,8 +880,9 @@ public class Notebook {
         }
     }
 
-    
     public static void loadProperties() {
+    	MainSystemUserController.loadUserProperties(SwitchController.focusUser);
+    	MessageProcessor.processMessage(2, SwitchController.focusUser, true);
         File userPropertiesFile = new File(notesFolderPath + File.separator + MainSystemUserController.GetProperty("Username") + ".properties");
         if (userPropertiesFile.exists()) {
             try (FileInputStream fis = new FileInputStream(userPropertiesFile)) {
