@@ -18,26 +18,21 @@ import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
 
 public class POSMenu {
-    public static List<String> ItemsOnInvoice = new ArrayList<>();
-    public static List<Double> CurrentPricesOnInvoice = new ArrayList<>();
-    public static List<Double> OrigPricesOnInvoice = new ArrayList<>();
-    public static List<Boolean> isItemDiscounted = new ArrayList<>();    
-    public static boolean updateArrays(){
-        ItemsOnInvoice = SalesMenu.ItemsOnInvoice;
-        CurrentPricesOnInvoice = SalesMenu.CurrentPricesOnInvoice;
-        OrigPricesOnInvoice = SalesMenu.OrigPricesOnInvoice;
-        isItemDiscounted = SalesMenu.isItemDiscounted;
-        return true;
-    }
+     
+    static CategoriesManager Manager = new CategoriesManager();
+    static PointOfSaleManager POSManager = new PointOfSaleManager();
+    static ItemManager ItemManager = new ItemManager();
+    
 
     public static void PointofSaleMenu(){
+    	PointofSale.ItemManager.loadItemsFromFile();;
         Logo.displayLogo();
         System.out.println("Welcome to the Solar Point of Sale Menu; User: " + SwitchController.focusUser);
-        System.out.println("[SALE]: Sales Menu");
+        System.out.println("[SALE]: Sales Menu; Items on Invoice: " + POSManager.size());
         System.out.println("[APP]: Apply Discount Menu");
         System.out.println("[CAT]: Sales Catalogue");
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-            System.out.println("[ADD] Add Item to MasterList ; Items: " + POSItem.itemObjects.size());
+            System.out.println("[ADD] Add Item to MasterList ; Items: " + PointofSale.ItemManager.getItemObjects().size());
             System.out.println("[ADDC] Add Category");
             System.out.println("[DEL]: Delete an Item from the MasterList");
             System.out.println("[DELC]: Remove a Category");
@@ -82,27 +77,27 @@ public class POSMenu {
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category ID?: ");
                     String id = CustomScanner.nextLine().toLowerCase();
-                    boolean idExists = CategoriesManager.checkID(id);
+                    boolean idExists = Manager.hasCategory(Integer.parseInt(id));
                     if(idExists){
-                        boolean successful = CategoriesManager.removeCategoryByID(id);
+                        boolean successful = Manager.removeCategoryByID(Integer.parseInt(id));
+                        		
                         if(successful){
-                            MessageProcessor.processMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(1, "A category was removed!", true);
                         }else{
-                            MessageProcessor.processMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(-1, "Failed to remove Category! ", true);
                         }
                     }
                 }
                 PointofSaleMenu();
                 break;
             case "app":
-                DiscountManager.DiscountMenu();
+                DiscountManager DManager = new DiscountManager();
+                DManager.DiscountMenu();
                 break;
             case "cat":
                 //Categories.SalesCatalogue();
-                boolean success = CategoriesManager.ListAllCat();
-                if(!success){
-                    MessageProcessor.processMessage(2, "No Categories to list at this time", success);
-                }
+                Manager.listAllCategories();
+                
                 System.out.println("Press Enter To Continue");
                 String Enter = CustomScanner.nextLine();
                 POSMenu.PointofSaleMenu();
@@ -135,7 +130,8 @@ public class POSMenu {
         layout.getChildren().add(saleButton);
         
         Button app = new Button("[APP]: Apply Discount Menu");
-        app.setOnAction(e -> DiscountManager.DiscountMenu());
+        DiscountManager DManager = new DiscountManager();
+        app.setOnAction(e -> DManager.DiscountMenu());
         layout.getChildren().add(app);
         
         Button cat = new Button("[CAT]: Sales Catalogue");
@@ -230,20 +226,18 @@ public class POSMenu {
 
             System.out.println("New Category ID: ");
             int categoryID = CustomScanner.nextInt();
+            
             CustomScanner.nextLine(); // Add this line to consume the newline character
-            String category = CategoriesManager.RetrieveCatbyID(String.valueOf(categoryID));
+            String category = Manager.getCategoryName(categoryID);
             
            
+            
             if(itemNum != 0) {
-            	 POSItem item = new POSItem(itemNum, itemName, origPrice, currentPrice, 
-                        isDiscounted, canBeDiscounted, isItemReturnable, 
-                        isTaxExempt, isItemSellable, itemQty, category, 
-                        categoryID, itemDescription) ;
+                POSItem item = new POSItem(itemNum, itemName, origPrice, currentPrice, isDiscounted, canBeDiscounted, isItemReturnable, isTaxExempt, isItemSellable, itemQty, category, categoryID, itemDescription);
+
             } else {
-            	 POSItem item = new POSItem(itemName, origPrice, currentPrice, 
-                        isDiscounted, canBeDiscounted, isItemReturnable, 
-                        isTaxExempt, isItemSellable, itemQty, category, 
-                        categoryID, itemDescription) ;
+                POSItem item = new POSItem(itemName, origPrice, currentPrice, isDiscounted, canBeDiscounted, isItemReturnable, isTaxExempt, isItemSellable, itemQty, category, categoryID, itemDescription);
+
             }
             
             //int itemNum, String itemName, String itemDescription, double originalPrice, double currentPrice, boolean isDiscounted, boolean canBeDiscounted, double discountPercent, boolean isItemReturnable, boolean isTaxExempt, boolean isItemSellable, int itemQty, int categoryID, String category

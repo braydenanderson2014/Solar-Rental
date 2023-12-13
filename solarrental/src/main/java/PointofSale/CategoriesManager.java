@@ -1,194 +1,170 @@
 package PointofSale;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.Properties;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import assets.Logo;
-
-import InstallManager.AutoSetup;
 import InstallManager.ProgramController;
-import messageHandler.MessageProcessor;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class CategoriesManager {
-    private String item;
-    private String Category;
-    private double price;
-    private String description;
-    public  int itemID;
-    private static Properties CatList = new Properties();
-    public static Boolean SearchForCat(String cat){
-        return true;
+    private Map<Integer, String> categories;
+    private Map<Integer, Set<Integer>> subCategoryMapping;
+    private static final String FILENAME = ProgramController.systemRunPath + "/ProgramFiles/Categories/categories.json"; // File to save/load data
+
+    public CategoriesManager() {
+        categories = new HashMap<>();
+        subCategoryMapping = new HashMap<>();
+        loadFromFile();
     }
 
-    public static Boolean LoadCatProperties(){
-        String path = ProgramController.userRunPath + "\\Categories/Categories.properties";
-        File file = new File(path);
-        try{
-            if(!file.exists()){
-                file.createNewFile();
-            }
-        }catch(IOException e){
-            MessageProcessor.processMessage(-2, e.toString(), true);
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String stackTrace = sw.toString();
-
-            MessageProcessor.processMessage(2, stackTrace, true);
-            return false;
-        }
-        try (InputStream input = new FileInputStream(path)){
-            CatList.load(input);
-            MessageProcessor.processMessage(1, "Categories Loaded", true);
-            return true;
-        }catch(IOException e){
-            MessageProcessor.processMessage(-2, e.toString(), true);
-            MessageProcessor.processMessage(-1, "Unable to load Categories", false);
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String stackTrace = sw.toString();
-
-            MessageProcessor.processMessage(2, stackTrace, true);
-            return false;
-        }
-    }
-
-    public static Boolean SaveCatProperties(){
-        String path = ProgramController.userRunPath + "\\Categories/Categories.properties";
-        try (OutputStream output = new FileOutputStream(path)){
-            CatList.store(output, null);
-            MessageProcessor.processMessage(1, "Categories List Saved! Categories", false);
-            LoadCatProperties();
-            return true;
-        }catch(IOException e){
-        	StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String stackTrace = sw.toString();
-
-            MessageProcessor.processMessage(2, stackTrace, true);
-            MessageProcessor.processMessage(-2, e.toString(), true);
-            return false;
-        }
-    }
-
-    public static Boolean RetrieveCat(){
-        return true;
-    }
-
-    public static Boolean ListAllCat(){
-        LoadCatProperties();
-        @SuppressWarnings("rawtypes")
-		Enumeration keys = CatList.keys();
-        try {
-			ProgramController.clearScreen();
-		} catch (IOException | InterruptedException e) {
-			StringWriter sw = new StringWriter();
-		    PrintWriter pw = new PrintWriter(sw);
-		    e.printStackTrace(pw);
-		    String stackTrace = sw.toString();
-
-		    MessageProcessor.processMessage(2, stackTrace, true);
-			MessageProcessor.processMessage(-2, e.toString(), true);
-		}
-			Logo.displayLogo();
-			System.out.println("Categories:");
-			Logo.displayLine();
-			while (keys.hasMoreElements()) {
-				String key = (String)keys.nextElement();
-				String value = (String)CatList.get(key);
-				System.out.println(key + ": " + value);
-				MessageProcessor.processMessage(1, key + ": " + value, false);
+    public void saveToFile() {
+        Gson gson = new Gson();
+        Map<String, Object> data = new HashMap<>();
+        data.put("categories", categories);
+        data.put("subCategoryMapping", subCategoryMapping);
+        File file = new File(FILENAME);
+        if(!file.exists()) {
+        	try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-        return true;
+        }
+        
+        try (FileWriter writer = new FileWriter(FILENAME)) {
+            gson.toJson(data, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void loadFromFile() {
+        Gson gson = new Gson();
+
+        try (FileReader reader = new FileReader(FILENAME)) {
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Map<String, Object> data = gson.fromJson(reader, type);
+
+            if (data == null) {
+                // Handle the case where the file is empty or corrupted
+                return;
+            }
+
+            // Correctly handle the loading of categories
+            Map<String, String> loadedCategories = (Map<String, String>) data.get("categories");
+            categories = new HashMap<>();
+            if (loadedCategories != null) {
+                for (Map.Entry<String, String> entry : loadedCategories.entrySet()) {
+                    categories.put(Integer.parseInt(entry.getKey()), entry.getValue());
+                }
+            }
+
+            // Correctly handle the loading of subcategory mappings
+            Map<String, List<Double>> loadedSubCategoryMapping = (Map<String, List<Double>>) data.get("subCategoryMapping");
+            subCategoryMapping = new HashMap<>();
+            if (loadedSubCategoryMapping != null) {
+                for (Map.Entry<String, List<Double>> entry : loadedSubCategoryMapping.entrySet()) {
+                    Set<Integer> subSet = new HashSet<>();
+                    for (Double subId : entry.getValue()) {
+                        subSet.add(subId.intValue());
+                    }
+                    subCategoryMapping.put(Integer.parseInt(entry.getKey()), subSet);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static Boolean AddCat(String category, String catID){
-        LoadCatProperties();
-        if(CatList.contains(catID) || CatList.containsKey(category)){
-            MessageProcessor.processMessage(-1, "ID or Category already Exists", false);
-            return false;
+
+    
+    // Create a new category
+    public void createCategory(int id, String name) {
+        categories.put(id, name);
+        subCategoryMapping.putIfAbsent(id, new HashSet<>());
+        saveToFile();
+    }
+
+    // Link a subcategory to a category
+    public void linkSubCategory(int mainCategoryId, int subCategoryId) {
+        if (!categories.containsKey(mainCategoryId) || !categories.containsKey(subCategoryId)) {
+            throw new IllegalArgumentException("Category ID does not exist. " + mainCategoryId + " " + subCategoryId);
         }
-		CatList.put(category, catID);
-		SaveCatProperties();
+        subCategoryMapping.get(mainCategoryId).add(subCategoryId);
+    }
+
+    // Get category name
+	public String getCategoryName(int categoryId) {
+		if (!categories.containsKey(categoryId)) {
+			throw new IllegalArgumentException("Category ID does not exist . " + categoryId);
+		}
+		return categories.get(categoryId);
+	}
+	
+    // Get subcategories of a category
+    public Set<String> getSubCategories(int categoryId) {
+        Set<String> subCategories = new HashSet<>();
+        if (subCategoryMapping.containsKey(categoryId)) {
+            for (int subId : subCategoryMapping.get(categoryId)) {
+                subCategories.add(categories.get(subId));
+            }
+        }
+        return subCategories;
+    }
+
+    // List all categories
+    public Map<Integer, String> listAllCategories() {
+        return new HashMap<>(categories);
+    }
+
+    // Optional: Remove a category (also removes it from any subcategory mapping)
+    public void removeCategory(int categoryId) {
+        if (!categories.containsKey(categoryId)) {
+            throw new IllegalArgumentException("Category ID does not exist. " + categoryId);
+        }
+        categories.remove(categoryId);
+        subCategoryMapping.remove(categoryId);
+        for (Set<Integer> subCategories : subCategoryMapping.values()) {
+            subCategories.remove(categoryId);
+        }
+    }
+
+    // Optional: Rename a category
+    public void renameCategory(int categoryId, String newName) {
+        if (!categories.containsKey(categoryId)) {
+            throw new IllegalArgumentException("Category ID does not exist. " + categoryId);
+        }
+        categories.put(categoryId, newName);
+    }
+    
+	public boolean hasCategory(int categoryId) {
+		return categories.containsKey(categoryId);
+	}
+	
+	public boolean removeSubCategory(int categoryId, int subCategoryId) {
+		if (!categories.containsKey(categoryId) || !categories.containsKey(subCategoryId)) {
+			return false;
+		}
+		return subCategoryMapping.get(categoryId).remove(subCategoryId);
+	}
+	
+	public boolean removeCategoryByID(int categoryId) {
+		if (!categories.containsKey(categoryId)) {
+			return false;
+		}
+		categories.remove(categoryId);
+		subCategoryMapping.remove(categoryId);
+		for (Set<Integer> subCategories : subCategoryMapping.values()) {
+			subCategories.remove(categoryId);
+		}
 		return true;
-    }
-
-    public CategoriesManager(String item, String category, double price, String description, int itemID){
-        this.item = item;
-        this.Category = category;
-        this.price = price;
-        this.description = description;
-        this.itemID = itemID;
-    }
-
-    public static void serializeToXML(){
-        //XMLMapper xmlMapper = new XMLMapper();
-    }
-
-    public static boolean checkID(String id) {
-        return CatList.containsValue(id);
-    }
-
-    public static String RetrieveCatbyID(String id) {
-        LoadCatProperties();
-        boolean exists = checkID(id);
-        if(exists){
-            @SuppressWarnings("rawtypes")
-			Enumeration keys = CatList.keys();
-            while (keys.hasMoreElements()) {
-                String key = (String)keys.nextElement();
-                String value = (String)CatList.get(key);
-                System.out.println(key + ": " + value);
-                MessageProcessor.processMessage(1, key + ": " + value, false);
-                if(value.equals(id)){
-                    return key;
-                }
-				MessageProcessor.processMessage(-1, "Unable to find category", true);
-				return "Null";
-            }
-            return "NULL";
-        }
-		MessageProcessor.processMessage(-1, "Unable to find category", true);
-		return "Null";
-    }
-
-    public static String RetrieveLastCatbyID(String id) {
-        return "itemID";  
-        		
-    }
-
-    public static boolean removeCategoryByID(String id) {
-        LoadCatProperties();
-        boolean exists = checkID(id);
-        if(exists){
-            @SuppressWarnings("rawtypes")
-			Enumeration keys = CatList.keys();
-            while (keys.hasMoreElements()) {
-                String key = (String)keys.nextElement();
-                String value = (String)CatList.get(key);
-                MessageProcessor.processMessage(1, key + ": " + value, false);
-                if(value.equals(id)){
-                    //itemID = "Category: " + key + ", ID: " + value;
-                    CatList.remove(key, value);
-                    SaveCatProperties();
-                    return true;
-                }
-				MessageProcessor.processMessage(-1, "Unable to find category", true);
-				return false;
-            }
-            return true;
-        }
-		MessageProcessor.processMessage(-1, "Unable to find category", true);
-		return false;
-    }
+	}
 }

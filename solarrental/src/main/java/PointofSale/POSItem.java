@@ -1,17 +1,24 @@
 package PointofSale;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import InstallManager.ProgramController;
 import assets.Logo;
 
 import messageHandler.MessageProcessor;
+
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class POSItem {
-	 private int itemNumber;
 	 private String itemName;
 	 private double currentPrice;
 	 private double originalPrice;
@@ -25,10 +32,10 @@ public class POSItem {
 	 private boolean isItemSellable;
 	 private int categoryID;
 	
+	 private static String FilePath = ProgramController.systemRunPath + "/ProgramFiles/ItemMasterList.json";
 	
 
 	private Random gen = new Random();
-    public static List<JSONObject> itemObjects = new ArrayList<>();
 
  // First Constructor
     public POSItem(String itemName, double originalPrice, double currentPrice, boolean isDiscounted, 
@@ -74,7 +81,13 @@ public class POSItem {
         toJSON();
     }
 
-    public static POSItem fromJSON(String jsonString) {
+    public POSItem() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public static POSItem fromJSON(String jsonString) {
         JSONObject jsonObject = new JSONObject(jsonString);
 
         int itemNumber = jsonObject.getInt("itemNumber");
@@ -98,6 +111,24 @@ public class POSItem {
                 categoryID, itemDescription) ;
     }
 
+	public static POSItem toPOSItem(Object object) {
+		// TODO Auto-generated method stub
+		POSItem item = new POSItem();
+		item.itemNumber = ((POSItem) object).getItemNumber();
+		item.itemName = ((POSItem) object).getItemName();
+		item.originalPrice = ((POSItem) object).getOriginalPrice();
+		item.currentPrice = ((POSItem) object).getCurrentPrice();
+		item.isDiscounted = ((POSItem) object).isDiscounted();
+		item.canBeDiscounted = ((POSItem) object).isCanBeDiscounted();
+		item.isItemReturnable = ((POSItem) object).isItemReturnable();
+		item.isTaxExempt = ((POSItem) object).isTaxExempt();
+		item.isItemSellable = ((POSItem) object).isItemSellable();
+		item.categoryID = ((POSItem) object).getCategoryID();
+		item.quantity = ((POSItem) object).getQuantity();
+		return item;
+	}
+		
+	
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
 
@@ -112,45 +143,177 @@ public class POSItem {
         jsonObject.put("isTaxExempt", this.isTaxExempt);
         jsonObject.put("isItemSellable", this.isItemSellable);
         jsonObject.put("itemQty", this.quantity);
-        jsonObject.put("categoryID", this.category);
+        jsonObject.put("categoryID", this.categoryID);
         jsonObject.put("category", this.category);
         
         MessageProcessor.processMessage(1, "New Item Created, Assigning to MasterList!", true);
-        itemObjects.add(jsonObject);
         MessageProcessor.processMessage(1, "Added NEW Item to MasterList!", true);
         return jsonObject;
     }
 
-    public static List<JSONObject> searchItems(List<POSItem> items, String query) {
-        List<JSONObject> matchingItems = new ArrayList<>();
-
-        query = query.toLowerCase(); // Convert the query to lowercase for case-insensitive search
-
-        for (POSItem item : items) {
-            JSONObject itemJson = item.toJSON();
-
-            // Check if any of the item properties match the search query
-            if (String.valueOf(item.itemNumber).contains(query) ||
-                item.itemName.toLowerCase().contains(query) ||
-                item.description.toLowerCase().contains(query) ||
-                String.valueOf(item.originalPrice).contains(query) ||
-                String.valueOf(item.currentPrice).contains(query) ||
-                String.valueOf(item.isDiscounted).contains(query) ||
-                String.valueOf(item.canBeDiscounted).contains(query) ||
-                String.valueOf(item.isItemReturnable).contains(query) ||
-                String.valueOf(item.isTaxExempt).contains(query) ||
-                String.valueOf(item.isItemSellable).contains(query) ||
-                String.valueOf(item.quantity).contains(query) || 
-                String.valueOf(item.categoryID).contains(query) ||
-                item.category.toLowerCase().contains(query)) {
-                matchingItems.add(itemJson);
-            }
-        }
-
-        return matchingItems;
-    }
-
+    
     private static final long serialVersionUID = 1L; // Add a serialVersionUID
 
+	
+
+   
+    private int itemNumber;
+	 public int getItemNumber() {
+		return itemNumber;
+	}
+
+
+
+	public void setItemNumber(int itemNumber) {
+		this.itemNumber = itemNumber;
+	}
+
+
+
+	public String getItemName() {
+		return itemName;
+	}
+
+
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+
+
+	public double getCurrentPrice() {
+		return currentPrice;
+	}
+
+
+
+	public void setCurrentPrice(double currentPrice) {
+		this.currentPrice = currentPrice;
+	}
+
+
+
+	public double getOriginalPrice() {
+		return originalPrice;
+	}
+
+
+
+	public void setOriginalPrice(double originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+
+
+
+	public boolean isDiscounted() {
+		return isDiscounted;
+	}
+
+
+
+	public void setDiscounted(boolean isDiscounted) {
+		this.isDiscounted = isDiscounted;
+	}
+
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+
+
+	public String getCategory() {
+		return category;
+	}
+
+
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+
+
+	public boolean isCanBeDiscounted() {
+		return canBeDiscounted;
+	}
+
+
+
+	public void setCanBeDiscounted(boolean canBeDiscounted) {
+		this.canBeDiscounted = canBeDiscounted;
+	}
+
+
+
+	public boolean isItemReturnable() {
+		return isItemReturnable;
+	}
+
+
+
+	public void setItemReturnable(boolean isItemReturnable) {
+		this.isItemReturnable = isItemReturnable;
+	}
+
+
+
+	public boolean isTaxExempt() {
+		return isTaxExempt;
+	}
+
+
+
+	public void setTaxExempt(boolean isTaxExempt) {
+		this.isTaxExempt = isTaxExempt;
+	}
+
+
+
+	public boolean isItemSellable() {
+		return isItemSellable;
+	}
+
+
+
+	public void setItemSellable(boolean isItemSellable) {
+		this.isItemSellable = isItemSellable;
+	}
+
+
+
+	public int getCategoryID() {
+		return categoryID;
+	}
+
+
+
+	public void setCategoryID(int categoryID) {
+		this.categoryID = categoryID;
+	}
+
+
+
+   
 }
 

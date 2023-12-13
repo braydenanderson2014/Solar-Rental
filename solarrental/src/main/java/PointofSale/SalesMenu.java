@@ -3,6 +3,8 @@ package PointofSale;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import assets.CustomScanner;
 import assets.Logo;
 import javafx.geometry.Insets;
@@ -25,18 +27,22 @@ public class SalesMenu {
     public static List<Double> CurrentPricesOnInvoice = new ArrayList<>();
     public static List<Double> OrigPricesOnInvoice = new ArrayList<>();
     public static List<Boolean> isItemDiscounted = new ArrayList<>();
+    public static List<POSItem> Items = new ArrayList<>();
     public static double taxPercentage = 0;
     public static double taxDAmount = 0;
     public static double discountTotal = 0;
     public static double TotalAmount = 0;
+    static CategoriesManager Manager = new CategoriesManager();
+    static PointOfSaleManager POSManager= new PointOfSaleManager();
+    static ItemManager ItemManager = new ItemManager();
     public static void TheSalesMenu() {
         Logo.displayLogo();
         System.out.println("Sales Menu");
-        System.out.println("[ADD]: Add Manual Item to Invoice");
+        System.out.println("[ADD]: Add Manual Item to Invoice; Total Items On Invoice: " + POSManager.size());
         System.out.println("[Search] Search for item or Category by id");
         System.out.println("[CAT]: Sales Catalogue");
         if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
-        	System.out.println("[ADD] Add Item to MasterList");
+        	System.out.println("[ADDI] Add Item to MasterList");
             System.out.println("[ADDC] Add Category");
             System.out.println("[DEL]: Delete an Item from the MasterList");
             System.out.println("[DELC]: Remove a Category");
@@ -73,11 +79,7 @@ public class SalesMenu {
                 viewInvoice();
                 break;
             case "cat":
-                boolean success = CategoriesManager.ListAllCat();
-                if(!success){
-                    MessageProcessor.processMessage(2, "No Categories to list at this time", success);
-                    System.out.println(MessageProcessor.getMessages());
-                }
+                Manager.listAllCategories();
                 String Enter = CustomScanner.nextLine();
                 MessageProcessor.processMessage(1, "[Enter]", false);
                 TheSalesMenu();
@@ -88,7 +90,8 @@ public class SalesMenu {
                     String Cat = CustomScanner.nextLine();
                     System.out.println("Category ID?");
                     String CatID = CustomScanner.nextLine();
-                    CategoriesManager.AddCat(Cat, CatID);
+                    int CategoryID = Integer.parseInt(CatID);
+                    Manager.createCategory(CategoryID, Cat);
                     TheSalesMenu();
                 }
                 break;
@@ -98,7 +101,15 @@ public class SalesMenu {
                     String SubCat = CustomScanner.nextLine();
                     System.out.println("Sub-Category ID's?");
                     String SubCatID = CustomScanner.nextLine();
+                    System.out.println("Which Category are you linking to? (Item  Num: )");
+                    String CatID = CustomScanner.nextLine();
+                    
+                    int CategoryID = Integer.parseInt(CatID);
+                    int SubCategoryID = Integer.parseInt(SubCatID);
+                    
                     SubCategoriesManager.addSubCat(SubCat, SubCatID);
+                    Manager.createCategory(SubCategoryID, SubCat);
+                    Manager.linkSubCategory(CategoryID, SubCategoryID);
                     TheSalesMenu();
 
                 }
@@ -107,20 +118,21 @@ public class SalesMenu {
                 if(Integer.parseInt(MainSystemUserController.GetProperty("PermissionLevel")) >= 8){
                     System.out.println("Category ID?: ");
                     String id = CustomScanner.nextLine().toLowerCase();
-                    boolean idExists = CategoriesManager.checkID(id);
+                    boolean idExists = Manager.hasCategory(Integer.parseInt(id));
                     if(idExists){
-                        boolean successful = CategoriesManager.removeCategoryByID(id);
+                        boolean successful = Manager.removeCategoryByID(Integer.parseInt(id));
                         if(successful){
-                            MessageProcessor.processMessage(1, "A category was removed! [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(1, "A category was removed! ", true);
                         }else{
-                            MessageProcessor.processMessage(-1, "Failed to remove Category [" + CategoriesManager.RetrieveLastCatbyID(id) + "]", true);
+                            MessageProcessor.processMessage(-1, "Failed to remove Category!", true);
                         }
                     }
                 }
                 TheSalesMenu();
                 break;
             case "app":
-                DiscountManager.DiscountMenu();
+            	DiscountManager Discount = new DiscountManager();
+                Discount.DiscountMenu();
                 break;
             case "rem":
                 removeItem();
@@ -187,17 +199,31 @@ public class SalesMenu {
     }
 
     private static void addItem() {
+    	//PointofSale.ItemManager.loadItemsFromFile();
         Logo.displayLogo();
         System.out.println("Add Item:");
         Logo.displayLine();
-        System.out.println("ITEM: ");
+        System.out.println("Item Num: ");
         String item = CustomScanner.nextLine();
-        System.out.println("Price: $");
-        double price = CustomScanner.nextDouble();
-        ItemsOnInvoice.add(item);
-        CurrentPricesOnInvoice.add(price);
-        OrigPricesOnInvoice.add(price);
-        isItemDiscounted.add(false);
+        int itemNum = Integer.parseInt(item);
+        boolean itemExists = PointofSale.ItemManager.itemExists(itemNum);
+        if(itemExists){
+        	JSONObject itemToAdd = PointofSale.ItemManager.getItem(itemNum);
+        	
+        	System.out.println("QTY: ");
+        	String qty = CustomScanner.nextLine();
+        	int quantity = Integer.parseInt(qty);
+        	if(quantity > 0){
+        		POSManager.addItem(POSItem.toPOSItem(itemToAdd), quantity);
+        		
+        		TheSalesMenu();
+        	}else{
+				MessageProcessor.processMessage(-1, "Invalid Quantity", true);
+				TheSalesMenu();
+        	}
+         } else {
+        	 MessageProcessor.processMessage(-1, "Unable To Find Item", true);
+         }
         TheSalesMenu();
     }
 
@@ -229,7 +255,7 @@ public class SalesMenu {
         Label welcomeLabel = new Label("Welcome to the Solar Sales Menu; User: " + SwitchController.focusUser);
         vbox.getChildren().add(welcomeLabel);        
         Button Cat = new Button("[CAT]: Sales Catalogue");
-        Cat.setOnAction(e -> CategoriesManager.ListAllCat());
+        Cat.setOnAction(e -> Manager.listAllCategories());
         vbox.getChildren().add(Cat);
      
         
