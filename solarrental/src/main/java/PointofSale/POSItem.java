@@ -31,7 +31,8 @@ public class POSItem {
 	 private boolean isTaxExempt;
 	 private boolean isItemSellable;
 	 private int categoryID;
-	
+	 private int itemNumber;
+
 	 private static String FilePath = ProgramController.systemRunPath + "/ProgramFiles/ItemMasterList.json";
 	
 
@@ -150,20 +151,13 @@ public class POSItem {
         MessageProcessor.processMessage(1, "Added NEW Item to MasterList!", true);
         return jsonObject;
     }
-
     
     private static final long serialVersionUID = 1L; // Add a serialVersionUID
 
-	
-
-   
-    private int itemNumber;
 	 public int getItemNumber() {
 		return itemNumber;
 	}
-
-
-
+	 
 	public void setItemNumber(int itemNumber) {
 		this.itemNumber = itemNumber;
 	}

@@ -42,12 +42,16 @@ public class ItemManager {
     }
 	
 	public static boolean itemExists(int itemNumber) {
-		for (JSONObject itemJson : itemObjects) {
+		for (JSONObject itemJson : getItemObjects()) {
 			if (itemJson.getInt("itemNumber") == itemNumber) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public static int size() {
+		return itemObjects.size();
 	}
 
     public static boolean itemMatchesQuery(JSONObject item, String query) {

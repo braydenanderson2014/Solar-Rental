@@ -26,6 +26,7 @@ public class POSMenu {
 
     public static void PointofSaleMenu(){
     	PointofSale.ItemManager.loadItemsFromFile();;
+    	System.out.println(PointofSale.ItemManager.getItemObjects());
         Logo.displayLogo();
         System.out.println("Welcome to the Solar Point of Sale Menu; User: " + SwitchController.focusUser);
         System.out.println("[SALE]: Sales Menu; Items on Invoice: " + POSManager.size());

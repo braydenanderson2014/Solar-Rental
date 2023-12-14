@@ -206,7 +206,13 @@ public class SalesMenu {
         System.out.println("Item Num: ");
         String item = CustomScanner.nextLine();
         int itemNum = Integer.parseInt(item);
+        PointofSale.ItemManager.loadItemsFromFile();
         boolean itemExists = PointofSale.ItemManager.itemExists(itemNum);
+        System.out.println(itemExists);
+        System.out.println(PointofSale.ItemManager.itemExists(itemNum));
+        System.out.println(PointofSale.ItemManager.getItemObjects());
+        System.out.println(itemNum);
+        System.out.println(item);
         if(itemExists){
         	JSONObject itemToAdd = PointofSale.ItemManager.getItem(itemNum);
         	
