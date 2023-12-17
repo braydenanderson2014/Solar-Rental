@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs": "--module-path ${env:PATH_TO_FX}/lib --add-modules javafx.controls,javafx.fxml",
+            "projectName": "solarrental"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "MainSystem.Main",
+            "vmArgs": "--module-path ${env:PATH_TO_FX}/lib --add-modules javafx.controls,javafx.fxml",
+            "projectName": "solarrental"
+        },
+        {
+            "type": "java",
+            "name": "Main(1)",
+            "request": "launch",
+            "mainClass": "SelfUpdater.Main",
+            "projectName": "solarrental"
+        }
+    ]
+}

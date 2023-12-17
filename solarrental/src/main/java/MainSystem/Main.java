@@ -127,6 +127,7 @@ public class Main extends Application {
             Login.showLoginScreen();
         }
     }
+    
     public static void main(String[] args) {
         SettingsController.loadSettings();
         new CustomScanner();
