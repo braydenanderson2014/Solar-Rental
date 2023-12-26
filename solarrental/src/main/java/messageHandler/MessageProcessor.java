@@ -105,8 +105,12 @@ public class MessageProcessor {
 
 		@Override
 		public synchronized String toString() {
-			if (SettingsController.getSetting("UI").equals("Enabled")) {
-				return messageTypes.get(messageType) + " [" + dateTime + "] " + message;
+			if(SettingsController.searchForSet("UI")){
+				if (SettingsController.getSetting("UI").equals("Enabled")) {
+					return messageTypes.get(messageType) + " [" + dateTime + "] " + message;
+				}
+				return messageColors.get(messageType) + messageTypes.get(messageType) + " [" + dateTime + "] " + message
+						+ "\033[0m"; // RESET color after printing the message
 			}
 			return messageColors.get(messageType) + messageTypes.get(messageType) + " [" + dateTime + "] " + message
 					+ "\033[0m"; // RESET color after printing the message

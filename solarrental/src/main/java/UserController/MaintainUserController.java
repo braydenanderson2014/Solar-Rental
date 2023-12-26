@@ -20,6 +20,7 @@ import InstallManager.ProgramController;
 import Login.SwitchController;
 import MainSystem.AdministrativeFunctions;
 import MainSystem.Settings;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -29,6 +30,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import messageHandler.ConsoleHandler;
 import messageHandler.MessageProcessor;
@@ -512,4 +514,43 @@ public class MaintainUserController {
 		// TODO Auto-generated method stub
 		
 	}
+
+    /**
+     * @param stage
+     * @param user
+     */
+    private void updateProfileSettings(Stage stage, String user) {
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(15, 20, 10, 10));
+        vbox.setAlignment(Pos.CENTER);
+
+        Text title = new Text("Account Updater: Menu");
+        vbox.getChildren().add(title);
+
+        Button btnName = new Button("Set Account Name");
+        btnName.setOnAction(e -> requestAccountChange(user)); // Implement requestAccountChange
+
+        Button btnPass = new Button("Change Password");
+        btnPass.setOnAction(e -> LoginUserController.changePassword(stage, user)); // Implement changePassword
+
+        Button btnNoti = new Button("Request Notification Systems");
+        btnNoti.setOnAction(e -> AdministrativeFunctions.newRequest(SwitchController.focusUser, "Notify", "Notifications", "NA")); // Implement handleNotificationRequest
+
+        Button btnPerm = new Button("Request Permission Level Change");
+        btnPerm.setOnAction(e -> AdministrativeFunctions.newRequest(SwitchController.focusUser, "Permissions", "Permissions", "NA")); // Implement handlePermissionRequest
+
+        Button btnReturn = new Button("Return to Settings Menu");
+        btnReturn.setOnAction(e -> Settings.settingsMenu(stage)); // Implement returnToSettings
+
+        vbox.getChildren().addAll(btnName, btnPass, btnNoti, btnPerm, btnReturn);
+
+        // Optionally hide the permission button for non-admin users
+        if (!user.equals("Admin")) {
+            vbox.getChildren().add(btnPerm);
+        }
+
+        Scene scene = new Scene(vbox, 300, 250);
+        stage.setScene(scene);
+        stage.show();
+    }
 }

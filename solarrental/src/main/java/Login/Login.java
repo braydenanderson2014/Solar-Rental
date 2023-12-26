@@ -220,6 +220,8 @@ public class Login {
 	        alert.setHeaderText(null);
 	        alert.setContentText("Invalid username or password. Please try again.");
 	        alert.showAndWait();
+			passwordField.clear();
+			Login.showLoginScreen();
 	    }
 	}
 

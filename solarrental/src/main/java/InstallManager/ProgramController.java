@@ -55,14 +55,14 @@ public class ProgramController {
         }
     }
 
-    public static boolean clearScreen() throws IOException, InterruptedException{
-        if (System.getProperty("os.name").contains("Windows")){
-		    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-		    System.out.flush();
-		}else{
-		    Runtime.getRuntime().exec("clear");
-		}
+    public static boolean clearScreen() throws IOException, InterruptedException {
+        if (System.getProperty("os.name").contains("Windows")) {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            System.out.flush();
+        } else {
+            new ProcessBuilder("clear").inheritIO().start().waitFor();
+        }
         System.out.print("\u000C");
-		return true;
+        return true;
     }
 }
